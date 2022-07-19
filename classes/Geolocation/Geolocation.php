@@ -14,6 +14,18 @@ class Geolocation
 
     public function __construct($dbPath)
     {
+        $migrate = !file_exists($dbPath);
+
+        if ($migrate) {
+            $zip = new \ZipArchive;
+            $res = $zip->open($dbPath . '.zip');
+            if ($res === TRUE) {
+                // extract it to the path we determined above
+                $zip->extractTo(dirname($dbPath));
+                $zip->close();
+            }
+        }
+
         $this->db  = new PDO(
             'sqlite:' . $dbPath,
             null,
