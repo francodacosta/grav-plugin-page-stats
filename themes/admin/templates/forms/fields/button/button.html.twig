@@ -1,0 +1,8 @@
+{% extends "forms/field.html.twig" %}
+
+{% block input %}
+  <a href="{{ uri.path  }}/action:create-db" class="button danger">{{ field.button_text|t }}</a>
+{% endblock %}
+
+
+

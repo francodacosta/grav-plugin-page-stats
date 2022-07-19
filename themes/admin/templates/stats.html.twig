@@ -1,0 +1,206 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block messages %}{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{% do assets.addCss('https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css') %}
+
+	<style>
+		a {
+			text-decoration: none !important
+		};
+	</style>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% do assets.addJS('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js') %}
+
+{% endblock %}
+
+{% block titlebar %}
+
+	<div class="button-bar">
+       
+		<div class="button-group">
+            <p>
+            Using: {{ stats.dbStats.path }} ({{ stats.dbStats.mb }} MB)
+        </p>
+			
+		
+		</div>
+
+
+	</div>
+
+
+	<h1>
+		<i class="fa fa-fw fa-line-chart"></i>
+		Page Stats</h1>
+
+{% endblock %}
+
+
+{% block content %}
+	{% include 'partials/messages.html.twig' %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-4">
+				<h5>Page Views</h5>
+				<div style="width: w-100">
+					<canvas id="chart_hits"></canvas>
+				</div>
+			</div>
+			<div class="col-4">
+				<h5>Unique Visitors</h5>
+				<div style="width: w-100">
+					<canvas id="chart_ips"></canvas>
+				</div>
+			</div>
+			<div class="col-4">
+				<h5>Unique Users</h5>
+				<div style="width: w-100">
+					<canvas id="chart_users"></canvas>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-5">
+			<div class="col">
+				<h5>Recently Viewed Pages</h5>
+				<table class="table">
+					<tr>
+						<th>Date</th>
+						<th>Page</th>
+						<th>user</th>
+						<th>Location</th>
+						{# <th>Views</th> #}
+					</tr>
+					{% for s in stats.recentPages %}
+						<tr>
+							<td>{{s.date|date}}</td>
+							<td>
+								<span title="{{s.route}}">{{s.page_title}}</span>
+							</td>
+							<td>{{s.user|default(s.ip)}}</td>
+							<td>{{s.city}}
+								-
+								{{ s.country}}</td>
+							{# <td>{{s.hits}}</td> #}
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+
+		<div class="row mt-5">
+			<div class="col">
+				<h5>Most Viewed Pages</h5>
+				<table class="table">
+					<tr>
+						<th>Page</th>
+						<th>Views</th>
+						<th>Unique visitors</th>
+						<th>Unique logged in Users</th>
+					</tr>
+
+					{% for s in stats.pagesSummary %}
+						<tr>
+							<td>
+								<span title="{{s.route}}">{{s.page_title}}</span>
+							</td>
+
+							<td>{{s.hits}}</td>
+							<td>{{s.visitors}}</td>
+							<td>{{s.users}}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+
+		</div>
+	</div>
+
+
+</div>
+
+{% set siteStats = stats.siteSummary%}
+<script>
+	var ctx = document.getElementById("chart_hits").getContext("2d");
+var myChart = new Chart(ctx, {
+type: "line",
+legend: {
+display: false
+},
+options: {
+scales: {
+y: {
+beginAtZero: true
+}
+}
+},
+data: {
+datasets: [
+{
+label: 'Page Views',
+data: [{% for s in siteStats.hits %}{
+x: "{{ s.date }}",
+y: {{ s.hits }}
+},{% endfor %}]
+}
+]
+}
+});
+
+var ctx = document.getElementById("chart_ips").getContext("2d");
+var myChart = new Chart(ctx, {
+type: "bar",
+legend: {
+display: false
+},
+options: {
+scales: {
+y: {
+beginAtZero: true
+}
+}
+},
+data: {
+datasets: [
+{
+label: 'Unique visitors',
+data: [{% for s in siteStats.visitors %}{
+x: "{{ s.date }}",
+y: {{ s.hits }}
+},{% endfor %}]
+}
+]
+}
+});
+var ctx = document.getElementById("chart_users").getContext("2d");
+var myChart = new Chart(ctx, {
+type: "bar",
+legend: {
+display: false
+},
+options: {
+scales: {
+y: {
+beginAtZero: true
+}
+}
+},
+data: {
+datasets: [
+{
+label: 'Unique logged in users',
+data: [{% for s in siteStats.users %}{
+x: "{{ s.date }}",
+y: {{ s.hits }}
+},{% endfor %}]
+}
+]
+}
+});
+</script>{% endblock %}

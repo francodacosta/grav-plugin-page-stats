@@ -1,0 +1,58 @@
+name: Page Stats
+slug: page-stats
+type: plugin
+version: 0.1.0
+description: Enhaced statistics for grav
+icon: plug
+author:
+  name: Nuno Costa
+  email: info@codehaha.com
+homepage: https://github.com/nuno-costa/grav-plugin-page-stats
+demo: http://demo.yoursite.com
+keywords: grav, plugin, etc
+bugs: https://github.com/nuno-costa/grav-plugin-page-stats/issues
+docs: https://github.com/nuno-costa/grav-plugin-page-stats/blob/develop/README.md
+license: MIT
+
+dependencies:
+  - { name: grav, version: '>=1.6.0' }
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: PLUGIN_ADMIN.PLUGIN_STATUS
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    db:
+      type: text
+      label: PLUGIN_PAGE_STATS.STATS_DB_LABEL
+      help: PLUGIN_PAGE_STATS.STATS_DB_HELP
+    log_admin:
+      type: toggle
+      label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
+      help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
+      highlight: 0
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    log_bot:
+      type: toggle
+      label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
+      help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
+      highlight: 0
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
