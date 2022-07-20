@@ -76,9 +76,9 @@ var myChart = new Chart(ctx, {
     data: {
         datasets: [
             {
-                label: 'Unique visitors',
+                label: 'Unique users',
                 data: [
-                    {% for s in siteStats.visitors %}
+                    {% for s in siteStats.users %}
                     {
                         x: "{{ s.date }}",
                         y: {{ s.hits }}
