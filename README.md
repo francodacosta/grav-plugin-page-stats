@@ -10,6 +10,13 @@ This plugin will create a new entry in the admin plugin sidebar to display enhac
 Please note the geolocation DB is 300Mb, make sure you have enough space on your server.
 It is distributed as a zip file, this means the first run will be a bit slow, as the plugin will unzip the geolocation db.
 
+Stats Available:
+* Page Vies
+* Unique IP's
+* Unique Users
+* Top users (by page views)
+* Latest viewed pages
+* Top Pages (by page views)
 
 
 ## Installation
