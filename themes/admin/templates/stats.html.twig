@@ -64,6 +64,21 @@
 					<canvas id="chart_users"></canvas>
 				</div>
 			</div>
+            <div class="col-8">
+                <h5>Top Users</h5>
+				<table class="table">
+                    <tr>
+                        <th>User</th>
+                        <th>Page Views</th>
+                    </tr>
+                    {% for s in stats.topUsers %}
+                        <tr>
+                            <td>{{ s.user }}</td>
+                            <td>{{ s.hits }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
 		</div>
 
 		<div class="row mt-5">
@@ -127,80 +142,6 @@
 
 {% set siteStats = stats.siteSummary%}
 <script>
-	var ctx = document.getElementById("chart_hits").getContext("2d");
-var myChart = new Chart(ctx, {
-type: "line",
-legend: {
-display: false
-},
-options: {
-scales: {
-y: {
-beginAtZero: true
-}
-}
-},
-data: {
-datasets: [
-{
-label: 'Page Views',
-data: [{% for s in siteStats.hits %}{
-x: "{{ s.date }}",
-y: {{ s.hits }}
-},{% endfor %}]
-}
-]
-}
-});
-
-var ctx = document.getElementById("chart_ips").getContext("2d");
-var myChart = new Chart(ctx, {
-type: "bar",
-legend: {
-display: false
-},
-options: {
-scales: {
-y: {
-beginAtZero: true
-}
-}
-},
-data: {
-datasets: [
-{
-label: 'Unique visitors',
-data: [{% for s in siteStats.visitors %}{
-x: "{{ s.date }}",
-y: {{ s.hits }}
-},{% endfor %}]
-}
-]
-}
-});
-var ctx = document.getElementById("chart_users").getContext("2d");
-var myChart = new Chart(ctx, {
-type: "bar",
-legend: {
-display: false
-},
-options: {
-scales: {
-y: {
-beginAtZero: true
-}
-}
-},
-data: {
-datasets: [
-{
-label: 'Unique logged in users',
-data: [{% for s in siteStats.users %}{
-x: "{{ s.date }}",
-y: {{ s.hits }}
-},{% endfor %}]
-}
-]
-}
-});
+	
+{% include 'partials/charts.html.twig' %}
 </script>{% endblock %}

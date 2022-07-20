@@ -1,0 +1,91 @@
+var ctx = document.getElementById("chart_hits").getContext("2d");
+var myChart = new Chart(ctx, {
+    type: "line",
+    legend: {
+        display: false
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    },
+    data: {
+        datasets: [
+            {
+                label: 'Page Views',
+                data: [
+                    {% for s in siteStats.hits %}
+                        {
+                                        x: "{{ s.date }}",
+                                        y: {{ s.hits }}
+                        }, 
+                    {% endfor %}
+                ]
+            }
+        ]
+    }
+});
+
+
+
+var ctx = document.getElementById("chart_ips").getContext("2d");
+var myChart = new Chart(ctx, {
+    type: "bar",
+    legend: {
+        display: false
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    },
+    data: {
+        datasets: [
+            {
+                label: 'Unique visitors',
+                data: [
+                    {% for s in siteStats.visitors %}
+                    {
+                        x: "{{ s.date }}",
+                        y: {{ s.hits }}
+                    }, 
+                {% endfor %}
+            ]
+        }
+    ]
+}
+});
+
+var ctx = document.getElementById("chart_users").getContext("2d");
+var myChart = new Chart(ctx, {
+    type: "bar",
+    legend: {
+        display: false
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    },
+    data: {
+        datasets: [
+            {
+                label: 'Unique visitors',
+                data: [
+                    {% for s in siteStats.visitors %}
+                    {
+                        x: "{{ s.date }}",
+                        y: {{ s.hits }}
+                    }, 
+                {% endfor %}
+            ]
+        }
+    ]
+}
+});
