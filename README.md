@@ -1,8 +1,16 @@
 # Page Stats Plugin
+![](screenshot.png)
 
-**This README.md file should be modified to describe the features, installation, configuration, and general usage of the plugin.**
+The **Page Stats** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav). 
 
-The **Page Stats** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav). Enhaced statistics for grav
+Enhaced statistics for grav
+
+This plugin will create a new entry in the admin plugin sidebar to display enhaced page stats about your site!
+
+Please note the geolocation DB is 300Mb, make sure you have enough space on your server.
+It is distributed as a zip file, this means the first run will be a bit slow, as the plugin will unzip the geolocation db.
+
+
 
 ## Installation
 
@@ -38,19 +46,41 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
+db: user/data/page-data.sqlite
+log_admin: false
+log_bot: false
 ```
+
+| parameter | default | explanation |
+| --------- | ------- | ----------- |
+| db | ```user/data/page-data.sqlite``` | db is the path to the stats database file, relative to grav root. |
+| log_admin | ```false``` | if true admin user activity on main website will be logged |
+| log_bot   | ```false``` | if true bot activity on main website will be logged |
+
+> Note:
+> If DB file does not exists it will be created on first run
+>
+> Bot detection is based on user agent, it is not perfect, but it does work well
 
 Note that if you use the Admin Plugin, a file with your configuration named page-stats.yaml will be saved in the `user/config/plugins/`-folder once the configuration is saved in the Admin.
 
 ## Usage
 
-**Describe how to use the plugin.**
+Just install and have fun!
+There is notnhing you need to do, plugin will work out of the box
+
+Have a look at the Grav Error log to ensure plugin is working fine
 
 ## Credits
 
-**Did you incorporate third-party code? Want to thank somebody?**
+This plugin includes IP2Location LITE data available from <a href="https://lite.ip2location.com">https://lite.ip2location.com</a>.
 
 ## To Do
 
-- [ ] Future plans, if any
+- [ ] World map view
+- [ ] Browser / device stats (based on user agent)
+- [ ] User behaviour (select user and see the session history and page flows)
+- [ ] Top country stats
+- [ ] Update geolocation db from csv user can download
+  
 
