@@ -1,5 +1,6 @@
 <?php
-declare (strict_types=1);
+
+declare(strict_types=1);
 
 namespace Grav\Plugin\PageStats;
 
@@ -10,7 +11,8 @@ use Grav\Common\User\Interfaces\UserInterface;
 use Grav\Plugin\PageStats\Geolocation\GeolocationData;
 use \PDO;
 
-class Stats {
+class Stats
+{
     private $db;
     private $dbPath;
     private $config;
@@ -20,7 +22,7 @@ class Stats {
         $this->config = $config;
 
         $this->dbPath = new \SplFileInfo($dbPath);
-        $migrate = ! $this->dbPath->isWritable();
+        $migrate = !$this->dbPath->isWritable();
         $this->db  = new PDO(
             'sqlite:' . $dbPath,
             null,
@@ -34,41 +36,50 @@ class Stats {
         }
     }
 
-    public function migrate() 
+    /**
+     * executes a db migration by running the <int>.sql files not executted yet
+     */
+    public function migrate()
     {
         $version = 0;
         try {
-            $q = 'SELECT version FROM migrations ORDER BY date Desc LIMIT 1' ;
+            $q = 'SELECT version FROM migrations ORDER BY date Desc LIMIT 1';
 
             $q = $this->query($q, [], $limit, $dateFrom, $dateTo);
-    
+
             if ($q) {
                 $version = $q[0]['version'];
             }
         } catch (\Throwable $e) {
             $version = 0;
         }
-       
+
         while (true) {
             $version++;
             $file = new \SplFileInfo(__DIR__ . '/../data/migrations/' . $version . '.sql');
-            if (! $file->isFile()) {
+            if (!$file->isFile()) {
                 break;
             }
-            $contents = file_get_contents((string) $file );
+            $contents = file_get_contents((string) $file);
             $this->db->exec($contents);
-            $this->db->exec('INSERT INTO migrations (version) VALUES('.$version.');');
+            $this->db->exec('INSERT INTO migrations (version) VALUES(' . $version . ');');
         }
-
     }
 
-   private function isBot() {
+    /**
+     * tries to detect if an user agent belongs to a bot
+     */
+    private function isBot()
+    {
 
         return preg_match('/abacho|accona|AddThis|AdsBot|ahoy|AhrefsBot|AISearchBot|alexa|altavista|anthill|appie|applebot|arale|araneo|AraybOt|ariadne|arks|aspseek|ATN_Worldwide|Atomz|baiduspider|baidu|bbot|bingbot|bing|Bjaaland|BlackWidow|BotLink|bot|boxseabot|bspider|calif|CCBot|ChinaClaw|christcrawler|CMC\/0\.01|combine|confuzzledbot|contaxe|CoolBot|cosmos|crawler|crawlpaper|crawl|curl|cusco|cyberspyder|cydralspider|dataprovider|digger|DIIbot|DotBot|downloadexpress|DragonBot|DuckDuckBot|dwcp|EasouSpider|ebiness|ecollector|elfinbot|esculapio|ESI|esther|eStyle|Ezooms|facebookexternalhit|facebook|facebot|fastcrawler|FatBot|FDSE|FELIX IDE|fetch|fido|find|Firefly|fouineur|Freecrawl|froogle|gammaSpider|gazz|gcreep|geona|Getterrobo-Plus|get|girafabot|golem|googlebot|\-google|grabber|GrabNet|griffon|Gromit|gulliver|gulper|hambot|havIndex|hotwired|htdig|HTTrack|ia_archiver|iajabot|IDBot|Informant|InfoSeek|InfoSpiders|INGRID\/0\.1|inktomi|inspectorwww|Internet Cruiser Robot|irobot|Iron33|JBot|jcrawler|Jeeves|jobo|KDD\-Explorer|KIT\-Fireball|ko_yappo_robot|label\-grabber|larbin|legs|libwww-perl|linkedin|Linkidator|linkwalker|Lockon|logo_gif_crawler|Lycos|m2e|majesticsEO|marvin|mattie|mediafox|mediapartners|MerzScope|MindCrawler|MJ12bot|mod_pagespeed|moget|Motor|msnbot|muncher|muninn|MuscatFerret|MwdSearch|NationalDirectory|naverbot|NEC\-MeshExplorer|NetcraftSurveyAgent|NetScoop|NetSeer|newscan\-online|nil|none|Nutch|ObjectsSearch|Occam|openstat.ru\/Bot|packrat|pageboy|ParaSite|patric|pegasus|perlcrawler|phpdig|piltdownman|Pimptrain|pingdom|pinterest|pjspider|PlumtreeWebAccessor|PortalBSpider|psbot|rambler|Raven|RHCS|RixBot|roadrunner|Robbie|robi|RoboCrawl|robofox|Scooter|Scrubby|Search\-AU|searchprocess|search|SemrushBot|Senrigan|seznambot|Shagseeker|sharp\-info\-agent|sift|SimBot|Site Valet|SiteSucker|skymob|SLCrawler\/2\.0|slurp|snooper|solbot|speedy|spider_monkey|SpiderBot\/1\.0|spiderline|spider|suke|tach_bw|TechBOT|TechnoratiSnoop|templeton|teoma|titin|topiclink|twitterbot|twitter|UdmSearch|Ukonline|UnwindFetchor|URL_Spider_SQL|urlck|urlresolver|Valkyrie libwww\-perl|verticrawl|Victoria|void\-bot|Voyager|VWbot_K|wapspider|WebBandit\/1\.0|webcatcher|WebCopier|WebFindBot|WebLeacher|WebMechanic|WebMoose|webquest|webreaper|webspider|webs|WebWalker|WebZip|wget|whowhere|winona|wlm|WOLP|woriobot|WWWC|XGET|xing|yahoo|YandexBot|YandexMobileBot|yandex|yeti|Zeus/i', $_SERVER['HTTP_USER_AGENT']);
-    
-    } 
+    }
 
-    public function dbStats() 
+    /**
+     * Database statistics
+     * currently file path and size
+     */
+    public function dbStats()
     {
         return [
             'mb' => round($this->dbPath->getSize() / 1024 / 1024, 1),
@@ -103,9 +114,9 @@ class Stats {
 
 
         if ('notfound' == $page->template()) {
-            $pageTitle = (string) $uri; 
+            $pageTitle = (string) $uri;
         }
-        $s->bindValue(':ip', $ip );
+        $s->bindValue(':ip', $ip);
         $s->bindValue(':country', $geo->countryCode());
         $s->bindValue(':city', $geo->city());
         $s->bindValue(':region', $geo->region());
@@ -134,8 +145,8 @@ class Stats {
 
         $s = $this->db->prepare($q);
 
-        foreach($params as $key => $value) {
-            $s->bindValue(':'.$key, $value);
+        foreach ($params as $key => $value) {
+            $s->bindValue(':' . $key, $value);
         }
 
         $s->execute();
@@ -148,6 +159,13 @@ class Stats {
     {
         $q = 'SELECT route, page_title, count(route) as hits, count(distinct ip) as visitors, count(distinct user) as users FROM data GROUP BY page_title ORDER BY hits DESC';
 
+        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+    }
+
+    public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    {
+        $q = 'select user, count(route) as hits from data where user is not "" group by user order by hits desc';
+        
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 

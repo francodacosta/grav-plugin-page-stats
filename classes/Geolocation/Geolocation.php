@@ -34,14 +34,19 @@ class Geolocation
         );
     }
 
+    /*
+     * returns GeoLocation data for the passed ip
+     * 
+     * @param string $ip
+     * @return GeolocationData
+     */
     public function locate($ip): GeolocationData
     {
-        // $ipNum = (int) Ip::toNumber('51.7.60.155');
         $ipNum = Ip::toNumber($ip);
 
         $s = $this->db->query('
                 SELECT * FROM geolocation
-                WHERE '. $ipNum .' between ip_from AND ip_to 
+                WHERE ' . $ipNum . ' between ip_from AND ip_to 
                 LIMIT 1
         ');
 
@@ -55,6 +60,7 @@ class Geolocation
             $msg = implode("\n| ", $this->db->errorInfo());
             throw new \RuntimeException($msg);
         }
+        
         return new GeolocationData(
             $result['country_code'] ?? 'unkown',
             $result['country_name'] ?? 'unkown',

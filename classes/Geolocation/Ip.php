@@ -20,9 +20,10 @@ class Ip
         }
     }
 
-
-
-
+        /**
+     * converts a number into an IPv4 Address
+     * from https://lite.ip2location.com/faq
+     */
     public static function toIP($IPNum)
     {
         if ($IPNum == "") {
