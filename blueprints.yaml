@@ -1,7 +1,7 @@
 name: Page Stats
 slug: page-stats
 type: plugin
-version: 0.1.0
+version: 0.1.1
 description: Enhaced statistics for grav
 icon: plug
 author:
