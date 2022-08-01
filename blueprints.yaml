@@ -1,15 +1,14 @@
 name: Page Stats
 slug: page-stats
 type: plugin
-version: 0.1.1
+version: 0.1.2
 description: Enhaced statistics for grav
 icon: plug
 author:
   name: Nuno Costa
   email: info@codehaha.com
 homepage: https://github.com/nuno-costa/grav-plugin-page-stats
-demo: http://demo.yoursite.com
-keywords: grav, plugin, etc
+keywords: grav, plugin, analytics, statistics
 bugs: https://github.com/nuno-costa/grav-plugin-page-stats/issues
 docs: https://github.com/nuno-costa/grav-plugin-page-stats/blob/develop/README.md
 license: MIT
