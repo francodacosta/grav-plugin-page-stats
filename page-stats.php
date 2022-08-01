@@ -19,7 +19,7 @@ class PageStatsPlugin extends Plugin
 {
     const GEO_DB = __DIR__ . '/data/geolocation.sqlite';
 
-    const PATH_ADMIN_STATS = '/admin/page-stats';
+    const PATH_ADMIN_STATS = '/page-stats';
     /**
      * @return array
      *
@@ -72,7 +72,7 @@ class PageStatsPlugin extends Plugin
         // Enable the main events we are interested in
         $this->enable([
             'onPageInitialized' => ['onPageInitialized', 990],
-           
+
         ]);
     }
 
@@ -143,9 +143,11 @@ class PageStatsPlugin extends Plugin
         $config = $this->config();
         $dbPath = $config['db'];
 
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
+        $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
 
         switch($uri->path()) {
-            case self::PATH_ADMIN_STATS:
+            case $pageStatesRoute:
                 $this->grav['twig']->twig_vars['stats'] = new Stats($dbPath, $this->config());
                 break;
             }
@@ -158,10 +160,12 @@ class PageStatsPlugin extends Plugin
         $pages = $this->grav['pages'];
         $page = new Page;
 
-        $adminPage = $pages->find('/admin');
+
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
+        $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
 
         switch($uri->path()) {
-            case self::PATH_ADMIN_STATS:
+            case $pageStatesRoute:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
                 break;

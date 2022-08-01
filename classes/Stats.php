@@ -94,7 +94,7 @@ class Stats
     public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date): void
     {
         if ($this->isBot()) {
-            if (false === $this->config['log_bots']) {
+            if (false === $this->config['log_bot']) {
                 error_log('Bot detected and we are configured to not log bot activiy');
                 return;
             }
@@ -165,7 +165,7 @@ class Stats
     public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
         $q = 'select user, count(route) as hits from data where user is not "" group by user order by hits desc';
-        
+
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 

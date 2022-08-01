@@ -1,2 +1,4 @@
 enabled: true
 db: user/data/page-data.sqlite
+log_admin: true
+log_bot: true
