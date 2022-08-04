@@ -1,10 +1,12 @@
 var ctx = document.getElementById("chart_hits").getContext("2d");
 var myChart = new Chart(ctx, {
     type: "line",
-    legend: {
-        display: false
-    },
     options: {
+        plugins: {
+            legend: {
+            display: false
+            }
+        },
         scales: {
             y: {
                 beginAtZero: true
@@ -20,7 +22,7 @@ var myChart = new Chart(ctx, {
                         {
                                         x: "{{ s.date }}",
                                         y: {{ s.hits }}
-                        }, 
+                        },
                     {% endfor %}
                 ]
             }
@@ -33,10 +35,12 @@ var myChart = new Chart(ctx, {
 var ctx = document.getElementById("chart_ips").getContext("2d");
 var myChart = new Chart(ctx, {
     type: "bar",
-    legend: {
-        display: false
-    },
     options: {
+        plugins: {
+            legend: {
+            display: false
+            }
+        },
         scales: {
             y: {
                 beginAtZero: true
@@ -52,7 +56,7 @@ var myChart = new Chart(ctx, {
                     {
                         x: "{{ s.date }}",
                         y: {{ s.hits }}
-                    }, 
+                    },
                 {% endfor %}
             ]
         }
@@ -60,32 +64,36 @@ var myChart = new Chart(ctx, {
 }
 });
 
-var ctx = document.getElementById("chart_users").getContext("2d");
-var myChart = new Chart(ctx, {
-    type: "bar",
-    legend: {
-        display: false
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
+{% if conf.show_unique_users_widget %}
+    var ctx = document.getElementById("chart_users").getContext("2d");
+    var myChart = new Chart(ctx, {
+        type: "bar",
+        options: {
+             plugins: {
+                legend: {
+                display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        }
-    },
-    data: {
-        datasets: [
-            {
-                label: 'Unique users',
-                data: [
-                    {% for s in siteStats.users %}
-                    {
-                        x: "{{ s.date }}",
-                        y: {{ s.hits }}
-                    }, 
-                {% endfor %}
-            ]
-        }
-    ]
-}
-});
+        },
+        data: {
+            datasets: [
+                {
+                    label: '',
+                    data: [
+                        {% for s in siteStats.users %}
+                        {
+                            x: "{{ s.date }}",
+                            y: {{ s.hits }}
+                        },
+                    {% endfor %}
+                ]
+            }
+        ]
+    }
+    });
+{% endif %}

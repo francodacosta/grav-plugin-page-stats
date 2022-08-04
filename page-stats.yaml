@@ -2,3 +2,5 @@ enabled: true
 db: user/data/page-data.sqlite
 log_admin: true
 log_bot: true
+show_top_users_widget: true
+show_unique_users_widget: true
