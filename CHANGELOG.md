@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
-## [0.2.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/27d206e17eb2a1847e304d0c40435b0fd87d7536...v1.0.0) (2022-08-04)
+## [1.1.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/27d206e17eb2a1847e304d0c40435b0fd87d7536...v1.0.0) (2022-08-04)
 
 ### Features
 
