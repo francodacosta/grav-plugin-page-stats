@@ -8,4 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Grav\\Plugin\\PageStatsPlugin' => $baseDir . '/page-stats.php',
+    'Grav\\Plugin\\PageStats\\Geolocation\\Geolocation' => $baseDir . '/classes/Geolocation/Geolocation.php',
+    'Grav\\Plugin\\PageStats\\Geolocation\\GeolocationData' => $baseDir . '/classes/Geolocation/GeolocationData.php',
+    'Grav\\Plugin\\PageStats\\Geolocation\\Ip' => $baseDir . '/classes/Geolocation/Ip.php',
+    'Grav\\Plugin\\PageStats\\Stats' => $baseDir . '/classes/Stats.php',
 );

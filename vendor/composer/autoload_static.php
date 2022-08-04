@@ -23,6 +23,10 @@ class ComposerStaticInita2c090e39093f29eb47e896c40be01d1
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Grav\\Plugin\\PageStatsPlugin' => __DIR__ . '/../..' . '/page-stats.php',
+        'Grav\\Plugin\\PageStats\\Geolocation\\Geolocation' => __DIR__ . '/../..' . '/classes/Geolocation/Geolocation.php',
+        'Grav\\Plugin\\PageStats\\Geolocation\\GeolocationData' => __DIR__ . '/../..' . '/classes/Geolocation/GeolocationData.php',
+        'Grav\\Plugin\\PageStats\\Geolocation\\Ip' => __DIR__ . '/../..' . '/classes/Geolocation/Ip.php',
+        'Grav\\Plugin\\PageStats\\Stats' => __DIR__ . '/../..' . '/classes/Stats.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
