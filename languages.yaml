@@ -2,7 +2,7 @@ en:
   PLUGIN_PAGE_STATS:
     PAGE_STATS: Page Stats
     STATS_DB_LABEL: Page Stats DB path
-    STATS_DB_HELP: Path to db relative to Grav root  
+    STATS_DB_HELP: Path to db relative to Grav root
     # STATS_DB_CREATE_LABEL: Recreate Stats database
     # STATS_DB_CREATE_HELP: This will create a db at the path specified and will overrite an existinf one without any questions
     # STATS_DB_CREATE_BTN_TEXT: Create new Stats database
@@ -11,3 +11,9 @@ en:
     LOG_ADMIN_HELP: Log admin user activity on site, they will never be logged whil using admin panel
     LOG_BOT_LABEL: Log Bot Activity
     LOG_BOT_HELP: By default we do not log activity of known BOTS, enable to log
+
+    SHOW_TOP_USERS_WIDGET_LABEL: Show Top Users Widget
+    SHOW_TOP_USERS_WIDGET_HELP: If enabled the Top Users Widget will be visible on the overview page
+
+    SHOW_UNIQUE_USERS_WIDGET_LABEL: Show Unique Users Widget
+    SHOW_UNIQUE_USERS_WIDGET_HELP: If enabled the Unique Users Widget will be visible on the overview page
