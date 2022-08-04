@@ -5,8 +5,8 @@ version: 0.1.3
 description: Enhaced Analytics for grav
 icon: plug
 author:
-  name: Nuno Costa
-  email: info@codehaha.com
+    name: Nuno Costa
+    email: info@codehaha.com
 homepage: https://github.com/francodacosta/grav-plugin-page-stats
 keywords: grav, plugin, analytics, statistics
 bugs: https://github.com/francodacosta/grav-plugin-page-stats/issues
@@ -14,66 +14,76 @@ docs: https://github.com/francodacosta/grav-plugin-page-stats/blob/master/README
 license: MIT
 
 dependencies:
-  - { name: grav, version: '>=1.6.0' }
+    - { name: grav, version: ">=1.6.0" }
 
 form:
-  validation: loose
-  fields:
-    enabled:
-      type: toggle
-      label: PLUGIN_ADMIN.PLUGIN_STATUS
-      highlight: 1
-      default: 0
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    db:
-      type: text
-      label: PLUGIN_PAGE_STATS.STATS_DB_LABEL
-      help: PLUGIN_PAGE_STATS.STATS_DB_HELP
-    log_admin:
-      type: toggle
-      label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
-      help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
-      highlight: 0
-      default: 0
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    log_bot:
-      type: toggle
-      label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
-      help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
-      highlight: 0
-      default: 0
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    show_top_users_widget:
-      type: toggle
-      label: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_LABEL
-      help: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_HELP
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    show_unique_users_widget:
-      type: toggle
-      label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_LABEL
-      help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_HELP
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+    validation: loose
+    fields:
+        enabled:
+            type: toggle
+            label: PLUGIN_ADMIN.PLUGIN_STATUS
+            highlight: 1
+            default: 0
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
+        db:
+            type: text
+            label: PLUGIN_PAGE_STATS.STATS_DB_LABEL
+            help: PLUGIN_PAGE_STATS.STATS_DB_HELP
+        log_admin:
+            type: toggle
+            label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
+            help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
+            highlight: 0
+            default: 0
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
+        log_bot:
+            type: toggle
+            label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
+            help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
+            highlight: 0
+            default: 0
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
+        show_top_users_widget:
+            type: toggle
+            label: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_LABEL
+            help: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_HELP
+            highlight: 1
+            default: 1
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
+        show_unique_users_widget:
+            type: toggle
+            label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_LABEL
+            help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_HELP
+            highlight: 1
+            default: 1
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
+        ignored_ips:
+            type: list
+            label: PLUGIN_PAGE_STATS.IGNORED_IPS_LABEL
+            help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
+            style: vertical
+            fields:
+                .ip:
+                    type: text
+                    label: PLUGIN_PAGE_STATS.IP
+                    help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
