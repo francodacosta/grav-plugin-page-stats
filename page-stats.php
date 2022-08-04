@@ -114,12 +114,38 @@ class PageStatsPlugin extends Plugin
      * eg:
      * page-stats:
      *      process: true
+     *
+     * @param array $headers
+     * @return bool
      */
     private function isEnabledForPage(array $headers): bool
     {
         if (isset($headers['page-stats']['process'])) {
             return $headers['page-stats']['process'];
         }
+
+        return true;
+    }
+
+    /**
+     * returns false if IP (or regexp) are in the plugin config list
+     *
+     * @param string $ip
+     * @return bool
+     */
+    private function isEnabledForIp(string $ip): bool
+    {
+        $config = $config = $this->config();
+        if (isset($config['ignored_ips']) && is_array($config['ignored_ips'])) {
+            $ips = array_map(function($a) {
+                return isset($a['ip']) ? $a['ip']: '' ;
+            }, $config['ignored_ips']);
+
+            $regexp = implode('|', $ips);
+
+            return 0 === preg_match("/$regexp/", $ip);
+        }
+
 
         return true;
     }
@@ -136,6 +162,9 @@ class PageStatsPlugin extends Plugin
             $config = $this->config();
             $dbPath = $config['db'];
             $ip = $this->getUserIP();
+            if (false === $this->isEnabledForIp($ip)) {
+                return;
+            }
             $geo = (new Geolocation(self::GEO_DB))->locate($ip);
 
             (new Stats($dbPath, $this->config()))->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable());
@@ -144,6 +173,8 @@ class PageStatsPlugin extends Plugin
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());
             $this->grav['log']->addDebug('GEO DB : ' . self::GEO_DB);
             $this->grav['log']->addDebug('STATS DB : ' . $dbPath);
+
+            throw $e;
         }
     }
 
