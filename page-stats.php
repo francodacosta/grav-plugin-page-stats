@@ -106,9 +106,33 @@ class PageStatsPlugin extends Plugin
     }
 
 
+    /**
+     * returns the value for front matter property that controls processing of a page
+     * or true otherwise.
+     * We return true as the default behaviour is to be enabled for all pages
+     *
+     * eg:
+     * page-stats:
+     *      process: true
+     */
+    private function isEnabledForPage(array $headers): bool
+    {
+        if (isset($headers['page-stats']['process'])) {
+            return $headers['page-stats']['process'];
+        }
+
+        return true;
+    }
+
     public function onPageInitialized()
     {
         try {
+
+            $page = $this->grav['page'];
+            if (false === $this->isEnabledForPage((array)$page->header())) {
+                return;
+            }
+
             $config = $this->config();
             $dbPath = $config['db'];
             $ip = $this->getUserIP();
