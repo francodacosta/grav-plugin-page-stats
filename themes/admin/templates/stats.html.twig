@@ -56,12 +56,15 @@
                     <canvas id="chart_hits"></canvas>
                 </div>
             </div>
+
+            {% if conf.show_unique_visitors_widget %}
             <div class="mb-5 col-4">
                 <h5>Unique Visitors</h5>
                 <div style="width: w-100">
                     <canvas id="chart_ips"></canvas>
                 </div>
             </div>
+            {% endif %}
 
             {% if conf.show_unique_users_widget %}
             <div class="mb-5 col-4">

@@ -31,38 +31,39 @@ var myChart = new Chart(ctx, {
 });
 
 
-
-var ctx = document.getElementById("chart_ips").getContext("2d");
-var myChart = new Chart(ctx, {
-    type: "bar",
-    options: {
-        plugins: {
-            legend: {
-            display: false
+{% if conf.show_unique_visitors_widget %}
+    var ctx = document.getElementById("chart_ips").getContext("2d");
+    var myChart = new Chart(ctx, {
+        type: "bar",
+        options: {
+            plugins: {
+                legend: {
+                display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
         },
-        scales: {
-            y: {
-                beginAtZero: true
+        data: {
+            datasets: [
+                {
+                    label: 'Unique visitors',
+                    data: [
+                        {% for s in siteStats.visitors %}
+                        {
+                            x: "{{ s.date }}",
+                            y: {{ s.hits }}
+                        },
+                    {% endfor %}
+                ]
             }
-        }
-    },
-    data: {
-        datasets: [
-            {
-                label: 'Unique visitors',
-                data: [
-                    {% for s in siteStats.visitors %}
-                    {
-                        x: "{{ s.date }}",
-                        y: {{ s.hits }}
-                    },
-                {% endfor %}
-            ]
-        }
-    ]
-}
-});
+        ]
+    }
+    });
+{% endif %}
 
 {% if conf.show_unique_users_widget %}
     var ctx = document.getElementById("chart_users").getContext("2d");
