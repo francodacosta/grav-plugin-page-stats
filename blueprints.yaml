@@ -76,6 +76,10 @@ form:
                                 10 : 10
                                 11 : 11
                                 12 : 12
+                        limit_top_users_widget:
+                            type: number
+                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
+                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
 
                 fs2:
                     type: fieldset

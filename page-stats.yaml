@@ -6,7 +6,7 @@ log_bot: true
 
 show_top_users_widget: true
 cols_top_users_widget: 4
-
+limit_top_users_widget: 10
 
 show_unique_users_widget: true
 cols_unique_users_widget: 4

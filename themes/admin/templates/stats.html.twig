@@ -84,7 +84,7 @@
                             <th>User</th>
                             <th>Page Views</th>
                         </tr>
-                        {% for s in stats.topUsers %}
+                        {% for s in stats.topUsers(conf.limit_top_users_widget) %}
                             <tr>
                                 <td>{{ s.user }}</td>
                                 <td>{{ s.hits }}</td>
