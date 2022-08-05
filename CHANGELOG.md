@@ -8,11 +8,22 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+* Configure viewed pages ([b3a0b2](https://github.com/francodacosta/grav-plugin-page-stats/commit/b3a0b28cbb282f6b173d3166ceb0f889ab4dd0de))
+* Select widget size [#17](https://github.com/francodacosta/grav-plugin-page-stats/issues/17) ([4f01da](https://github.com/francodacosta/grav-plugin-page-stats/commit/4f01da6d19db2253ff015f064a6ce477c0577e17))
+* Specify number of top users to fetch ([c55a01](https://github.com/francodacosta/grav-plugin-page-stats/commit/c55a01b22f6c2ec36e696d537f83de50ad40cf21))
 * Toggle page views widget [#14](https://github.com/francodacosta/grav-plugin-page-stats/issues/14) ([686085](https://github.com/francodacosta/grav-plugin-page-stats/commit/6860859c60d478a3f2c68dbc22d698f04ec042e3))
 * Toggle unique visitors [#15](https://github.com/francodacosta/grav-plugin-page-stats/issues/15) ([93fde2](https://github.com/francodacosta/grav-plugin-page-stats/commit/93fde20f6a953841cbcc4b600754631885829ce0))
+* Top pages: toggle display, configure size and records to show ([65be4c](https://github.com/francodacosta/grav-plugin-page-stats/commit/65be4c89701a53ab4da12782815682196fae9d8c))
 
 
 ---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 
 ## [1.1.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/27d206e17eb2a1847e304d0c40435b0fd87d7536...v1.0.0) (2022-08-04)
 
