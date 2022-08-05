@@ -4,6 +4,23 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.3.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.2.0...v1.3.0) (2022-08-05)
+
+### Features
+
+* Collect browser stats ([97e89f](https://github.com/francodacosta/grav-plugin-page-stats/commit/97e89f30f096d9ccc4becab1037c851edb1e1577))
+* Setting to throw exception on errors, or ignore them (log them) ([6a4bd2](https://github.com/francodacosta/grav-plugin-page-stats/commit/6a4bd2e9c80b8e2ba3ee615d761f69a95423a502))
+* Top countries ([1d2913](https://github.com/francodacosta/grav-plugin-page-stats/commit/1d29130f0d589f66c07769e98387d697fb5d0724))
+
+
+---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 ## [1.2.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.1.0...v1.2.0) (2022-08-05)
 
 ### Features

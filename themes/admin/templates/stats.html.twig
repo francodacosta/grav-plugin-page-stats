@@ -125,7 +125,7 @@
                         <tr>
                             <td>{{s.date|date}}</td>
                             <td>
-                                <span title="{{s.route}}">{{s.page_title}}</span>
+                                <span title="{{s.page_title}}">{{s.route}}</span>
                             </td>
                             <td>{{s.user|default(s.ip)}}</td>
                             <td>{{s.city}}
@@ -152,7 +152,7 @@
                     {% for s in stats.pagesSummary(conf.limit_top_pages_pages) %}
                         <tr>
                             <td>
-                                <span title="{{s.route}}">{{s.page_title}}</span>
+                                <span title="{{s.page_title}}">{{s.route}}</span>
                             </td>
 
                             <td>{{s.hits}}</td>
