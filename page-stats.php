@@ -20,6 +20,7 @@ class PageStatsPlugin extends Plugin
     const GEO_DB = __DIR__ . '/data/geolocation.sqlite';
 
     const PATH_ADMIN_STATS = '/page-stats';
+    const PATH_ADMIN_PAGE_DETAIL = '/page-details';
     /**
      * @return array
      *
@@ -204,10 +205,12 @@ class PageStatsPlugin extends Plugin
 
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
         $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+        $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
 
 
         switch($uri->path()) {
             case $pageStatesRoute:
+            case $pageDetailsRoute:
                 $this->grav['twig']->twig_vars['stats'] = new Stats($dbPath, $this->config());
                 break;
             }
@@ -223,12 +226,20 @@ class PageStatsPlugin extends Plugin
 
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
         $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+        $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
 
         switch($uri->path()) {
             case $pageStatesRoute:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
                 break;
+
+                case $pageDetailsRoute:
+
+                    $page = $event['page'];
+                    $page->init(new \SplFileInfo(__DIR__ . '/pages/page-details.md'));
+                    break;
+
         }
 
 

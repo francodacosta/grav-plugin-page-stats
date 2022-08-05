@@ -140,10 +140,22 @@ class Stats
 
     private function query(string $q, array $params = [], ?int $limit = null, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
+        $where = [];
         if ($dateFrom && $dateTo) {
-            $q .= ' WHERE date BETWEEN :date_from AND :dateTo';
+            $where[] = ' date BETWEEN :date_from AND :dateTo';
             $params['date_from'] = $dateFrom;
             $params['date_to'] = $dateTo;
+        }
+
+        foreach ($params as $key => $value) {
+           $where[] = "$key = :$key";
+        }
+
+        if (count($where)) {
+          $q =  str_replace('%where', ' WHERE ' . implode(' AND ' , $where), $q);
+        } else {
+            $q = str_replace('%where', '', $q);
+
         }
 
         if ($limit) {
@@ -156,6 +168,11 @@ class Stats
         foreach ($params as $key => $value) {
             $s->bindValue(':' . $key, $value);
         }
+
+
+        // var_dump($q);die;
+        error_log('=============> QUERY: ' . $q);
+        error_log('params: ' . var_export($params, true));
 
         $s->execute();
 
@@ -170,35 +187,53 @@ class Stats
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
-    public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $q = 'select user, count(route) as hits from data where user is not "" group by user order by hits desc';
+        $q = '/* top users */ select user, count(route) as hits from data %where group by user order by hits desc';
 
-        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+        return $this->query($q, $params, $limit, $dateFrom, $dateTo);
     }
 
-    public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $q = 'select country, count(country) as hits from data group by country order by hits desc';
 
-        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
+
+        $q = 'select country, count(country) as hits from data %where group by country order by hits desc';
+
+        $$countries = $this->query($q, $params, $limit, $dateFrom, $dateTo);
+
+
+        $result = [];
+        foreach($$countries as  $country) {
+            if (empty($country['country'])) {
+                $country['country'] = 'unknown';
+            }
+            $result[] = [
+                'country' => $country['country'],
+                'hits' => $country['hits'],
+                'share' => round($country['hits'] * 100 / $totalPages, 2)
+            ];
+        }
+
+        return $result;
     }
 
 
-    public function totalPageViews( ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function totalPageViews( ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $q = 'select count(route) as hits from data';
+        $q = 'select count(route) as hits from data %where';
 
-        return $this->query($q, [], null, $dateFrom, $dateTo);
+        return $this->query($q,$params, null, $dateFrom, $dateTo);
     }
 
-    public function topBrowsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function topBrowsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $totalPages = $this->totalPageViews($dateFrom, $dateTo)[0]['hits'];
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
 
-        $q = 'select browser, count(ip) as hits from data group by browser order by hits desc';
+        $q = 'select browser, count(ip) as hits from data %where group by browser order by hits desc';
 
-        $browsers = $this->query($q, [], $limit, $dateFrom, $dateTo);
+        $browsers = $this->query($q, $params, $limit, $dateFrom, $dateTo);
 
 
         $result = [];
@@ -216,13 +251,13 @@ class Stats
         return $result;
     }
 
-    public function topPlatforms(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function topPlatforms(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $totalPages = $this->totalPageViews($dateFrom, $dateTo)[0]['hits'];
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
 
-        $q = 'select platform, count(ip) as hits from data group by platform order by hits desc';
+        $q = 'select platform, count(ip) as hits from data %where group by platform order by hits desc';
 
-        $platforms = $this->query($q, [], $limit, $dateFrom, $dateTo);
+        $platforms = $this->query($q, $params, $limit, $dateFrom, $dateTo);
 
 
         $result = [];
@@ -248,11 +283,11 @@ class Stats
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
-    public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $hits = $this->query('SELECT date(date) as date, route, page_title, count(route) as hits FROM data GROUP BY date(date)', [], $dateFrom, $dateTo);
-        $visitors = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct ip) as hits FROM data GROUP BY date(date)',  [], $dateFrom, $dateTo);
-        $users = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct user) as hits FROM data GROUP BY date(date)',  [], $dateFrom, $dateTo);
+        $hits = $this->query('SELECT date(date) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(date)', $params, $dateFrom, $dateTo);
+        $visitors = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(date)',  $params, $dateFrom, $dateTo);
+        $users = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(date)',  $params, $dateFrom, $dateTo);
 
         return [
             'hits' => $hits,
