@@ -216,6 +216,30 @@ class Stats
         return $result;
     }
 
+    public function topPlatforms(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    {
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo)[0]['hits'];
+
+        $q = 'select platform, count(ip) as hits from data group by platform order by hits desc';
+
+        $platforms = $this->query($q, [], $limit, $dateFrom, $dateTo);
+
+
+        $result = [];
+        foreach($platforms as  $platform) {
+            if (empty($platform['platform'])) {
+                $platform['platform'] = 'unknown';
+            }
+            $result[] = [
+                'platform' => $platform['platform'],
+                'hits' => $platform['hits'],
+                'share' => round($platform['hits'] * 100 / $totalPages, 2)
+            ];
+        }
+
+        return $result;
+    }
+
     public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
         // $q = 'SELECT route, page_title, count(route) as hits, date FROM data GROUP BY route ORDER BY date DESC';

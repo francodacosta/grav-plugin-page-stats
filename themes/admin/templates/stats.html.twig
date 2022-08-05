@@ -129,6 +129,27 @@
                         {% endfor %}
                     </table>
                 </div>
+
+            {% endif %}
+            {% if conf.show_top_platforms %}
+                <div class="mb-5 col-{{ conf.cols_top_platforms }}">
+                    <h5>Top Platforms</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Platform</th>
+                            <th>% share</th>
+                            <th>Page Views</th>
+                        </tr>
+                        {% for s in stats.topPlatforms(conf.limit_top_platforms) %}
+                            <tr>
+                                <td>
+                                    {{ s.platform }}</td>
+                                <td>{{ s.share }}%</td>
+                                <td>{{ s.hits }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             {% endif %}
 
             {% if conf.show_recently_viewed_pages %}

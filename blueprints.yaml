@@ -73,7 +73,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -112,7 +111,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -147,7 +145,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -182,7 +179,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -217,7 +213,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -256,7 +251,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -295,7 +289,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -334,7 +327,6 @@ form:
                             type: select
                             label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
                             help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            default: 4
                             options:
                                 1 : 1
                                 2 : 2
@@ -352,6 +344,45 @@ form:
                             type: number
                             label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
                             help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                fs9:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.TOP_PLATFORMS
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_top_platforms:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.SHOW_TOP_PLATFORMS_LABEL
+                            help: PLUGIN_PAGE_STATS.SHOW_TOP_PLATFORMS_HELP
+                            highlight: 1
+                            default: 1
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+                        cols_top_platforms:
+                            type: select
+                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
+                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
+                            options:
+                                1 : 1
+                                2 : 2
+                                3 : 3
+                                4 : 4
+                                5 : 5
+                                6 : 6
+                                7 : 7
+                                8 : 8
+                                9 : 9
+                                10 : 10
+                                11 : 11
+                                12 : 12
+                        limit_top_platforms:
+                            type: number
+                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
+                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+
 
 
         section_behaviour:
