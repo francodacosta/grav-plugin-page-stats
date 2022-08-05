@@ -30,17 +30,14 @@
                 ({{ stats.dbStats.mb }}
                 MB)
             </p>
-
-
         </div>
-
-
     </div>
 
 
     <h1>
         <i class="fa fa-fw fa-line-chart"></i>
-        Page Stats</h1>
+        Page Stats
+    </h1>
 
 {% endblock %}
 
@@ -51,20 +48,20 @@
     <div class="container-fluid">
         <div class="row">
             {% if conf.show_page_views_widget %}
-            <div class="mb-5 col-{{ conf.cols_page_views_widget }}">
-                <h5>Page Views</h5>
-                <div style="width: w-100">
-                    <canvas id="chart_hits"></canvas>
+                <div class="mb-5 col-{{ conf.cols_page_views_widget }}">
+                    <h5>Page Views</h5>
+                    <div style="width: w-100">
+                        <canvas id="chart_hits"></canvas>
+                    </div>
                 </div>
-            </div>
             {% endif %}
             {% if conf.show_unique_visitors_widget %}
-            <div class="mb-5 col-{{ conf.cols_unique_visitors_widget}}">
-                <h5>Unique Visitors</h5>
-                <div style="width: w-100">
-                    <canvas id="chart_ips"></canvas>
+                <div class="mb-5 col-{{ conf.cols_unique_visitors_widget}}">
+                    <h5>Unique Visitors</h5>
+                    <div style="width: w-100">
+                        <canvas id="chart_ips"></canvas>
+                    </div>
                 </div>
-            </div>
             {% endif %}
 
             {% if conf.show_unique_users_widget %}

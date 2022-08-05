@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Grav\Plugin\PageStats;
 
 use DateTimeImmutable;
+use Grav\Common\Browser;
 use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Page\Page;
 use Grav\Common\User\Interfaces\UserInterface;
@@ -17,12 +18,14 @@ class Stats
     private $dbPath;
     private $config;
 
+    const FORCE_MIGRATION_FLAG = '/../data/migrations/MUST_MIGRATE';
+
     public function __construct($dbPath, $config)
     {
         $this->config = $config;
 
         $this->dbPath = new \SplFileInfo($dbPath);
-        $migrate = !$this->dbPath->isWritable();
+        $migrate = !$this->dbPath->isWritable() || file_exists(__DIR__ . self::FORCE_MIGRATION_FLAG);
         $this->db  = new PDO(
             'sqlite:' . $dbPath,
             null,
@@ -45,7 +48,7 @@ class Stats
         try {
             $q = 'SELECT version FROM migrations ORDER BY date Desc LIMIT 1';
 
-            $q = $this->query($q, [], $limit, $dateFrom, $dateTo);
+            $q = $this->query($q);
 
             if ($q) {
                 $version = $q[0]['version'];
@@ -64,6 +67,8 @@ class Stats
             $this->db->exec($contents);
             $this->db->exec('INSERT INTO migrations (version) VALUES(' . $version . ');');
         }
+
+        unlink (__DIR__ . self::FORCE_MIGRATION_FLAG);
     }
 
     /**
@@ -91,7 +96,7 @@ class Stats
     /**
      * save stats into db
      */
-    public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date): void
+    public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date, Browser $browser): void
     {
         if ($this->isBot()) {
             if (false === $this->config['log_bot']) {
@@ -107,9 +112,9 @@ class Stats
 
         $s = $this->db->prepare('
             INSERT INTO data
-                ("ip", "country", "city", "region", "route", "page_title", "user", "date", "user_agent", "is_bot")
+                ("ip", "country", "city", "region", "route", "page_title", "user", "date", "user_agent", "is_bot", "browser", "browser_version", "platform")
              VALUES
-                (:ip, :country, :city, :region, :route, :title, :user, :date, :user_agent, :is_bot)
+                (:ip, :country, :city, :region, :route, :title, :user, :date, :user_agent, :is_bot, :browser, :browser_version, :platform)
         ');
 
 
@@ -126,6 +131,9 @@ class Stats
         $s->bindValue(':date', $date->format('c'));
         $s->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
         $s->bindValue(':is_bot', $this->isBot());
+        $s->bindValue(':browser', $browser->getBrowser());
+        $s->bindValue(':browser_version', $browser->getVersion());
+        $s->bindValue(':platform', $browser->getPlatform());
 
         $s->execute();
     }

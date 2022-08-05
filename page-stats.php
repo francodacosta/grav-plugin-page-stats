@@ -153,23 +153,23 @@ class PageStatsPlugin extends Plugin
     public function onPageInitialized()
     {
         try {
-
-
-
             $page = $this->grav['page'];
             if (false === $this->isEnabledForPage((array)$page->header())) {
                 return;
             }
 
-            $config = $this->config();
-            $dbPath = $config['db'];
             $ip = $this->getUserIP();
             if (false === $this->isEnabledForIp($ip)) {
                 return;
             }
             $geo = (new Geolocation(self::GEO_DB))->locate($ip);
 
-            (new Stats($dbPath, $this->config()))->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable());
+            $config = $this->config();
+            $browser = $this->grav['browser'];
+            $dbPath = $config['db'];
+
+
+            (new Stats($dbPath, $this->config()))->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable(), $browser);
         } catch (\Throwable $e) {
             error_log($e->getmessage());
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());
@@ -204,6 +204,7 @@ class PageStatsPlugin extends Plugin
 
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
         $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+
 
         switch($uri->path()) {
             case $pageStatesRoute:
