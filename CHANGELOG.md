@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.4.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.3.1...v1.4.0) (2022-08-05)
+
+### Features
+
+* Top browsers ([46c487](https://github.com/francodacosta/grav-plugin-page-stats/commit/46c487a02ab698f23a7f3a7844760838b80c2a99))
+* Top platforms ([01bc31](https://github.com/francodacosta/grav-plugin-page-stats/commit/01bc31d489bbaf4b72aac783988967e15c848180))
+
+
+---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 ## [1.3.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.2.0...v1.3.0) (2022-08-05)
 
 ### Features
