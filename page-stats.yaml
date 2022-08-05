@@ -5,3 +5,4 @@ log_bot: true
 show_top_users_widget: true
 show_unique_users_widget: true
 show_unique_visitors_widget: true
+show_page_views_widget: true

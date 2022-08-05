@@ -61,7 +61,6 @@ form:
                 fs2:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.UNIQUE_USERS_WIDGET
-                    icon: comments       # Fork Awesome icons system (see : forkaweso.me).
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
@@ -80,7 +79,6 @@ form:
                 fs3:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.UNIQUE_VISITORS_WIDGET
-                    icon: comments       # Fork Awesome icons system (see : forkaweso.me).
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
@@ -88,6 +86,23 @@ form:
                             type: toggle
                             label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_VISITORS_WIDGET_LABEL
                             help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_VISITORS_WIDGET_HELP
+                            highlight: 1
+                            default: 1
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+                fs4:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.PAGE_VIEWS_WIDGET
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_page_views_widget:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.SHOW_PAGE_VIEWS_WIDGET_LABEL
+                            help: PLUGIN_PAGE_STATS.SHOW_PAGE_VIEWS_WIDGET_HELP
                             highlight: 1
                             default: 1
                             options:

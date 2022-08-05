@@ -50,13 +50,14 @@
     {% include 'partials/messages.html.twig' %}
     <div class="container-fluid">
         <div class="row">
+            {% if conf.show_page_views_widget %}
             <div class="mb-5 col-4">
                 <h5>Page Views</h5>
                 <div style="width: w-100">
                     <canvas id="chart_hits"></canvas>
                 </div>
             </div>
-
+            {% endif %}
             {% if conf.show_unique_visitors_widget %}
             <div class="mb-5 col-4">
                 <h5>Unique Visitors</h5>

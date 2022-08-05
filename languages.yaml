@@ -24,6 +24,10 @@ en:
     SHOW_UNIQUE_VISITORS_WIDGET_LABEL: Show Unique Visitors Widget
     SHOW_UNIQUE_VISITORS_WIDGET_HELP: If enabled the Unique Visitors Widget will be visible on the overview page
 
+    PAGE_VIEWS_WIDGET: Page Views
+    SHOW_PAGE_VIEWS_WIDGET_LABEL: Show Page Views Widget
+    SHOW_PAGE_VIEWS_WIDGET_HELP: If enabled the Page Views Widget will be visible on the overview page
+
     IGNORED_IPS_LABEL: "IP's to ignore"
     IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotter notation (eg: 127.0.0.1 or 127.*)"
     IP: "IP or Regular Expression"
