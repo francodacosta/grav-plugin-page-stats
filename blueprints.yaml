@@ -29,6 +29,17 @@ form:
                 0: PLUGIN_ADMIN.DISABLED
             validate:
                 type: bool
+        ignore_errors:
+            type: toggle
+            label: PLUGIN_PAGE_STATS.IGNORE_ERRORS_LABEL
+            help: PLUGIN_PAGE_STATS.IGNORE_ERRORS_HELP
+            highlight: 1
+            default: 0
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
         db:
             type: text
             label: PLUGIN_PAGE_STATS.STATS_DB_LABEL

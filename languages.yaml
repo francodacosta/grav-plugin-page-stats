@@ -53,4 +53,8 @@ en:
     SQL_LIMIT_HELP: The number of records to show dor this widget
 
 
+    IGNORE_ERRORS_LABEL: Ignore Errors
+    IGNORE_ERRORS_HELP: IF true, errors will be logged, otherwise an exception is thrown.
+
+
 

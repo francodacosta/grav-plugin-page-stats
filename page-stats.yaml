@@ -1,5 +1,6 @@
 enabled: true
 db: user/data/page-data.sqlite
+ignore_errors: true
 log_admin: true
 log_bot: true
 

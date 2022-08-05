@@ -154,6 +154,8 @@ class PageStatsPlugin extends Plugin
     {
         try {
 
+
+
             $page = $this->grav['page'];
             if (false === $this->isEnabledForPage((array)$page->header())) {
                 return;
@@ -174,7 +176,9 @@ class PageStatsPlugin extends Plugin
             $this->grav['log']->addDebug('GEO DB : ' . self::GEO_DB);
             $this->grav['log']->addDebug('STATS DB : ' . $dbPath);
 
-            throw $e;
+            if (false === $config['ignore_errors']) {
+                throw $e;
+            }
         }
     }
 
