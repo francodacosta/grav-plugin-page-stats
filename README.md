@@ -95,6 +95,8 @@ Have a look at the Grav Error log to ensure plugin is working fine
 
 This plugin includes IP2Location LITE data available from <a href="https://lite.ip2location.com">https://lite.ip2location.com</a>.
 
+Flags from https://flagpedia.net
+
 ## To Do
 
 - [ ] World map view

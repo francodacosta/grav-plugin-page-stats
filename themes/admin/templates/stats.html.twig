@@ -90,6 +90,24 @@
                     </table>
                 </div>
             {% endif %}
+
+            {% if conf.show_top_countries %}
+                <div class="mb-5 col-{{ conf.cols_top_countries }}">
+                    <h5>Top Countries</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Country</th>
+                            <th>Page Views</th>
+                        </tr>
+                        {% for s in stats.topCountries(conf.limit_top_countries) %}
+                            <tr>
+                                <td><img src="https://flagcdn.com/24x18/{{ s.country|lower }}.png" > {{ s.country }}</td>
+                                <td>{{ s.hits }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
         </div>
 
         {% if conf.show_recently_viewed_pages %}
