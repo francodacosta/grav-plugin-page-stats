@@ -2,12 +2,26 @@ enabled: true
 db: user/data/page-data.sqlite
 log_admin: true
 log_bot: true
-show_top_users_widget: true
-show_unique_users_widget: true
-show_unique_visitors_widget: true
-show_page_views_widget: true
 
+
+show_top_users_widget: true
 cols_top_users_widget: 4
+
+
+show_unique_users_widget: true
 cols_unique_users_widget: 4
+
+
+show_unique_visitors_widget: true
 cols_unique_visitors_widget: 4
+
+
+show_page_views_widget: true
 cols_page_views_widget: 4
+
+
+show_recently_viewed_pages: true
+cols_recently_viewed_pages: 12
+limit_recently_viewed_pages: 15
+
+

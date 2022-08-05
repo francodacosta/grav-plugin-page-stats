@@ -95,8 +95,8 @@
             {% endif %}
         </div>
 
-        <div class="row mt-5">
-            <div class="col">
+        {% if conf.show_recently_viewed_pages %}
+            <div class="col-{{ conf.cols_recently_viewed_pages }}">
                 <h5>Recently Viewed Pages</h5>
                 <table class="table">
                     <tr>
@@ -106,7 +106,7 @@
                         <th>Location</th>
                         {# <th>Views</th> #}
                     </tr>
-                    {% for s in stats.recentPages %}
+                    {% for s in stats.recentPages(conf.limit_recently_viewed_pages) %}
                         <tr>
                             <td>{{s.date|date}}</td>
                             <td>
@@ -121,7 +121,7 @@
                     {% endfor %}
                 </table>
             </div>
-        </div>
+        {% endif %}
 
         <div class="row mt-5">
             <div class="col">
