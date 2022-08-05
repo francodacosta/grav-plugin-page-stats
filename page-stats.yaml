@@ -30,7 +30,11 @@ cols_top_pages: 12
 limit_top_pages_pages: 15
 
 show_top_countries: true
-cols_top_countries: 4
+cols_top_countries: 2
 limit_top_countries: 10
+
+show_top_browsers: true
+cols_top_browsers: 2
+limit_top_browsers: 10
 
 

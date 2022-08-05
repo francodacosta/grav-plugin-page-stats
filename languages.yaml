@@ -36,6 +36,14 @@ en:
     SHOW_TOP_PAGES_LABEL: Show Top Pages Pages Widget
     SHOW_TOP_PAGES_HELP: If enabled the Top Pages Pages Widget will be visible on the overview page
 
+    TOP_BROWSERS: Top Browsers
+    SHOW_TOP_BROWSERS_LABEL: Show Top Browsers Pages Widget
+    SHOW_TOP_BROWSERS_HELP: If enabled the Top Browsers Pages Widget will be visible on the overview page
+
+    TOP_COUNTRIES: Top Countries
+    SHOW_TOP_COUNTRIES_LABEL: Show Top Countries Pages Widget
+    SHOW_TOP_COUNTRIES_HELP: If enabled the Top Countries Pages Widget will be visible on the overview page
+
     IGNORED_IPS_LABEL: "IP's to ignore"
     IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotter notation (eg: 127.0.0.1 or 127.*)"
     IP: "IP or Regular Expression"

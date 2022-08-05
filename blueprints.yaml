@@ -91,7 +91,6 @@ form:
                             type: number
                             label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
                             help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
-
                 fs2:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.UNIQUE_USERS_WIDGET
@@ -127,8 +126,6 @@ form:
                                 10 : 10
                                 11 : 11
                                 12 : 12
-
-
                 fs3:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.UNIQUE_VISITORS_WIDGET
@@ -238,7 +235,6 @@ form:
                             type: number
                             label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
                             help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
-
                 fs6:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_PAGES
@@ -279,6 +275,45 @@ form:
                             label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
                             help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
                 fs7:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.TOP_BROWSERS
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_top_browsers:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.SHOW_TOP_BROWSERS_LABEL
+                            help: PLUGIN_PAGE_STATS.SHOW_TOP_BROWSERS_HELP
+                            highlight: 1
+                            default: 1
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+                        cols_top_browsers:
+                            type: select
+                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
+                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
+                            default: 4
+                            options:
+                                1 : 1
+                                2 : 2
+                                3 : 3
+                                4 : 4
+                                5 : 5
+                                6 : 6
+                                7 : 7
+                                8 : 8
+                                9 : 9
+                                10 : 10
+                                11 : 11
+                                12 : 12
+                        limit_top_browsers:
+                            type: number
+                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
+                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                fs8:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_COUNTRIES
                     collapsed: false      # Initial state of fieldset (see collapsible option)

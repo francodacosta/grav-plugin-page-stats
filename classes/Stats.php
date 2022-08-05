@@ -184,6 +184,38 @@ class Stats
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
+
+    public function totalPageViews( ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    {
+        $q = 'select count(route) as hits from data';
+
+        return $this->query($q, [], null, $dateFrom, $dateTo);
+    }
+
+    public function topBrowsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    {
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo)[0]['hits'];
+
+        $q = 'select browser, count(ip) as hits from data group by browser order by hits desc';
+
+        $browsers = $this->query($q, [], $limit, $dateFrom, $dateTo);
+
+
+        $result = [];
+        foreach($browsers as  $browser) {
+            if (empty($browser['browser'])) {
+                $browser['browser'] = 'unknown';
+            }
+            $result[] = [
+                'browser' => $browser['browser'],
+                'hits' => $browser['hits'],
+                'share' => round($browser['hits'] * 100 / $totalPages, 2)
+            ];
+        }
+
+        return $result;
+    }
+
     public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
         // $q = 'SELECT route, page_title, count(route) as hits, date FROM data GROUP BY route ORDER BY date DESC';

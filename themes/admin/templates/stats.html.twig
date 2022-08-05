@@ -101,74 +101,95 @@
                         </tr>
                         {% for s in stats.topCountries(conf.limit_top_countries) %}
                             <tr>
-                                <td><img src="https://flagcdn.com/24x18/{{ s.country|lower }}.png" > {{ s.country }}</td>
+                                <td><img src="https://flagcdn.com/24x18/{{ s.country|lower }}.png">
+                                    {{ s.country }}</td>
                                 <td>{{ s.hits }}</td>
                             </tr>
                         {% endfor %}
                     </table>
                 </div>
             {% endif %}
+
+            {% if conf.show_top_browsers %}
+                <div class="mb-5 col-{{ conf.cols_top_browsers }}">
+                    <h5>Top Browsers</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Browser</th>
+                            <th>% share</th>
+                            <th>Page Views</th>
+                        </tr>
+                        {% for s in stats.topBrowsers(conf.limit_top_browsers) %}
+                            <tr>
+                                <td>
+                                    {{ s.browser }}</td>
+                                <td>{{ s.share }}%</td>
+                                <td>{{ s.hits }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+
+            {% if conf.show_recently_viewed_pages %}
+                <div class="col-{{ conf.cols_recently_viewed_pages }}">
+                    <h5>Recently Viewed Pages</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Date</th>
+                            <th>Page</th>
+                            <th>user</th>
+                            <th>Location</th>
+                            {# <th>Views</th> #}
+                        </tr>
+                        {% for s in stats.recentPages(conf.limit_recently_viewed_pages) %}
+                            <tr>
+                                <td>{{s.date|date}}</td>
+                                <td>
+                                    <span title="{{s.page_title}}">{{s.route}}</span>
+                                </td>
+                                <td>{{s.user|default(s.ip)}}</td>
+                                <td>{{s.city}}
+                                    -
+                                    {{ s.country}}</td>
+                                {# <td>{{s.hits}}</td> #}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+
+            {% if conf.show_top_pages %}
+                <div class="col-{{ conf.cols_top_pages }}">
+                    <h5>Most Viewed Pages</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Page</th>
+                            <th>Views</th>
+                            <th>Unique visitors</th>
+                            <th>Unique logged in Users</th>
+                        </tr>
+
+                        {% for s in stats.pagesSummary(conf.limit_top_pages_pages) %}
+                            <tr>
+                                <td>
+                                    <span title="{{s.page_title}}">{{s.route}}</span>
+                                </td>
+
+                                <td>{{s.hits}}</td>
+                                <td>{{s.visitors}}</td>
+                                <td>{{s.users}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
         </div>
-
-        {% if conf.show_recently_viewed_pages %}
-            <div class="col-{{ conf.cols_recently_viewed_pages }}">
-                <h5>Recently Viewed Pages</h5>
-                <table class="table">
-                    <tr>
-                        <th>Date</th>
-                        <th>Page</th>
-                        <th>user</th>
-                        <th>Location</th>
-                        {# <th>Views</th> #}
-                    </tr>
-                    {% for s in stats.recentPages(conf.limit_recently_viewed_pages) %}
-                        <tr>
-                            <td>{{s.date|date}}</td>
-                            <td>
-                                <span title="{{s.page_title}}">{{s.route}}</span>
-                            </td>
-                            <td>{{s.user|default(s.ip)}}</td>
-                            <td>{{s.city}}
-                                -
-                                {{ s.country}}</td>
-                            {# <td>{{s.hits}}</td> #}
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        {% endif %}
-
-        {% if conf.show_top_pages %}
-            <div class="col-{{ conf.cols_top_pages }}">
-                <h5>Most Viewed Pages</h5>
-                <table class="table">
-                    <tr>
-                        <th>Page</th>
-                        <th>Views</th>
-                        <th>Unique visitors</th>
-                        <th>Unique logged in Users</th>
-                    </tr>
-
-                    {% for s in stats.pagesSummary(conf.limit_top_pages_pages) %}
-                        <tr>
-                            <td>
-                                <span title="{{s.page_title}}">{{s.route}}</span>
-                            </td>
-
-                            <td>{{s.hits}}</td>
-                            <td>{{s.visitors}}</td>
-                            <td>{{s.users}}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        {% endif %}
     </div>
 
 
-</div>
+    {% set siteStats = stats.siteSummary%}
+    <script>
 
-{% set siteStats = stats.siteSummary%}
-<script>
-
-    {% include 'partials/charts.html.twig' %}</script>{% endblock %}
+        {% include 'partials/charts.html.twig' %}</script>
+{% endblock %}
