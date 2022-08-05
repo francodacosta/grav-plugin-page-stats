@@ -131,6 +131,7 @@
                 </div>
 
             {% endif %}
+
             {% if conf.show_top_platforms %}
                 <div class="mb-5 col-{{ conf.cols_top_platforms }}">
                     <h5>Top Platforms</h5>
@@ -167,7 +168,10 @@
                             <tr>
                                 <td>{{s.date|date}}</td>
                                 <td>
-                                    <span title="{{s.page_title}}">{{s.route}}</span>
+                                    <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
+                                        <i class="fa fa-external-link"></i>
+                                    </a>
+                                    <span title="{{s.route}}">{{s.page_title}}</span>
                                 </td>
                                 <td>{{s.user|default(s.ip)}}</td>
                                 <td>{{s.city}}
@@ -194,7 +198,11 @@
                         {% for s in stats.pagesSummary(conf.limit_top_pages_pages) %}
                             <tr>
                                 <td>
-                                    <span title="{{s.page_title}}">{{s.route}}</span>
+                                    <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
+                                        <i class="fa fa-external-link"></i>
+                                    </a>
+
+                                    <span title="{{s.route}}">{{s.page_title}}</span>
                                 </td>
 
                                 <td>{{s.hits}}</td>
@@ -210,7 +218,5 @@
 
 
     {% set siteStats = stats.siteSummary%}
-    <script>
-
-        {% include 'partials/charts.html.twig' %}</script>
+    <script>{% include 'partials/charts.html.twig' %}</script>
 {% endblock %}
