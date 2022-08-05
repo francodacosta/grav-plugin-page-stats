@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.6.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.5.0...v1.6.0) (2022-08-05)
+
+### Features
+
+* Detailed page stats ([7672be](https://github.com/francodacosta/grav-plugin-page-stats/commit/7672bee5ac9b9f54dc5735ab407d455d0d7b8b9b))
+
+
+---
+
 ## [1.5.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.4.1...v1.5.0) (2022-08-05)
 
 ### Features
