@@ -4,3 +4,4 @@ log_admin: true
 log_bot: true
 show_top_users_widget: true
 show_unique_users_widget: true
+show_unique_visitors_widget: true

@@ -12,12 +12,24 @@ en:
     LOG_BOT_LABEL: Log Bot Activity
     LOG_BOT_HELP: By default we do not log activity of known BOTS, enable to log
 
+    TOP_USERS_WIDGET: Top Users
     SHOW_TOP_USERS_WIDGET_LABEL: Show Top Users Widget
     SHOW_TOP_USERS_WIDGET_HELP: If enabled the Top Users Widget will be visible on the overview page
 
+    UNIQUE_USERS_WIDGET: Unique Users
     SHOW_UNIQUE_USERS_WIDGET_LABEL: Show Unique Users Widget
     SHOW_UNIQUE_USERS_WIDGET_HELP: If enabled the Unique Users Widget will be visible on the overview page
+
+    UNIQUE_VISITORS_WIDGET: Unique Visitors
+    SHOW_UNIQUE_VISITORS_WIDGET_LABEL: Show Unique Visitors Widget
+    SHOW_UNIQUE_VISITORS_WIDGET_HELP: If enabled the Unique Visitors Widget will be visible on the overview page
 
     IGNORED_IPS_LABEL: "IP's to ignore"
     IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotter notation (eg: 127.0.0.1 or 127.*)"
     IP: "IP or Regular Expression"
+
+    SECTION_WIDGETS: Widgets Config
+    SECTION_WIDGETS_LABEL: Configure Page Stats widgets
+
+    SECTION_BEHAVIOUR: Behaviour
+    SECTION_BEHAVIOUR_LABEL: Control when the plugin collect stats

@@ -33,57 +33,105 @@ form:
             type: text
             label: PLUGIN_PAGE_STATS.STATS_DB_LABEL
             help: PLUGIN_PAGE_STATS.STATS_DB_HELP
-        log_admin:
-            type: toggle
-            label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
-            help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
-            highlight: 0
-            default: 0
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-        log_bot:
-            type: toggle
-            label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
-            help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
-            highlight: 0
-            default: 0
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-        show_top_users_widget:
-            type: toggle
-            label: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_LABEL
-            help: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_HELP
-            highlight: 1
-            default: 1
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-        show_unique_users_widget:
-            type: toggle
-            label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_LABEL
-            help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_HELP
-            highlight: 1
-            default: 1
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-        ignored_ips:
-            type: list
-            label: PLUGIN_PAGE_STATS.IGNORED_IPS_LABEL
-            help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
-            style: vertical
+
+
+        section_widgets:
+            type: section
+            title: PLUGIN_PAGE_STATS.SECTION_WIDGETS
+            text: PLUGIN_PAGE_STATS.SECTION_WIDGETS_LABEL
+            underline: true
             fields:
-                .ip:
-                    type: text
-                    label: PLUGIN_PAGE_STATS.IP
+                fs1:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.TOP_USERS_WIDGET
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_top_users_widget:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_LABEL
+                            help: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_HELP
+                            highlight: 1
+                            default: 1
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+                fs2:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.UNIQUE_USERS_WIDGET
+                    icon: comments       # Fork Awesome icons system (see : forkaweso.me).
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_unique_users_widget:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_LABEL
+                            help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_HELP
+                            highlight: 1
+                            default: 1
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+
+                fs3:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.UNIQUE_VISITORS_WIDGET
+                    icon: comments       # Fork Awesome icons system (see : forkaweso.me).
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_unique_visitors_widget:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_VISITORS_WIDGET_LABEL
+                            help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_VISITORS_WIDGET_HELP
+                            highlight: 1
+                            default: 1
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+
+
+        section_behaviour:
+            type: section
+            title: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR
+            text: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR_LABEL
+            underline: true
+            fields:
+                log_admin:
+                    type: toggle
+                    label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
+                    help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
+                    highlight: 0
+                    default: 0
+                    options:
+                        1: PLUGIN_ADMIN.ENABLED
+                        0: PLUGIN_ADMIN.DISABLED
+                    validate:
+                        type: bool
+                log_bot:
+                    type: toggle
+                    label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
+                    help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
+                    highlight: 0
+                    default: 0
+                    options:
+                        1: PLUGIN_ADMIN.ENABLED
+                        0: PLUGIN_ADMIN.DISABLED
+                    validate:
+                        type: bool
+                ignored_ips:
+                    type: list
+                    label: PLUGIN_PAGE_STATS.IGNORED_IPS_LABEL
                     help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
+                    style: vertical
+                    fields:
+                        .ip:
+                            type: text
+                            label: PLUGIN_PAGE_STATS.IP
+                            help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
