@@ -32,6 +32,10 @@ en:
     SHOW_RECENTLY_VIEWED_PAGES_LABEL: Show Recently Viewed Pages Widget
     SHOW_RECENTLY_VIEWED_PAGES_HELP: If enabled the Recently Viewed Pages Widget will be visible on the overview page
 
+    TOP_PAGES: Top Pages
+    SHOW_TOP_PAGES_LABEL: Show Top Pages Pages Widget
+    SHOW_TOP_PAGES_HELP: If enabled the Top Pages Pages Widget will be visible on the overview page
+
     IGNORED_IPS_LABEL: "IP's to ignore"
     IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotter notation (eg: 127.0.0.1 or 127.*)"
     IP: "IP or Regular Expression"

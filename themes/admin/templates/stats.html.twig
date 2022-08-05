@@ -123,8 +123,8 @@
             </div>
         {% endif %}
 
-        <div class="row mt-5">
-            <div class="col">
+        {% if conf.show_top_pages %}
+            <div class="col-{{ conf.cols_top_pages }}">
                 <h5>Most Viewed Pages</h5>
                 <table class="table">
                     <tr>
@@ -134,7 +134,7 @@
                         <th>Unique logged in Users</th>
                     </tr>
 
-                    {% for s in stats.pagesSummary %}
+                    {% for s in stats.pagesSummary(conf.limit_top_pages_pages) %}
                         <tr>
                             <td>
                                 <span title="{{s.route}}">{{s.page_title}}</span>
@@ -147,8 +147,7 @@
                     {% endfor %}
                 </table>
             </div>
-
-        </div>
+        {% endif %}
     </div>
 
 
