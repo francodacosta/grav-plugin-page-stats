@@ -6,3 +6,8 @@ show_top_users_widget: true
 show_unique_users_widget: true
 show_unique_visitors_widget: true
 show_page_views_widget: true
+
+cols_top_users_widget: 4
+cols_unique_users_widget: 4
+cols_unique_visitors_widget: 4
+cols_page_views_widget: 4

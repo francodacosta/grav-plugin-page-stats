@@ -51,7 +51,7 @@
     <div class="container-fluid">
         <div class="row">
             {% if conf.show_page_views_widget %}
-            <div class="mb-5 col-4">
+            <div class="mb-5 col-{{ conf.cols_page_views_widget }}">
                 <h5>Page Views</h5>
                 <div style="width: w-100">
                     <canvas id="chart_hits"></canvas>
@@ -59,7 +59,7 @@
             </div>
             {% endif %}
             {% if conf.show_unique_visitors_widget %}
-            <div class="mb-5 col-4">
+            <div class="mb-5 col-{{ conf.cols_unique_visitors_widget}}">
                 <h5>Unique Visitors</h5>
                 <div style="width: w-100">
                     <canvas id="chart_ips"></canvas>
@@ -68,16 +68,16 @@
             {% endif %}
 
             {% if conf.show_unique_users_widget %}
-            <div class="mb-5 col-4">
-                <h5>Unique Users</h5>
-                <div style="width: w-100">
-                    <canvas id="chart_users"></canvas>
+                <div class="mb-5 col-{{ conf.cols_unique_users_widget }}">
+                    <h5>Unique Users</h5>
+                    <div style="width: w-100">
+                        <canvas id="chart_users"></canvas>
+                    </div>
                 </div>
-            </div>
             {% endif %}
 
             {% if conf.show_top_users_widget %}
-                <div class="mb-5 col-8">
+                <div class="mb-5 col-{{ conf.cols_top_users_widget }}">
                     <h5>Top Users</h5>
                     <table class="table">
                         <tr>

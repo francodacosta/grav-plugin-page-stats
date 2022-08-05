@@ -4,6 +4,16 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.2.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.1.0...v1.2.0) (2022-08-05)
+
+### Features
+
+* Toggle page views widget [#14](https://github.com/francodacosta/grav-plugin-page-stats/issues/14) ([686085](https://github.com/francodacosta/grav-plugin-page-stats/commit/6860859c60d478a3f2c68dbc22d698f04ec042e3))
+* Toggle unique visitors [#15](https://github.com/francodacosta/grav-plugin-page-stats/issues/15) ([93fde2](https://github.com/francodacosta/grav-plugin-page-stats/commit/93fde20f6a953841cbcc4b600754631885829ce0))
+
+
+---
+
 ## [1.1.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/27d206e17eb2a1847e304d0c40435b0fd87d7536...v1.0.0) (2022-08-04)
 
 ### Features

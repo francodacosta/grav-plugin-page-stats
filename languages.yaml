@@ -37,3 +37,6 @@ en:
 
     SECTION_BEHAVIOUR: Behaviour
     SECTION_BEHAVIOUR_LABEL: Control when the plugin collect stats
+
+    WIDGET_SIZE_LABEL: Widget Size
+    WIDGET_SIZE_HELP: The number of Columns the widget will use to wender itself
