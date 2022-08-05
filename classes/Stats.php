@@ -201,11 +201,11 @@ class Stats
 
         $q = 'select country, count(country) as hits from data %where group by country order by hits desc';
 
-        $$countries = $this->query($q, $params, $limit, $dateFrom, $dateTo);
+        $countries = $this->query($q, $params, $limit, $dateFrom, $dateTo);
 
 
         $result = [];
-        foreach($$countries as  $country) {
+        foreach($countries as  $country) {
             if (empty($country['country'])) {
                 $country['country'] = 'unknown';
             }
