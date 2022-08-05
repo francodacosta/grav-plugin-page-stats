@@ -10,6 +10,11 @@ All notable changes to this project will be documented in this file.
 
 * Detailed page stats ([7672be](https://github.com/francodacosta/grav-plugin-page-stats/commit/7672bee5ac9b9f54dc5735ab407d455d0d7b8b9b))
 
+### Bug Fixes
+
+* Error with double $$; make migrations more forgiving if updating from dev version (pre migrations) ([90a027](https://github.com/francodacosta/grav-plugin-page-stats/commit/90a027f94174549fe6529b7ec60b8dff7f87575d))
+
+
 
 ---
 
