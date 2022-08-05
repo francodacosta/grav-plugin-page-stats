@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 * Collect browser stats ([97e89f](https://github.com/francodacosta/grav-plugin-page-stats/commit/97e89f30f096d9ccc4becab1037c851edb1e1577))
+* Display route instead of title ([2feb0e](https://github.com/francodacosta/grav-plugin-page-stats/commit/2feb0ef862a08af027e846cb4390e0a209ba991b))
 * Setting to throw exception on errors, or ignore them (log them) ([6a4bd2](https://github.com/francodacosta/grav-plugin-page-stats/commit/6a4bd2e9c80b8e2ba3ee615d761f69a95423a502))
 * Top countries ([1d2913](https://github.com/francodacosta/grav-plugin-page-stats/commit/1d29130f0d589f66c07769e98387d697fb5d0724))
 
