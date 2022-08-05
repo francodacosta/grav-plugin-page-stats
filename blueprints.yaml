@@ -160,7 +160,7 @@ form:
                                 12 : 12
                 fs4:
                     type: fieldset
-                    title: PLUGIN_PAGE_STATS.RECENTLY_VIEWED_PAGES
+                    title: PLUGIN_PAGE_STATS.PAGE_VIEWS_WIDGET
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
