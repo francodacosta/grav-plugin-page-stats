@@ -164,6 +164,8 @@
                             <th>Page</th>
                             <th>user</th>
                             <th>Location</th>
+                            <th>Browser</th>
+                            <th>Platform</th>
                             {# <th>Views</th> #}
                         </tr>
                         {% for s in stats.recentPages(conf.limit_recently_viewed_pages) %}
@@ -180,6 +182,9 @@
                                     -
                                     {{ s.country}}</td>
                                 {# <td>{{s.hits}}</td> #}
+                                <td>{{s.browser}}</td>
+                                <td>{{s.platform}}</td>
+
                             </tr>
                         {% endfor %}
                     </table>
