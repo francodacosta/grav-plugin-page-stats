@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Grav\Plugin\PageStats;
 
 use DateTimeImmutable;
+use Grav\Common\Browser;
 use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Page\Page;
 use Grav\Common\User\Interfaces\UserInterface;
@@ -17,12 +18,14 @@ class Stats
     private $dbPath;
     private $config;
 
+    const FORCE_MIGRATION_FLAG = '/../data/migrations/MUST_MIGRATE';
+
     public function __construct($dbPath, $config)
     {
         $this->config = $config;
 
         $this->dbPath = new \SplFileInfo($dbPath);
-        $migrate = !$this->dbPath->isWritable();
+        $migrate = !$this->dbPath->isWritable() || file_exists(__DIR__ . self::FORCE_MIGRATION_FLAG);
         $this->db  = new PDO(
             'sqlite:' . $dbPath,
             null,
@@ -45,7 +48,7 @@ class Stats
         try {
             $q = 'SELECT version FROM migrations ORDER BY date Desc LIMIT 1';
 
-            $q = $this->query($q, [], $limit, $dateFrom, $dateTo);
+            $q = $this->query($q);
 
             if ($q) {
                 $version = $q[0]['version'];
@@ -64,6 +67,8 @@ class Stats
             $this->db->exec($contents);
             $this->db->exec('INSERT INTO migrations (version) VALUES(' . $version . ');');
         }
+
+        unlink (__DIR__ . self::FORCE_MIGRATION_FLAG);
     }
 
     /**
@@ -91,10 +96,10 @@ class Stats
     /**
      * save stats into db
      */
-    public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date): void
+    public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date, Browser $browser): void
     {
         if ($this->isBot()) {
-            if (false === $this->config['log_bots']) {
+            if (false === $this->config['log_bot']) {
                 error_log('Bot detected and we are configured to not log bot activiy');
                 return;
             }
@@ -107,9 +112,9 @@ class Stats
 
         $s = $this->db->prepare('
             INSERT INTO data
-                ("ip", "country", "city", "region", "route", "page_title", "user", "date", "user_agent", "is_bot")
+                ("ip", "country", "city", "region", "route", "page_title", "user", "date", "user_agent", "is_bot", "browser", "browser_version", "platform")
              VALUES
-                (:ip, :country, :city, :region, :route, :title, :user, :date, :user_agent, :is_bot)
+                (:ip, :country, :city, :region, :route, :title, :user, :date, :user_agent, :is_bot, :browser, :browser_version, :platform)
         ');
 
 
@@ -126,16 +131,31 @@ class Stats
         $s->bindValue(':date', $date->format('c'));
         $s->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
         $s->bindValue(':is_bot', $this->isBot());
+        $s->bindValue(':browser', $browser->getBrowser());
+        $s->bindValue(':browser_version', $browser->getVersion());
+        $s->bindValue(':platform', $browser->getPlatform());
 
         $s->execute();
     }
 
     private function query(string $q, array $params = [], ?int $limit = null, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
+        $where = [];
         if ($dateFrom && $dateTo) {
-            $q .= ' WHERE date BETWEEN :date_from AND :dateTo';
+            $where[] = ' date BETWEEN :date_from AND :dateTo';
             $params['date_from'] = $dateFrom;
             $params['date_to'] = $dateTo;
+        }
+
+        foreach ($params as $key => $value) {
+           $where[] = "$key = :$key";
+        }
+
+        if (count($where)) {
+          $q =  str_replace('%where', ' WHERE ' . implode(' AND ' , $where), $q);
+        } else {
+            $q = str_replace('%where', '', $q);
+
         }
 
         if ($limit) {
@@ -148,6 +168,11 @@ class Stats
         foreach ($params as $key => $value) {
             $s->bindValue(':' . $key, $value);
         }
+
+
+        // var_dump($q);die;
+        error_log('=============> QUERY: ' . $q);
+        error_log('params: ' . var_export($params, true));
 
         $s->execute();
 
@@ -162,11 +187,92 @@ class Stats
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
-    public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $q = 'select user, count(route) as hits from data where user is not "" group by user order by hits desc';
-        
-        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+        $q = '/* top users */ select user, count(route) as hits from data %where group by user order by hits desc';
+
+        return $this->query($q, $params, $limit, $dateFrom, $dateTo);
+    }
+
+    public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
+
+        $q = 'select country, count(country) as hits from data %where group by country order by hits desc';
+
+        $countries = $this->query($q, $params, $limit, $dateFrom, $dateTo);
+
+
+        $result = [];
+        foreach($countries as  $country) {
+            if (empty($country['country'])) {
+                $country['country'] = 'unknown';
+            }
+            $result[] = [
+                'country' => $country['country'],
+                'hits' => $country['hits'],
+                'share' => round($country['hits'] * 100 / $totalPages, 2)
+            ];
+        }
+
+        return $result;
+    }
+
+
+    public function totalPageViews( ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+        $q = 'select count(route) as hits from data %where';
+
+        return $this->query($q,$params, null, $dateFrom, $dateTo);
+    }
+
+    public function topBrowsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
+
+        $q = 'select browser, count(ip) as hits from data %where group by browser order by hits desc';
+
+        $browsers = $this->query($q, $params, $limit, $dateFrom, $dateTo);
+
+
+        $result = [];
+        foreach($browsers as  $browser) {
+            if (empty($browser['browser'])) {
+                $browser['browser'] = 'unknown';
+            }
+            $result[] = [
+                'browser' => $browser['browser'],
+                'hits' => $browser['hits'],
+                'share' => round($browser['hits'] * 100 / $totalPages, 2)
+            ];
+        }
+
+        return $result;
+    }
+
+    public function topPlatforms(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+        $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
+
+        $q = 'select platform, count(ip) as hits from data %where group by platform order by hits desc';
+
+        $platforms = $this->query($q, $params, $limit, $dateFrom, $dateTo);
+
+
+        $result = [];
+        foreach($platforms as  $platform) {
+            if (empty($platform['platform'])) {
+                $platform['platform'] = 'unknown';
+            }
+            $result[] = [
+                'platform' => $platform['platform'],
+                'hits' => $platform['hits'],
+                'share' => round($platform['hits'] * 100 / $totalPages, 2)
+            ];
+        }
+
+        return $result;
     }
     public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
@@ -183,11 +289,11 @@ class Stats
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
-    public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $hits = $this->query('SELECT date(date) as date, route, page_title, count(route) as hits FROM data GROUP BY date(date)', [], $dateFrom, $dateTo);
-        $visitors = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct ip) as hits FROM data GROUP BY date(date)',  [], $dateFrom, $dateTo);
-        $users = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct user) as hits FROM data GROUP BY date(date)',  [], $dateFrom, $dateTo);
+        $hits = $this->query('SELECT date(date) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(date)', $params, $dateFrom, $dateTo);
+        $visitors = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(date)',  $params, $dateFrom, $dateTo);
+        $users = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(date)',  $params, $dateFrom, $dateTo);
 
         return [
             'hits' => $hits,

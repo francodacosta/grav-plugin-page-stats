@@ -19,7 +19,8 @@ class PageStatsPlugin extends Plugin
 {
     const GEO_DB = __DIR__ . '/data/geolocation.sqlite';
 
-    const PATH_ADMIN_STATS = '/admin/page-stats';
+    const PATH_ADMIN_STATS = '/page-stats';
+    const PATH_ADMIN_PAGE_DETAIL = '/page-details';
     /**
      * @return array
      *
@@ -72,7 +73,7 @@ class PageStatsPlugin extends Plugin
         // Enable the main events we are interested in
         $this->enable([
             'onPageInitialized' => ['onPageInitialized', 990],
-           
+
         ]);
     }
 
@@ -106,20 +107,79 @@ class PageStatsPlugin extends Plugin
     }
 
 
+    /**
+     * returns the value for front matter property that controls processing of a page
+     * or true otherwise.
+     * We return true as the default behaviour is to be enabled for all pages
+     *
+     * eg:
+     * page-stats:
+     *      process: true
+     *
+     * @param array $headers
+     * @return bool
+     */
+    private function isEnabledForPage(array $headers): bool
+    {
+        if (isset($headers['page-stats']['process'])) {
+            return $headers['page-stats']['process'];
+        }
+
+        return true;
+    }
+
+    /**
+     * returns false if IP (or regexp) are in the plugin config list
+     *
+     * @param string $ip
+     * @return bool
+     */
+    private function isEnabledForIp(string $ip): bool
+    {
+        $config = $config = $this->config();
+        if (isset($config['ignored_ips']) && is_array($config['ignored_ips'])) {
+            $ips = array_map(function($a) {
+                return isset($a['ip']) ? $a['ip']: '' ;
+            }, $config['ignored_ips']);
+
+            $regexp = implode('|', $ips);
+
+            return 0 === preg_match("/$regexp/", $ip);
+        }
+
+
+        return true;
+    }
+
     public function onPageInitialized()
     {
         try {
-            $config = $this->config();
-            $dbPath = $config['db'];
+            $page = $this->grav['page'];
+            if (false === $this->isEnabledForPage((array)$page->header())) {
+                return;
+            }
+
             $ip = $this->getUserIP();
+            if (false === $this->isEnabledForIp($ip)) {
+                return;
+            }
             $geo = (new Geolocation(self::GEO_DB))->locate($ip);
 
-            (new Stats($dbPath, $this->config()))->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable());
+            $config = $this->config();
+            $browser = $this->grav['browser'];
+            $dbPath = $config['db'];
+
+
+            (new Stats($dbPath, $this->config()))->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable(), $browser);
         } catch (\Throwable $e) {
             error_log($e->getmessage());
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());
             $this->grav['log']->addDebug('GEO DB : ' . self::GEO_DB);
             $this->grav['log']->addDebug('STATS DB : ' . $dbPath);
+
+            if (false === $config['ignore_errors']) {
+                throw $e;
+            }
         }
     }
 
@@ -143,9 +203,14 @@ class PageStatsPlugin extends Plugin
         $config = $this->config();
         $dbPath = $config['db'];
 
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
+        $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+        $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
+
 
         switch($uri->path()) {
-            case self::PATH_ADMIN_STATS:
+            case $pageStatesRoute:
+            case $pageDetailsRoute:
                 $this->grav['twig']->twig_vars['stats'] = new Stats($dbPath, $this->config());
                 break;
             }
@@ -158,13 +223,23 @@ class PageStatsPlugin extends Plugin
         $pages = $this->grav['pages'];
         $page = new Page;
 
-        $adminPage = $pages->find('/admin');
+
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
+        $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+        $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
 
         switch($uri->path()) {
-            case self::PATH_ADMIN_STATS:
+            case $pageStatesRoute:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
                 break;
+
+                case $pageDetailsRoute:
+
+                    $page = $event['page'];
+                    $page->init(new \SplFileInfo(__DIR__ . '/pages/page-details.md'));
+                    break;
+
         }
 
 

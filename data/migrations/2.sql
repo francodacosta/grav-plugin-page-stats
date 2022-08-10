@@ -1,0 +1,10 @@
+PRAGMA foreign_keys = off;
+
+BEGIN TRANSACTION;
+
+ALTER TABLE data ADD COLUMN browser STRING (100);
+ALTER TABLE data ADD COLUMN browser_version STRING (20);
+ALTER TABLE data ADD COLUMN platform STRING (255);
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;
