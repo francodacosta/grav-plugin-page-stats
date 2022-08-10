@@ -79,6 +79,21 @@
                     {% endfor %}
                 </table>
             </div>
+            <div class="mb-5 col-4">
+                <h5>Top Countries</h5>
+				<table class="table">
+                    <tr>
+                        <th>Country</th>
+                        <th>Page Views</th>
+                    </tr>
+                    {% for s in stats.topCountries %}
+                        <tr>
+                            <td>{{ s.country }}</td>
+                            <td>{{ s.hits }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
 		</div>
 
 		<div class="row mt-5">

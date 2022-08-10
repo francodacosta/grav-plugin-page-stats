@@ -168,6 +168,12 @@ class Stats
         
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
+    public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    {
+        $q = 'select country, count(route) as hits from data group by country order by hits desc';
+        
+        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+    }
 
     public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
