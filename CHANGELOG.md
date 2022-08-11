@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.7.0]() (2022-08-11)
 
+* add stats icon to pages listing, so when you click on the stats icon you go to the stats page
 * Show paltform and browser on recently viewed pages
 * Show recent views on page details stats
 
