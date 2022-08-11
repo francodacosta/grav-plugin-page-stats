@@ -171,7 +171,7 @@
                         {% for s in stats.recentPages(conf.limit_recently_viewed_pages) %}
                             <tr>
                                 <td>{{s.date|date}}</td>
-                                <td>
+                                <td class="w-100">
                                     <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
                                         <i class="fa fa-external-link"></i>
                                     </a>

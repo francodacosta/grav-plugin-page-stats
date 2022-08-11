@@ -170,16 +170,15 @@ class Stats
         }
 
 
-        // var_dump($q);die;
-        error_log('=============> QUERY: ' . $q);
-        error_log('params: ' . var_export($params, true));
-
         $s->execute();
 
         return $s->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
+    /**
+     * gets most viewed pages
+     */
     public function pagesSummary(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
         $q = 'SELECT route, page_title, count(route) as hits, count(distinct ip) as visitors, count(distinct user) as users FROM data GROUP BY page_title ORDER BY hits DESC';
@@ -187,6 +186,9 @@ class Stats
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
+    /**
+     * returns the users with the most page views
+     */
     public function topUsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $q = '/* top users */ select user, count(route) as hits from data %where group by user order by hits desc';
@@ -194,6 +196,9 @@ class Stats
         return $this->query($q, $params, $limit, $dateFrom, $dateTo);
     }
 
+    /**
+     * returns the countries with the most page views
+     */
     public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
 
@@ -220,6 +225,9 @@ class Stats
     }
 
 
+    /**
+     * returns the total page views
+     */
     public function totalPageViews( ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $q = 'select count(route) as hits from data %where';
@@ -227,6 +235,9 @@ class Stats
         return $this->query($q,$params, null, $dateFrom, $dateTo);
     }
 
+    /**
+     * returns the browsers with the most pageviews
+     */
     public function topBrowsers(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
@@ -251,6 +262,9 @@ class Stats
         return $result;
     }
 
+    /**
+     * returns the platforms/os with the most pageviews
+     */
     public function topPlatforms(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $totalPages = $this->totalPageViews($dateFrom, $dateTo, $params)[0]['hits'];
@@ -274,21 +288,21 @@ class Stats
 
         return $result;
     }
-    public function topCountries(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
-    {
-        $q = 'select country, count(route) as hits from data group by country order by hits desc';
-        
-        return $this->query($q, [], $limit, $dateFrom, $dateTo);
-    }
 
+    /**
+     * returns the most recently viewed pages
+     */
     public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
         // $q = 'SELECT route, page_title, count(route) as hits, date FROM data GROUP BY route ORDER BY date DESC';
-        $q = 'SELECT route, page_title, ip, user, country, city, date FROM data ORDER BY date DESC';
+        $q = 'SELECT route, page_title, ip, user, country, city, date, browser, platform FROM data ORDER BY date DESC';
 
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
 
+    /**
+     * returns the  statistics used for the charts
+     */
     public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $hits = $this->query('SELECT date(date) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(date)', $params, $dateFrom, $dateTo);
