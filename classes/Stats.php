@@ -292,12 +292,12 @@ class Stats
     /**
      * returns the most recently viewed pages
      */
-    public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         // $q = 'SELECT route, page_title, count(route) as hits, date FROM data GROUP BY route ORDER BY date DESC';
-        $q = 'SELECT route, page_title, ip, user, country, city, date, browser, platform FROM data ORDER BY date DESC';
+        $q = 'SELECT * FROM data %where ORDER BY date DESC';
 
-        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+        return $this->query($q, $params, $limit, $dateFrom, $dateTo);
     }
 
     /**

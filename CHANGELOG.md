@@ -4,6 +4,13 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+
+## [1.7.0]() (2022-08-11)
+
+* Show paltform and browser on recently viewed pages
+* Show recent views on page details stats
+
+
 ## [1.6.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.6.0...v1.6.1) (2022-08-05)
 
 ### Bug Fixes

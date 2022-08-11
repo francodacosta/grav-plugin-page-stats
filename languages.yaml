@@ -69,4 +69,8 @@ en:
     IGNORE_ERRORS_HELP: IF true, errors will be logged, otherwise an exception is thrown.
 
 
+    PAGE_DETAILS:
+      RECENT_VIEWS: Recent Views on Page Details
+      RECENT_VIEWS_LABEL: Show Widget
+      RECENT_VIEWS_HELP: If visible widget will be shown
 

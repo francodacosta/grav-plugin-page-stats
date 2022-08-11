@@ -42,3 +42,6 @@ cols_top_platforms: 2
 limit_top_platforms: 10
 
 
+show_pagedetails_recent_views: true
+cols_pagedetails_recent_views: 12
+limit_pagedetails_recent_views: 15

@@ -1,142 +1,227 @@
 {% extends 'stats.html.twig' %}
-
 {% block pageTitle %}
     <h1>
         <i class="fa fa-fw fa-line-chart"></i>
         Page Details:
+                
         {{ grav.uri.query('page') }}
     </h1>
 {% endblock %}
-
-
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
 {% endblock %}
-
 {% block content %}
     {% set conf = config.plugins['page-stats'] %}
     {% include 'partials/messages.html.twig' %}
-
     <div class="container-fluid">
         <div class="row">
             {% if conf.show_page_views_widget %}
                 <div class="mb-5 col-{{ conf.cols_page_views_widget }}">
-                    <h5>Page Views</h5>
+                    <h5>
+                        Page Views
+                    </h5>
                     <div style="width: w-100">
                         <canvas id="chart_hits"></canvas>
                     </div>
                 </div>
             {% endif %}
-
             {% if conf.show_unique_visitors_widget %}
-                <div class="mb-5 col-{{ conf.cols_unique_visitors_widget}}">
-                    <h5>Unique Visitors</h5>
+                <div class="mb-5 col-{{ conf.cols_unique_visitors_widget }}">
+                    <h5>
+                        Unique Visitors
+                    </h5>
                     <div style="width: w-100">
                         <canvas id="chart_ips"></canvas>
                     </div>
                 </div>
             {% endif %}
-
             {% if conf.show_unique_users_widget %}
                 <div class="mb-5 col-{{ conf.cols_unique_users_widget }}">
-                    <h5>Unique Users</h5>
+                    <h5>
+                        Unique Users
+                    </h5>
                     <div style="width: w-100">
                         <canvas id="chart_users"></canvas>
                     </div>
                 </div>
             {% endif %}
-
             {% if conf.show_top_users_widget %}
                 <div class="mb-5 col-{{ conf.cols_top_users_widget }}">
-                    <h5>Top Users</h5>
+                    <h5>
+                        Top Users
+                    </h5>
                     <table class="table">
                         <tr>
-                            <th>User</th>
-                            <th>Page Views</th>
+                            <th>
+                                User
+                            </th>
+                            <th>
+                                Page Views
+                            </th>
                         </tr>
                         {% for s in stats.topUsers(conf.limit_top_users_widget,null,null, {'route' : grav.uri.query('page')}) %}
                             <tr>
-                                <td>{{ s.user|default('not logged in') }}</td>
-                                <td>{{ s.hits }}</td>
+                                <td>
+                                    {{ s.user|default('not logged in') }}
+                                </td>
+                                <td>
+                                    {{ s.hits }}
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
                 </div>
             {% endif %}
-
             {% if conf.show_top_countries %}
                 <div class="mb-5 col-{{ conf.cols_top_countries }}">
-                    <h5>Top Countries</h5>
+                    <h5>
+                        Top Countries
+                    </h5>
                     <table class="table">
                         <tr>
-                            <th>Country</th>
-                            <th>% share</th>
-                            <th>Page Views</th>
-
+                            <th>
+                                Country
+                            </th>
+                            <th>
+                                % share
+                            </th>
+                            <th>
+                                Page Views
+                            </th>
                         </tr>
                         {% for s in stats.topCountries(conf.limit_top_countries,null,null, {'route' : grav.uri.query('page')}) %}
                             <tr>
-                                <td><img src="https://flagcdn.com/24x18/{{ s.country|lower }}.png">
-                                    {{ s.country }}</td>
-                                <td>{{ s.share }} %</td>
-                                <td>{{ s.hits }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            {% endif %}
-
-            {% if conf.show_top_browsers %}
-                <div class="mb-5 col-{{ conf.cols_top_browsers }}">
-                    <h5>Top Browsers</h5>
-                    <table class="table">
-                        <tr>
-                            <th>Browser</th>
-                            <th>% share</th>
-                            <th>Page Views</th>
-                        </tr>
-                        {% for s in stats.topBrowsers(conf.limit_top_browsers,null,null, {'route' : grav.uri.query('page')}) %}
-                            <tr>
                                 <td>
-                                    {{ s.browser }}</td>
-                                <td>{{ s.share }}%</td>
-                                <td>{{ s.hits }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-
-            {% endif %}
-
-            {% if conf.show_top_platforms %}
-                <div class="mb-5 col-{{ conf.cols_top_platforms }}">
-                    <h5>Top Platforms</h5>
-                    <table class="table">
-                        <tr>
-                            <th>Platform</th>
-                            <th>% share</th>
-                            <th>Page Views</th>
-                        </tr>
-                        {% for s in stats.topPlatforms(conf.limit_top_platforms,null,null, {'route' : grav.uri.query('page')}) %}
+                                    <img src="https://flagcdn.com/24x18/{{ s.country|lower }}.png">
+                                        {{ s.country }}
+                                    </td>
+                                    <td>
+                                        {{ s.share }}
+                                        %
+                                    </td>
+                                    <td>
+                                        {{ s.hits }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
+                {% if conf.show_top_browsers %}
+                    <div class="mb-5 col-{{ conf.cols_top_browsers }}">
+                        <h5>
+                            Top Browsers
+                        </h5>
+                        <table class="table">
                             <tr>
-                                <td>
-                                    {{ s.platform }}</td>
-                                <td>{{ s.share }}%</td>
-                                <td>{{ s.hits }}</td>
+                                <th>
+                                    Browser
+                                </th>
+                                <th>
+                                    % share
+                                </th>
+                                <th>
+                                    Page Views
+                                </th>
                             </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            {% endif %}
+                            {% for s in stats.topBrowsers(conf.limit_top_browsers,null,null, {'route' : grav.uri.query('page')}) %}
+                                <tr>
+                                    <td>
+                                        {{ s.browser }}
+                                    </td>
+                                    <td>
+                                        {{ s.share }}
+                                        %
+                                    </td>
+                                    <td>
+                                        {{ s.hits }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
+                {% if conf.show_top_platforms %}
+                    <div class="mb-5 col-{{ conf.cols_top_platforms }}">
+                        <h5>
+                            Top Platforms
+                        </h5>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Platform
+                                </th>
+                                <th>
+                                    % share
+                                </th>
+                                <th>
+                                    Page Views
+                                </th>
+                            </tr>
+                            {% for s in stats.topPlatforms(conf.limit_top_platforms,null,null, {'route' : grav.uri.query('page')}) %}
+                                <tr>
+                                    <td>
+                                        {{ s.platform }}
+                                    </td>
+                                    <td>
+                                        {{ s.share }}
+                                        %
+                                    </td>
+                                    <td>
+                                        {{ s.hits }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
 
+                {% if conf.show_pagedetails_recent_views %}
+                    <div class="mb-5 col-{{ conf.cols_pagedetails_recent_views }}">
+                        <h5>
+                            Recent Views
+                        </h5>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    User
+                                </th>
+                                <th>
+                                    Platform
+                                </th>
+                                <th>
+                                    Browser
+                                </th>
+                            </tr>
+                            {% for s in stats.recentPages(conf.limit_pagedetails_recent_views,null,null, {'route' : grav.uri.query('page')}) %}
+                                <tr>
+                                    <td>
+                                        {{ s.date|date }}
+                                    </td>
+                                    <td>
+                                        {{ s.user|default(s.ip) }}
+                                    </td>
+                                    <td>
+                                        {{ s.platform }}
+                                    </td>
+                                    <td>
+                                        {{ s.browser }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
-
-
-    {% set siteStats = stats.siteSummary(null,null, {'route' : grav.uri.query('page')}) %}
-    <script>{% include 'partials/charts.html.twig' %}</script>
-{% endblock %}
+        {% set siteStats = stats.siteSummary(null,null, {'route' : grav.uri.query('page')}) %}
+        <script>{% include 'partials/charts.html.twig' %}
+        </script> 
+    {% endblock %}
+    
