@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.8.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.7.0...v1.8.1) (2022-08-15)
+
+
+### Bug Fixes
+
+* Better user vs ip detection ([9d2216](https://github.com/francodacosta/grav-plugin-page-stats/commit/9d2216bc98bda86cdfea6c23104739d39b25f79e))
+
+
+---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 ## [1.8.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.7.0...v1.8.0) (2022-08-15)
 
 ### Features
