@@ -18,7 +18,7 @@
 
 {% block content %}
     {% set queryKey = 'user' %}
-    {% if grav.uri.query('user') matches '/[\d.]{15}/' %}
+    {% if grav.uri.query('user') matches '#^([0-9]{1,3}\.){2,}#' %}
         {% set queryKey = 'ip' %}
     {% endif %}
 
