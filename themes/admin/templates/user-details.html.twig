@@ -2,52 +2,31 @@
 {% block pageTitle %}
     <h1>
         <i class="fa fa-fw fa-line-chart"></i>
-        Page Details:
+        User Details:
 
-        {{ grav.uri.query('page') }}
+        {{ grav.uri.query('user') }}
     </h1>
 {% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
 {% endblock %}
+
 {% block content %}
+    {% set queryKey = 'user' %}
+    {% if grav.uri.query('user') matches '/[\d.]{15}/' %}
+        {% set queryKey = 'ip' %}
+    {% endif %}
+
+
     {% set conf = config.plugins['page-stats'] %}
     {% include 'partials/messages.html.twig' %}
     <div class="container-fluid">
         <div class="row">
-            {% if conf.show_page_views_widget %}
-                <div class="mb-5 col-{{ conf.cols_page_views_widget }}">
-                    <h5>
-                        Page Views
-                    </h5>
-                    <div style="width: w-100">
-                        <canvas id="chart_hits"></canvas>
-                    </div>
-                </div>
-            {% endif %}
-            {% if conf.show_unique_visitors_widget %}
-                <div class="mb-5 col-{{ conf.cols_unique_visitors_widget }}">
-                    <h5>
-                        Unique Visitors
-                    </h5>
-                    <div style="width: w-100">
-                        <canvas id="chart_ips"></canvas>
-                    </div>
-                </div>
-            {% endif %}
-            {% if conf.show_unique_users_widget %}
-                <div class="mb-5 col-{{ conf.cols_unique_users_widget }}">
-                    <h5>
-                        Unique Users
-                    </h5>
-                    <div style="width: w-100">
-                        <canvas id="chart_users"></canvas>
-                    </div>
-                </div>
-            {% endif %}
             {% if conf.show_top_users_widget %}
                 <div class="mb-5 col-{{ conf.cols_top_users_widget }}">
                     <h5>
@@ -62,7 +41,7 @@
                                 Page Views
                             </th>
                         </tr>
-                        {% for s in stats.topUsers(conf.limit_top_users_widget,null,null, {'route' : grav.uri.query('page')}) %}
+                        {% for s in stats.topUsers(conf.limit_top_users_widget,null,null, {(queryKey) : grav.uri.query('user')}) %}
                             <tr>
                                 <td>
                                     <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
@@ -95,7 +74,7 @@
                                 Page Views
                             </th>
                         </tr>
-                        {% for s in stats.topCountries(conf.limit_top_countries,null,null, {'route' : grav.uri.query('page')}) %}
+                        {% for s in stats.topCountries(conf.limit_top_countries,null,null, {(queryKey) : grav.uri.query('user')}) %}
                             <tr>
                                 <td>
                                     <img src="https://flagcdn.com/24x18/{{ s.country|lower }}.png">
@@ -130,7 +109,7 @@
                                 Page Views
                             </th>
                         </tr>
-                        {% for s in stats.topBrowsers(conf.limit_top_browsers,null,null, {'route' : grav.uri.query('page')}) %}
+                        {% for s in stats.topBrowsers(conf.limit_top_browsers,null,null, {(queryKey) : grav.uri.query('user')}) %}
                             <tr>
                                 <td>
                                     {{ s.browser }}
@@ -182,7 +161,8 @@
                 </div>
             {% endif %}
 
-            {% if conf.show_pagedetails_recent_views %}
+
+              {% if conf.show_pagedetails_recent_views %}
                 <div class="mb-5 col-{{ conf.cols_pagedetails_recent_views }}">
                     <h5>
                         Recent Views
@@ -193,7 +173,7 @@
                                 Date
                             </th>
                             <th>
-                                User
+                                Page
                             </th>
                             <th>Location</th>
                             <th>
@@ -203,35 +183,45 @@
                                 Browser
                             </th>
                         </tr>
-                        {% for s in stats.recentPages(conf.limit_pagedetails_recent_views,null,null, {'route' : grav.uri.query('page')}) %}
-                            <tr>
-                                <td>
-                                    {{ s.date|date }}
-                                </td>
-                                <td>
-                                    <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
-                                        <i class="fa fa-fw fa-line-chart"></i>
-                                    </a>
-                                    {{ s.user|default(s.ip) }}
-                                </td>
-                                <td>
-                                    {{ s.city }}
-                                    -
-                                    {{ s.country }}
-                                </td>
-                                <td>
-                                    {{ s.platform }}
-                                </td>
-                                <td>
-                                    {{ s.browser }}
-                                </td>
-                            </tr>
+                        {% for s in stats.recentPages(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
+                             <tr>
+                                    <td>
+                                        {{ s.date|date }}
+                                    </td>
+                                    <td class="w-100">
+                                        <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
+                                            <i class="fa fa-external-link"></i>
+                                        </a>
+                                        <a class="me-2" title="view page stats" href="page-details?page={{ s.route }}" title="{{ s.route }}">
+                                            <i class="fa fa-fw fa-line-chart"></i>
+                                        </a>
+                                        {{ s.page_title }}
+                                    </td>
+                                    <td>
+                                        <a class="me-2"  href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
+                                            <i class="fa fa-fw fa-line-chart"></i>
+                                        </a>
+                                        {{ s.user|default(s.ip) }}
+                                    </td>
+                                    <td>
+                                        {{ s.city }}
+                                        -
+                                        {{ s.country }}
+                                    </td>
+                                    {# <td>{{s.hits}}</td> #}
+                                    <td>
+                                        {{ s.browser }}
+                                    </td>
+                                    <td>
+                                        {{ s.platform }}
+                                    </td>
+                                </tr>
                         {% endfor %}
                     </table>
                 </div>
             {% endif %}
+
+
         </div>
     </div>
-    {% set siteStats = stats.siteSummary(null,null, {'route' : grav.uri.query('page')}) %}
-    <script>{% include 'partials/charts.html.twig' %}</script>
 {% endblock %}

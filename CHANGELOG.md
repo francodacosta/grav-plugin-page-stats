@@ -5,12 +5,21 @@ All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
 
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
+
 ## [1.7.0]() (2022-08-11)
 
 * add stats icon to pages listing, so when you click on the stats icon you go to the stats page
 * Show paltform and browser on recently viewed pages
 * Show recent views on page details stats
 
+---
 
 ## [1.6.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.6.0...v1.6.1) (2022-08-05)
 
@@ -18,14 +27,7 @@ All notable changes to this project will be documented in this file.
 
 * Fixed wrong labelled plugin setting ([6f8ca2](https://github.com/francodacosta/grav-plugin-page-stats/commit/6f8ca29443bf42685ffc85bed9b821c9f6153910))
 
-
 ---
-
-<!--- BEGIN HEADER -->
-# Changelog
-
-All notable changes to this project will be documented in this file.
-<!--- END HEADER -->
 
 ## [1.6.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.5.0...v1.6.0) (2022-08-05)
 

@@ -21,6 +21,7 @@ class PageStatsPlugin extends Plugin
 
     const PATH_ADMIN_STATS = '/page-stats';
     const PATH_ADMIN_PAGE_DETAIL = '/page-details';
+    const PATH_ADMIN_USER_DETAIL = '/user-details';
     /**
      * @return array
      *
@@ -174,8 +175,8 @@ class PageStatsPlugin extends Plugin
         } catch (\Throwable $e) {
             error_log($e->getmessage());
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());
-            $this->grav['log']->addDebug('GEO DB : ' . self::GEO_DB);
-            $this->grav['log']->addDebug('STATS DB : ' . $dbPath);
+            // $this->grav['log']->addDebug('GEO DB : ' . self::GEO_DB);
+            // $this->grav['log']->addDebug('STATS DB : ' . $dbPath);
 
             if (false === $config['ignore_errors']) {
                 throw $e;
@@ -206,9 +207,10 @@ class PageStatsPlugin extends Plugin
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
         $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
-
+        $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
 
         switch($uri->path()) {
+            case $userDetailsRoute:
             case $pageStatesRoute:
             case $pageDetailsRoute:
                 $this->grav['twig']->twig_vars['stats'] = new Stats($dbPath, $this->config());
@@ -227,6 +229,7 @@ class PageStatsPlugin extends Plugin
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
         $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
+        $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
 
         switch($uri->path()) {
             case $pageStatesRoute:
@@ -234,11 +237,15 @@ class PageStatsPlugin extends Plugin
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
                 break;
 
-                case $pageDetailsRoute:
+            case $pageDetailsRoute:
+                $page = $event['page'];
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/page-details.md'));
+                break;
 
-                    $page = $event['page'];
-                    $page->init(new \SplFileInfo(__DIR__ . '/pages/page-details.md'));
-                    break;
+            case $userDetailsRoute:
+                $page = $event['page'];
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/user-details.md'));
+                break;
 
         }
 

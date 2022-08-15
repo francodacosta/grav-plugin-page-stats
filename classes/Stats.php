@@ -193,6 +193,7 @@ class Stats
     {
         $q = '/* top users */ select user, count(route) as hits from data %where group by user order by hits desc';
 
+
         return $this->query($q, $params, $limit, $dateFrom, $dateTo);
     }
 
