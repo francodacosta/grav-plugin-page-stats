@@ -4,6 +4,21 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.8.2](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.8.1...v1.8.2) (2022-08-15)
+
+### Bug Fixes
+
+* Show platform data on user detail page ([d510cd](https://github.com/francodacosta/grav-plugin-page-stats/commit/d510cd38a5a3d6a36cd009946286cf418a3cbdb5))
+
+
+---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 ## [1.8.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.7.0...v1.8.1) (2022-08-15)
 
 
