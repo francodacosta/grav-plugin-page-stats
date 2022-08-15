@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.8.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.7.0...v1.8.0) (2022-08-15)
+
+### Features
+
+* Show location on recent views of page details ([ea7d29](https://github.com/francodacosta/grav-plugin-page-stats/commit/ea7d290aae6dd783a570c50604835bd6d18adeac))
+* User Details Page ([91fed4](https://github.com/francodacosta/grav-plugin-page-stats/commit/91fed4f7702bb47a5ca132ec60472eb2f0719c88))
+
+
+---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 
 
 <!--- BEGIN HEADER -->
