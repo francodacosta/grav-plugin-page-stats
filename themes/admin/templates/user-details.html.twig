@@ -143,7 +143,7 @@
                                 Page Views
                             </th>
                         </tr>
-                        {% for s in stats.topPlatforms(conf.limit_top_platforms,null,null, {'route' : grav.uri.query('page')}) %}
+                        {% for s in stats.topPlatforms(conf.limit_top_platforms,null,null, {(queryKey): grav.uri.query('user')}) %}
                             <tr>
                                 <td>
                                     {{ s.platform }}
