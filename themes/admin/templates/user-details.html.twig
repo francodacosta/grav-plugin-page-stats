@@ -162,7 +162,7 @@
             {% endif %}
 
 
-              {% if conf.show_pagedetails_recent_views %}
+            {% if conf.show_pagedetails_recent_views %}
                 <div class="mb-5 col-{{ conf.cols_pagedetails_recent_views }}">
                     <h5>
                         Recent Views
@@ -183,10 +183,17 @@
                                 Browser
                             </th>
                         </tr>
-                        {% for s in stats.recentPages(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
-                             <tr>
+                        {% for d in stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
+
+                            <tr>
+                                <td colspan="5">
+                                    <strong>{{ d.day|date }}</strong>
+                                </td>
+                            </tr>
+                            {% for s in d %}
+                                <tr>
                                     <td>
-                                        {{ s.date|date }}
+                                        {{ s.time }}
                                     </td>
                                     <td class="w-100">
                                         <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
@@ -198,7 +205,7 @@
                                         {{ s.page_title }}
                                     </td>
                                     <td>
-                                        <a class="me-2"  href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
+                                        <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
                                             <i class="fa fa-fw fa-line-chart"></i>
                                         </a>
                                         {{ s.user|default(s.ip) }}
@@ -216,6 +223,7 @@
                                         {{ s.platform }}
                                     </td>
                                 </tr>
+                            {% endfor %}
                         {% endfor %}
                     </table>
                 </div>

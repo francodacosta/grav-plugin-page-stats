@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.9.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.8.2...v1.9.0) (2022-08-16)
+
+### Features
+
+* Group page views by day in user detail page ([184489](https://github.com/francodacosta/grav-plugin-page-stats/commit/1844899445f7d6c894720214c32225f8e2d57bf2))
+
+
+---
+
 ## [1.8.2](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.8.1...v1.8.2) (2022-08-15)
 
 ### Bug Fixes
@@ -12,12 +21,6 @@ All notable changes to this project will be documented in this file.
 
 
 ---
-
-<!--- BEGIN HEADER -->
-# Changelog
-
-All notable changes to this project will be documented in this file.
-<!--- END HEADER -->
 
 ## [1.8.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.7.0...v1.8.1) (2022-08-15)
 
@@ -28,12 +31,6 @@ All notable changes to this project will be documented in this file.
 
 
 ---
-
-<!--- BEGIN HEADER -->
-# Changelog
-
-All notable changes to this project will be documented in this file.
-<!--- END HEADER -->
 
 ## [1.8.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.7.0...v1.8.0) (2022-08-15)
 
