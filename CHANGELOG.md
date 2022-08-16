@@ -4,6 +4,21 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.9.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.0...v1.9.1) (2022-08-16)
+
+### Bug Fixes
+
+* Removed user name from recently viewed pages of user details screen ([13e612](https://github.com/francodacosta/grav-plugin-page-stats/commit/13e6123d4369225b93ea6d4196a55a8286476ffa))
+
+
+---
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 ## [1.9.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.8.2...v1.9.0) (2022-08-16)
 
 ### Features
