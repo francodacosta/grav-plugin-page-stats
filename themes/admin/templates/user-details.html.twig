@@ -204,12 +204,7 @@
                                         </a>
                                         {{ s.page_title }}
                                     </td>
-                                    <td>
-                                        <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
-                                            <i class="fa fa-fw fa-line-chart"></i>
-                                        </a>
-                                        {{ s.user|default(s.ip) }}
-                                    </td>
+
                                     <td>
                                         {{ s.city }}
                                         -
