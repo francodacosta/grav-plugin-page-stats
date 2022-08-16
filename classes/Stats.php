@@ -296,9 +296,27 @@ class Stats
     public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         // $q = 'SELECT route, page_title, count(route) as hits, date FROM data GROUP BY route ORDER BY date DESC';
-        $q = 'SELECT * FROM data %where ORDER BY date DESC';
+        $q = 'SELECT *, date(data.date) as day, time(data.date) as time  FROM data %where ORDER BY date DESC';
 
         return $this->query($q, $params, $limit, $dateFrom, $dateTo);
+    }
+
+    /**
+     * returns recently viewd pages groupes by day
+     */
+    public function recentPagesByDay(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+        $pages = $this->recentPages($limit, $dateFrom, $dateTo, $params);
+
+        $result = [];
+        foreach($pages as $p) {
+            if (! array_key_exists($p['day'], $result)) {
+                $result[$p['day']] = [];
+            }
+            $result[$p['day']][] = $p;
+        }
+
+        return $result;
     }
 
     /**
