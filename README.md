@@ -1,6 +1,10 @@
 # Page Stats Plugin
 ![](screenshot.png)
 
+
+![](screenshot-1.png)
+
+
 The **Page Stats** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav).
 
 Enhaced statistics for grav
@@ -122,8 +126,9 @@ Flags from https://flagpedia.net
 
 - [ ] World map view
 - [X] Browser / device stats (based on user agent)
-- [ ] User behaviour (select user and see the session history and page flows)
+- [X] User behaviour (select user and see the session history and page flows)
 - [X] Top country stats
 - [ ] Update geolocation db from csv user can download
+- [X] Page details (select page and seee detailed stats about that page)
 
 
