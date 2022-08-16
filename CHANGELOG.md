@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.9.2](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.1...v1.9.2) (2022-08-16)
+
+### Bug Fixes
+
+* Show correct day instead of current day in user details recent page views ([bf1329](https://github.com/francodacosta/grav-plugin-page-stats/commit/bf13292f1f152efbea1d9bccc2320a740b37673d))
+
+
+---
+
 ## [1.9.1](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.0...v1.9.1) (2022-08-16)
 
 ### Bug Fixes
