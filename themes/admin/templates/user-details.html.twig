@@ -183,11 +183,11 @@
                                 Browser
                             </th>
                         </tr>
-                        {% for d in stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
+                        {% for day, d in stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
 
                             <tr>
                                 <td colspan="5">
-                                    <strong>{{ d.day|date }}</strong>
+                                    <strong>{{ day|date }}</strong>
                                 </td>
                             </tr>
                             {% for s in d %}
