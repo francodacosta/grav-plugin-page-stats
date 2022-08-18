@@ -4,6 +4,11 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.9.3](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.2...v1.9.3) (2022-08-18)
+
+
+---
+
 ## [1.9.2](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.1...v1.9.2) (2022-08-16)
 
 ### Bug Fixes
