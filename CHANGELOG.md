@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.3](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.2...v1.9.3) (2022-08-18)
 
+### Bug Fixes
+
+* Display date only on user detail page ([b4fb45](https://github.com/francodacosta/grav-plugin-page-stats/commit/b4fb4537ce87a44a31246ea878e170009841c48c))
+
+
+---
+
+## [1.9.3](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.2...v1.9.3) (2022-08-18)
+
 
 ---
 
