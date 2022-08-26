@@ -4,16 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.10.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.3...v1.10.0) (2022-08-26)
+
+### Features
+
+* Show all pages on most recent ([3c0784](https://github.com/francodacosta/grav-plugin-page-stats/commit/3c07842e1be491f99dce7b0264167417f0af0c20))
+* View all pages ([7cf039](https://github.com/francodacosta/grav-plugin-page-stats/commit/7cf0396f451896c16b7d4fdd80224fbac81fb416))
+
+
+---
+
 ## [1.9.3](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.2...v1.9.3) (2022-08-18)
 
 ### Bug Fixes
 
 * Display date only on user detail page ([b4fb45](https://github.com/francodacosta/grav-plugin-page-stats/commit/b4fb4537ce87a44a31246ea878e170009841c48c))
 
-
----
-
-## [1.9.3](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.2...v1.9.3) (2022-08-18)
 
 
 ---
