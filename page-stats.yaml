@@ -31,7 +31,7 @@ limit_top_pages_pages: 15
 
 show_top_countries: true
 cols_top_countries: 2
-limit_top_countries: 10
+limit_top_countries: 5
 
 show_top_browsers: true
 cols_top_browsers: 2

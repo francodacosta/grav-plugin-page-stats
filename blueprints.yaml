@@ -16,6 +16,31 @@ license: MIT
 dependencies:
     - { name: grav, version: ">=1.6.0" }
 
+x-widget-enabled: &widget-enabled
+    type: toggle
+    label: PLUGIN_PAGE_STATS.WIDGET.ENABLED.TEXT
+    help: PLUPLUGIN_PAGE_STATS.WIDGET.ENABLED.HELP
+    highlight: 1
+    default: 1
+    options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+    validate:
+        type: bool
+x-widget-size: &widget-size
+    type: select
+    label: PLUGIN_PAGE_STATS.WIDGET.SIZE.TEXT
+    help: PLUGIN_PAGE_STATS.WIDGET.SIZE.HELP
+    options:
+        'col-12 col-md-3' : small
+        'col-12 col-md-4': 'medium'
+        'col-12 col-md-6': 'large'
+        'col-12': 'full width'
+
+x-widget-limit: &widget-limit
+    type: number
+    label: PLUGIN_PAGE_STATS.WIDGET.LIMIIT.TEXT
+    help: PLUGIN_PAGE_STATS.WIDGET.LIMIIT.HELP
 form:
     validation: loose
     fields:
@@ -52,374 +77,93 @@ form:
             text: PLUGIN_PAGE_STATS.SECTION_WIDGETS_LABEL
             underline: true
             fields:
-                fs1:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_USERS_WIDGET
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_users_widget:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_TOP_USERS_WIDGET_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_top_users_widget:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_top_users_widget:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
                 fs2:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.UNIQUE_USERS_WIDGET
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_unique_users_widget:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_USERS_WIDGET_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_unique_users_widget:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
+                        show_unique_users_widget: *widget-enabled
+                        cols_unique_users_widget: *widget-size
                 fs3:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.UNIQUE_VISITORS_WIDGET
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_unique_visitors_widget:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_UNIQUE_VISITORS_WIDGET_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_UNIQUE_VISITORS_WIDGET_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_unique_visitors_widget:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
+                        show_unique_visitors_widget: *widget-enabled
+                        cols_unique_visitors_widget: *widget-size
                 fs4:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.PAGE_VIEWS_WIDGET
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_page_views_widget:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_PAGE_VIEWS_WIDGET_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_PAGE_VIEWS_WIDGET_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_page_views_widget:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                fs5:
+                        show_page_views_widget: *widget-enabled
+                        cols_page_views_widget: *widget-size
+                fs1:
                     type: fieldset
-                    title: PLUGIN_PAGE_STATS.RECENTLY_VIEWED_PAGES
+                    title: PLUGIN_PAGE_STATS.TOP_USERS_WIDGET
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_recently_viewed_pages:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_RECENTLY_VIEWED_PAGES_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_RECENTLY_VIEWED_PAGES_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_recently_viewed_pages:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_recently_viewed_pages:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
-                fs6:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_PAGES
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_pages:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_TOP_PAGES_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_TOP_PAGES_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_top_pages:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_top_pages_pages:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                        show_top_users_widget: *widget-enabled
+                        cols_top_users_widget: *widget-size
+                        limit_top_users_widget: *widget-limit
                 fs7:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_BROWSERS
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_top_browsers:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_TOP_BROWSERS_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_TOP_BROWSERS_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_top_browsers:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_top_browsers:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                        show_top_browsers: *widget-enabled
+                        cols_top_browsers: *widget-size
+                        limit_top_browsers: *widget-limit
                 fs8:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_COUNTRIES
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_top_countries:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_TOP_COUNTRIES_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_TOP_COUNTRIES_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_top_countries:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_top_countries:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                        show_top_countries: *widget-enabled
+                        cols_top_countries: *widget-size
+                        limit_top_countries: *widget-limit
                 fs9:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_PLATFORMS
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_top_platforms:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.SHOW_TOP_PLATFORMS_LABEL
-                            help: PLUGIN_PAGE_STATS.SHOW_TOP_PLATFORMS_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_top_platforms:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_top_platforms:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                        show_top_platforms: *widget-enabled
+                        cols_top_platforms: *widget-size
+                        limit_top_platforms: *widget-limit
+                fs5:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.RECENTLY_VIEWED_PAGES
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_recently_viewed_pages: *widget-enabled
+                        cols_recently_viewed_pages: *widget-size
+                        limit_recently_viewed_pages: *widget-limit
+                fs6:
+                    type: fieldset
+                    title: PLUGIN_PAGE_STATS.TOP_PAGES
+                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                    collapsible: true    # Whether one can expand the fieldset or not
+                    fields:
+                        show_top_pages: *widget-enabled
+                        cols_top_pages: *widget-size
+                        limit_top_pages_pages: *widget-limit
                 fs10:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.PAGE_DETAILS.RECENT_VIEWS
                     collapsed: false      # Initial state of fieldset (see collapsible option)
                     collapsible: true    # Whether one can expand the fieldset or not
                     fields:
-                        show_pagedetails_recent_views:
-                            type: toggle
-                            label: PLUGIN_PAGE_STATS.PAGE_DETAILS.RECENT_VIEWS_LABEL
-                            help: PLUGIN_PAGE_STATS.PAGE_DETAILS.RECENT_VIEWS_HELP
-                            highlight: 1
-                            default: 1
-                            options:
-                                1: PLUGIN_ADMIN.ENABLED
-                                0: PLUGIN_ADMIN.DISABLED
-                            validate:
-                                type: bool
-                        cols_pagedetails_recent_views:
-                            type: select
-                            label: PLUGIN_PAGE_STATS.WIDGET_SIZE_LABEL
-                            help: PLUGIN_PAGE_STATS.WIDGET_SIZE_HELP
-                            options:
-                                1 : 1
-                                2 : 2
-                                3 : 3
-                                4 : 4
-                                5 : 5
-                                6 : 6
-                                7 : 7
-                                8 : 8
-                                9 : 9
-                                10 : 10
-                                11 : 11
-                                12 : 12
-                        limit_pagedetails_recent_views:
-                            type: number
-                            label: PLUGIN_PAGE_STATS.SQL_LIMIT_LABEL
-                            help: PLUGIN_PAGE_STATS.SQL_LIMIT_HELP
+                        show_pagedetails_recent_views: *widget-enabled
+                        cols_pagedetails_recent_views: *widget-size
+                        limit_pagedetails_recent_views: *widget-limit
 
 
 

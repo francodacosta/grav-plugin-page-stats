@@ -3,6 +3,20 @@ en:
     PAGE_STATS: Page Stats
     STATS_DB_LABEL: Page Stats DB path
     STATS_DB_HELP: Path to db relative to Grav root
+
+
+    WIDGET:
+        ENABLED:
+            TEXT: Enabled
+            HELP: If Enabled the widget will be shown
+        SIZE:
+            TEXT: Size
+            HELP: The size of the widget on the dashboard
+        LIMIT:
+            TEXT: Limit
+            HELP: The number of records to fetch
+
+
     # STATS_DB_CREATE_LABEL: Recreate Stats database
     # STATS_DB_CREATE_HELP: This will create a db at the path specified and will overrite an existinf one without any questions
     # STATS_DB_CREATE_BTN_TEXT: Create new Stats database

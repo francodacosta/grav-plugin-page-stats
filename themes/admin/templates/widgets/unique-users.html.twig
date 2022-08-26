@@ -1,0 +1,39 @@
+<div class="mb-5 {{ conf.cols_unique_users_widget }}">
+    <h5>
+        Unique Users
+
+    </h5>
+    <div style="width: w-100">
+        <canvas id="chart_users"></canvas>
+    </div>
+</div>
+<script>
+    var ctx = document.getElementById("chart_users").getContext("2d");
+    var myChart = new Chart(ctx, {
+        type: "bar",
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        },
+        data: {
+            datasets: [
+                {
+                    label: '',
+                    data: [{% for s in data %}
+                            {
+                                x: "{{ s.date }}",
+                                y: {{ s.hits }}
+                            },{% endfor %}]
+                }
+            ]
+        }
+    });
+</script>

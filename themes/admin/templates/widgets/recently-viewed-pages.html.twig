@@ -1,58 +1,86 @@
-{% extends 'stats.html.twig' %}
-{% block pageTitle %}
-    <h1>
-        <i class="fa fa-fw fa-line-chart"></i>
-        User Details:
+<div class="mb-5  col-12{{ conf.cols_recently_viewed_pages }}">
+    <h5>
+        Recently Viewed Pages
 
-        {{ grav.uri.query('user') }}
-    </h1>
-{% endblock %}
+    </h5>
+    {# <table class="table">
+        <tr>
+            <th>
+                Date
 
-{% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
+            </th>
+            {% if hide_page is not defined %}
+            <th>
+                Page
 
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
-
-{% block content %}
-    {% set queryKey = 'user' %}
-    {% if grav.uri.query('user') matches '#^([0-9]{1,3}\.){2,}#' %}
-        {% set queryKey = 'ip' %}
-    {% endif %}
-
-
-    {% set conf = config.plugins['page-stats'] %}
-    {% include 'partials/messages.html.twig' %}
-    <div class="container-fluid">
-        <div class="row">
-
-            {% if conf.show_top_countries %}
-                {% include 'widgets/top-countries.html.twig' with {'data': stats.topCountries(conf.limit_top_countries,null,null, {(queryKey) : grav.uri.query('user')}) } %}
+            </th>
             {% endif %}
-            {% if conf.show_top_browsers %}
-                {% include 'widgets/top-browsers.html.twig' with {'data': stats.topBrowsers(conf.limit_top_browsers,null,null, {(queryKey) : grav.uri.query('user')}) } %}
-            {% endif %}
-            {% if conf.show_top_platforms %}
-            {% include 'widgets/top-platforms.html.twig' with {'data': stats.topPlatforms(conf.limit_top_platforms,null,null, {(queryKey): grav.uri.query('user')}) } %}
-            {% endif %}
+            <th>
+                user
+
+            </th>
+            <th>
+                Location
+
+            </th>
+            <th>
+                Browser
+
+            </th>
+            <th>
+                Platform
+
+            </th>
+        </tr>
+        {% for s in data %}
+            <tr>
+                <td>
+                    {{ s.date|date }}
+                </td>
+                 {% if  hide_page is not defined %}
+                <td class="w-100">
+                    <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
+                        <i class="fa fa-external-link"></i>
+                    </a>
+                    <a class="me-2" title="view page stats" href="page-details?page={{ s.route }}" title="{{ s.route }}">
+                        <i class="fa fa-fw fa-line-chart"></i>
+                    </a>
+                    {{ s.page_title }}
+                </td>
+                {% endif %}
+                <td>
+                    <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
+                        <i class="fa fa-fw fa-line-chart"></i>
+                    </a>
+                    {{ s.user|default(s.ip) }}
+                </td>
+                <td>
+                    {{ s.city }}
+                    -
 
 
-            {% if conf.show_pagedetails_recent_views %}
-                {% include 'widgets/recently-viewed-pages.html.twig' with {'data':  stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) } %}
-                {# <div class="mb-5 col-{{ conf.cols_pagedetails_recent_views }}">
-                    <h5>
-                        Recent Views
-                    </h5>
-                    <table class="table">
+                    {{ s.country }}
+                </td>
+                <td>
+                    {{ s.browser }}
+                </td>
+                <td>
+                    {{ s.platform }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table> #}
+
+                    <table class="table table-hover">
                         <tr>
                             <th>
                                 Date
                             </th>
+                            {% if hide_page is not defined %}
                             <th>
                                 Page
                             </th>
+                            {% endif %}
                             <th>Location</th>
                             <th>
                                 Platform
@@ -61,7 +89,7 @@
                                 Browser
                             </th>
                         </tr>
-                        {% for day, d in stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
+                        {% for day, d in data %}
 
                             <tr>
                                 <td colspan="5">
@@ -73,6 +101,7 @@
                                     <td>
                                         {{ s.time }}
                                     </td>
+                                    {% if hide_page is not defined %}
                                     <td class="w-100">
                                         <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
                                             <i class="fa fa-external-link"></i>
@@ -82,6 +111,7 @@
                                         </a>
                                         {{ s.page_title }}
                                     </td>
+                                    {% endif %}
 
                                     <td>
                                         {{ s.city }}
@@ -99,10 +129,4 @@
                             {% endfor %}
                         {% endfor %}
                     </table>
-                </div> #}
-            {% endif %}
-
-
-        </div>
-    </div>
-{% endblock %}
+</div>

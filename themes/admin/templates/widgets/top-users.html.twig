@@ -1,0 +1,31 @@
+<div class="mb-5 {{ conf.cols_top_users_widget }}">
+    <h5>
+        Top Users
+
+    </h5>
+    <table class="table table-hover">
+        <tr>
+            <th>
+                User
+
+            </th>
+            <th>
+                Page Views
+
+            </th>
+        </tr>
+        {% for s in data %}
+            <tr>
+                <td>
+                    <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
+                        <i class="fa fa-fw fa-line-chart"></i>
+                    </a>
+                    {{ s.user|default('not logged in') }}
+                </td>
+                <td>
+                    {{ s.hits }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
