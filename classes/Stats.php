@@ -158,7 +158,7 @@ class Stats
 
         }
 
-        if ($limit) {
+        if ($limit && (int) $limit > 0) {
             $q .= ' LIMIT :limit';
             $params['limit'] = $limit;
         }

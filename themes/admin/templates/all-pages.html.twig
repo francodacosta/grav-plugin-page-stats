@@ -14,7 +14,7 @@
     <div class="container-fluid">
         <div class="row">
 
-           {% include 'widgets/top-pages.html.twig' with {'title': 'All pages', 'hide_show_all': true, 'data': pageStats.db.pagesSummary() }  %}
+           {% include 'widgets/top-pages.html.twig' with {'title': 'All pages', 'hide_show_all': true, 'data': pageStats.db.pagesSummary(0) }  %}
 
         </div>
     </div>
