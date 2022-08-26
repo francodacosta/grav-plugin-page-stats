@@ -1,132 +1,64 @@
 <div class="mb-5  col-12{{ conf.cols_recently_viewed_pages }}">
     <h5>
         Recently Viewed Pages
-
     </h5>
-    {# <table class="table">
+
+    <table class="table table-hover">
         <tr>
             <th>
                 Date
-
             </th>
             {% if hide_page is not defined %}
-            <th>
-                Page
-
-            </th>
+                <th>
+                    Page
+                </th>
             {% endif %}
+            <th>Location</th>
             <th>
-                user
-
-            </th>
-            <th>
-                Location
-
+                Platform
             </th>
             <th>
                 Browser
-
-            </th>
-            <th>
-                Platform
-
             </th>
         </tr>
-        {% for s in data %}
+        {% for day, d in data %}
+
             <tr>
-                <td>
-                    {{ s.date|date }}
-                </td>
-                 {% if  hide_page is not defined %}
-                <td class="w-100">
-                    <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
-                        <i class="fa fa-external-link"></i>
-                    </a>
-                    <a class="me-2" title="view page stats" href="page-details?page={{ s.route }}" title="{{ s.route }}">
-                        <i class="fa fa-fw fa-line-chart"></i>
-                    </a>
-                    {{ s.page_title }}
-                </td>
-                {% endif %}
-                <td>
-                    <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
-                        <i class="fa fa-fw fa-line-chart"></i>
-                    </a>
-                    {{ s.user|default(s.ip) }}
-                </td>
-                <td>
-                    {{ s.city }}
-                    -
-
-
-                    {{ s.country }}
-                </td>
-                <td>
-                    {{ s.browser }}
-                </td>
-                <td>
-                    {{ s.platform }}
+                <td colspan="5">
+                    <strong>{{ day|date('F jS') }}</strong>
                 </td>
             </tr>
+            {% for s in d %}
+                <tr>
+                    <td>
+                        {{ s.time }}
+                    </td>
+                    {% if hide_page is not defined %}
+                        <td class="w-100">
+                            <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
+                                <i class="fa fa-external-link"></i>
+                            </a>
+                            <a class="me-2" title="view page stats" href="{{ pageStats.urls.pageDetails}}?page={{ s.route }}" title="{{ s.route }}">
+                                <i class="fa fa-fw fa-line-chart"></i>
+                            </a>
+                            {{ s.page_title }}
+                        </td>
+                    {% endif %}
+
+                    <td>
+                        {{ s.city }}
+                        -
+                        {{ s.country }}
+                    </td>
+
+                    <td>
+                        {{ s.browser }}
+                    </td>
+                    <td>
+                        {{ s.platform }}
+                    </td>
+                </tr>
+            {% endfor %}
         {% endfor %}
-    </table> #}
-
-                    <table class="table table-hover">
-                        <tr>
-                            <th>
-                                Date
-                            </th>
-                            {% if hide_page is not defined %}
-                            <th>
-                                Page
-                            </th>
-                            {% endif %}
-                            <th>Location</th>
-                            <th>
-                                Platform
-                            </th>
-                            <th>
-                                Browser
-                            </th>
-                        </tr>
-                        {% for day, d in data %}
-
-                            <tr>
-                                <td colspan="5">
-                                    <strong>{{ day|date('F jS') }}</strong>
-                                </td>
-                            </tr>
-                            {% for s in d %}
-                                <tr>
-                                    <td>
-                                        {{ s.time }}
-                                    </td>
-                                    {% if hide_page is not defined %}
-                                    <td class="w-100">
-                                        <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
-                                            <i class="fa fa-external-link"></i>
-                                        </a>
-                                        <a class="me-2" title="view page stats" href="page-details?page={{ s.route }}" title="{{ s.route }}">
-                                            <i class="fa fa-fw fa-line-chart"></i>
-                                        </a>
-                                        {{ s.page_title }}
-                                    </td>
-                                    {% endif %}
-
-                                    <td>
-                                        {{ s.city }}
-                                        -
-                                        {{ s.country }}
-                                    </td>
-
-                                    <td>
-                                        {{ s.browser }}
-                                    </td>
-                                    <td>
-                                        {{ s.platform }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% endfor %}
-                    </table>
+    </table>
 </div>

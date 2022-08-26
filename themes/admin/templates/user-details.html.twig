@@ -29,79 +29,20 @@
         <div class="row">
 
             {% if conf.show_top_countries %}
-                {% include 'widgets/top-countries.html.twig' with {'data': stats.topCountries(conf.limit_top_countries,null,null, {(queryKey) : grav.uri.query('user')}) } %}
-            {% endif %}
-            {% if conf.show_top_browsers %}
-                {% include 'widgets/top-browsers.html.twig' with {'data': stats.topBrowsers(conf.limit_top_browsers,null,null, {(queryKey) : grav.uri.query('user')}) } %}
-            {% endif %}
-            {% if conf.show_top_platforms %}
-            {% include 'widgets/top-platforms.html.twig' with {'data': stats.topPlatforms(conf.limit_top_platforms,null,null, {(queryKey): grav.uri.query('user')}) } %}
+                {% include 'widgets/top-countries.html.twig' with {'data': pageStats.db.topCountries(conf.limit_top_countries,null,null, {(queryKey) : grav.uri.query('user')}) } %}
             {% endif %}
 
+            {% if conf.show_top_browsers %}
+                {% include 'widgets/top-browsers.html.twig' with {'data': pageStats.db.topBrowsers(conf.limit_top_browsers,null,null, {(queryKey) : grav.uri.query('user')}) } %}
+            {% endif %}
+
+            {% if conf.show_top_platforms %}
+                {% include 'widgets/top-platforms.html.twig' with {'data': pageStats.db.topPlatforms(conf.limit_top_platforms,null,null, {(queryKey): grav.uri.query('user')}) } %}
+            {% endif %}
 
             {% if conf.show_pagedetails_recent_views %}
-                {% include 'widgets/recently-viewed-pages.html.twig' with {'data':  stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) } %}
-                {# <div class="mb-5 col-{{ conf.cols_pagedetails_recent_views }}">
-                    <h5>
-                        Recent Views
-                    </h5>
-                    <table class="table">
-                        <tr>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                                Page
-                            </th>
-                            <th>Location</th>
-                            <th>
-                                Platform
-                            </th>
-                            <th>
-                                Browser
-                            </th>
-                        </tr>
-                        {% for day, d in stats.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) %}
-
-                            <tr>
-                                <td colspan="5">
-                                    <strong>{{ day|date('F jS') }}</strong>
-                                </td>
-                            </tr>
-                            {% for s in d %}
-                                <tr>
-                                    <td>
-                                        {{ s.time }}
-                                    </td>
-                                    <td class="w-100">
-                                        <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
-                                            <i class="fa fa-external-link"></i>
-                                        </a>
-                                        <a class="me-2" title="view page stats" href="page-details?page={{ s.route }}" title="{{ s.route }}">
-                                            <i class="fa fa-fw fa-line-chart"></i>
-                                        </a>
-                                        {{ s.page_title }}
-                                    </td>
-
-                                    <td>
-                                        {{ s.city }}
-                                        -
-                                        {{ s.country }}
-                                    </td>
-
-                                    <td>
-                                        {{ s.browser }}
-                                    </td>
-                                    <td>
-                                        {{ s.platform }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% endfor %}
-                    </table>
-                </div> #}
+                {% include 'widgets/recently-viewed-pages.html.twig' with {'data':  pageStats.db.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) } %}
             {% endif %}
-
 
         </div>
     </div>

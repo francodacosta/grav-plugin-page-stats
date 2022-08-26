@@ -17,7 +17,7 @@
         {% for s in data %}
             <tr>
                 <td>
-                    <a class="me-2" href="user-details?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
+                    <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
                         <i class="fa fa-fw fa-line-chart"></i>
                     </a>
                     {{ s.user|default('not logged in') }}

@@ -22,6 +22,8 @@ class PageStatsPlugin extends Plugin
     const PATH_ADMIN_STATS = '/page-stats';
     const PATH_ADMIN_PAGE_DETAIL = '/page-details';
     const PATH_ADMIN_USER_DETAIL = '/user-details';
+    const PATH_ADMIN_ALL_PAGES = '/all-pages';
+
     /**
      * @return array
      *
@@ -204,16 +206,26 @@ class PageStatsPlugin extends Plugin
         $config = $this->config();
         $dbPath = $config['db'];
 
-        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
-        $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
+        $pageStatsRoute = $adminRoute;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
+        $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
 
         switch($uri->path()) {
             case $userDetailsRoute:
-            case $pageStatesRoute:
+            case $pageStatsRoute:
             case $pageDetailsRoute:
-                $this->grav['twig']->twig_vars['stats'] = new Stats($dbPath, $this->config());
+            case $allPagesRoute:
+                $this->grav['twig']->twig_vars['pageStats'] = [
+                    'db' =>  new Stats($dbPath, $this->config()),
+                    'urls' => [
+                        'base' => $pageStatsRoute,
+                        'pageDetails' =>  $pageDetailsRoute,
+                        'userDetails' => $userDetailsRoute,
+                        'all{ages' => $allPagesRoute,
+                    ],
+                ];
                 break;
             }
 
@@ -226,13 +238,15 @@ class PageStatsPlugin extends Plugin
         $page = new Page;
 
 
-        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/');
-        $pageStatesRoute = $adminRoute . self::PATH_ADMIN_STATS;
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
+        $pageStatsRoute = $adminRoute ;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
+        $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
+
 
         switch($uri->path()) {
-            case $pageStatesRoute:
+            case $pageStatsRoute:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
                 break;
@@ -245,6 +259,12 @@ class PageStatsPlugin extends Plugin
             case $userDetailsRoute:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/user-details.md'));
+                break;
+
+            case $allPagesRoute:
+                die('aaa');
+                $page = $event['page'];
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/all-pages.md'));
                 break;
 
         }

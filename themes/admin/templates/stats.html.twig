@@ -38,7 +38,7 @@
 {% endblock %}
 {% block content %}
     {% set conf = config.plugins['page-stats'] %}
-    {% set siteStats = stats.siteSummary %}
+    {% set siteStats = pageStats.db.siteSummary %}
     {% include 'partials/messages.html.twig' %}
     <div class="container-fluid">
         <div class="row">
@@ -52,69 +52,22 @@
                 {% include 'widgets/unique-users.html.twig' with {'data': siteStats.users} %}
             {% endif %}
             {% if conf.show_top_users_widget %}
-                {% include 'widgets/top-users.html.twig' with {'data': stats.topUsers(conf.limit_top_users_widget)} %}
+                {% include 'widgets/top-users.html.twig' with {'data': pageStats.db.topUsers(conf.limit_top_users_widget)} %}
             {% endif %}
             {% if conf.show_top_countries %}
-                {% include 'widgets/top-countries.html.twig' with {'data': stats.topCountries(conf.limit_top_countries)} %}
+                {% include 'widgets/top-countries.html.twig' with {'data': pageStats.db.topCountries(conf.limit_top_countries)} %}
             {% endif %}
             {% if conf.show_top_browsers %}
-                {% include 'widgets/top-browsers.html.twig' with {'data': stats.topBrowsers(conf.limit_top_browsers)} %}
+                {% include 'widgets/top-browsers.html.twig' with {'data': pageStats.db.topBrowsers(conf.limit_top_browsers)} %}
             {% endif %}
             {% if conf.show_top_platforms %}
-                {% include 'widgets/top-platforms.html.twig' with {'data': stats.topPlatforms(conf.limit_top_platforms)} %}
+                {% include 'widgets/top-platforms.html.twig' with {'data': pageStats.db.topPlatforms(conf.limit_top_platforms)} %}
             {% endif %}
             {% if conf.show_recently_viewed_pages %}
-                {% include 'widgets/recently-viewed-pages.html.twig' with {'data': stats.recentPagesByDay(conf.limit_recently_viewed_pages)}  %}
+                {% include 'widgets/recently-viewed-pages.html.twig' with {'data': pageStats.db.recentPagesByDay(conf.limit_recently_viewed_pages)}  %}
             {% endif %}
             {% if conf.show_top_pages %}
-                <div class="col-{{ conf.cols_top_pages }}">
-                    <h5>
-                        Most Viewed Pages
-
-                    </h5>
-                    <table class="table">
-                        <tr>
-                            <th>
-                                Page
-
-                            </th>
-                            <th>
-                                Views
-
-                            </th>
-                            <th>
-                                Unique visitors
-
-                            </th>
-                            <th>
-                                Unique logged in Users
-
-                            </th>
-                        </tr>
-                        {% for s in stats.pagesSummary(conf.limit_top_pages_pages) %}
-                            <tr>
-                                <td>
-                                    <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
-                                        <i class="fa fa-external-link"></i>
-                                    </a>
-                                    <a class="me-2" title="view page stats" href="page-details?page={{ s.route }}" title="{{ s.route }}">
-                                        <i class="fa fa-fw fa-line-chart"></i>
-                                    </a>
-                                    {{ s.page_title }}
-                                </td>
-                                <td>
-                                    {{ s.hits }}
-                                </td>
-                                <td>
-                                    {{ s.visitors }}
-                                </td>
-                                <td>
-                                    {{ s.users }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+                {% include 'widgets/top-pages.html.twig' with {'data': pageStats.db.pagesSummary(conf.limit_top_pages_pages) }  %}
             {% endif %}
         </div>
     </div>

@@ -1,0 +1,21 @@
+{% extends 'stats.html.twig' %}
+{% block pageTitle %}
+    <h1>
+        <i class="fa fa-fw fa-line-chart"></i>
+        All Pages
+    </h1>
+{% endblock %}
+
+
+{% block content %}
+
+    {% set conf = config.plugins['page-stats'] %}
+    {% include 'partials/messages.html.twig' %}
+    <div class="container-fluid">
+        <div class="row">
+
+           {% include 'widgets/top-pages.html.twig' with {'data': stats.pagesSummary() }  %}
+
+        </div>
+    </div>
+{% endblock %}

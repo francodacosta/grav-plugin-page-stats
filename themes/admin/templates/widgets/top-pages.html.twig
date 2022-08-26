@@ -1,0 +1,48 @@
+<div class="col-{{ conf.cols_top_pages }}">
+    <h5>
+        {{ title|default('Most Viewed Pages') }}
+
+    </h5>
+    <table class="table">
+        <tr>
+            <th>
+                Page
+
+            </th>
+            <th>
+                Views
+
+            </th>
+            <th>
+                Unique visitors
+
+            </th>
+            <th>
+                Unique logged in Users
+
+            </th>
+        </tr>
+        {% for s in data %}
+            <tr>
+                <td>
+                    <a class="me-2" title="view page" target="blank" href="{{ s.route }}">
+                        <i class="fa fa-external-link"></i>
+                    </a>
+                    <a class="me-2" title="view page stats" href="{{ pageStats.urls.pageDetails}}?page={{ s.route }}" title="{{ s.route }}">
+                        <i class="fa fa-fw fa-line-chart"></i>
+                    </a>
+                    {{ s.page_title }}
+                </td>
+                <td>
+                    {{ s.hits }}
+                </td>
+                <td>
+                    {{ s.visitors }}
+                </td>
+                <td>
+                    {{ s.users }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>

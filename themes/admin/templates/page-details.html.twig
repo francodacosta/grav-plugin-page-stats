@@ -15,7 +15,7 @@
 {% endblock %}
 {% block content %}
     {% set conf = config.plugins['page-stats'] %}
-    {% set siteStats = stats.siteSummary(null,null, {'route' : grav.uri.query('page')}) %}
+    {% set siteStats = pageStats.db.siteSummary(null,null, {'route' : grav.uri.query('page')}) %}
 
     {% include 'partials/messages.html.twig' %}
     <div class="container-fluid">
@@ -33,23 +33,23 @@
             {% endif %}
 
             {% if conf.show_top_users_widget %}
-                {% include 'widgets/top-users.html.twig' with {'data': stats.topUsers(conf.limit_top_users_widget,null,null, {'route' : grav.uri.query('page')})} %}
+                {% include 'widgets/top-users.html.twig' with {'data': pageStats.db.topUsers(conf.limit_top_users_widget,null,null, {'route' : grav.uri.query('page')})} %}
             {% endif %}
 
             {% if conf.show_top_countries %}
-                {% include 'widgets/top-countries.html.twig' with {'data': stats.topCountries(conf.limit_top_countries,null,null, {'route' : grav.uri.query('page')}) } %}
+                {% include 'widgets/top-countries.html.twig' with {'data': pageStats.db.topCountries(conf.limit_top_countries,null,null, {'route' : grav.uri.query('page')}) } %}
             {% endif %}
 
             {% if conf.show_top_browsers %}
-                {% include 'widgets/top-browsers.html.twig' with {'data': stats.topBrowsers(conf.limit_top_browsers,null,null, {'route' : grav.uri.query('page')}) } %}
+                {% include 'widgets/top-browsers.html.twig' with {'data': pageStats.db.topBrowsers(conf.limit_top_browsers,null,null, {'route' : grav.uri.query('page')}) } %}
             {% endif %}
 
             {% if conf.show_top_platforms %}
-                {% include 'widgets/top-platforms.html.twig' with {'data': stats.topPlatforms(conf.limit_top_platforms,null,null, {'route' : grav.uri.query('page')}) } %}
+                {% include 'widgets/top-platforms.html.twig' with {'data': pageStats.db.topPlatforms(conf.limit_top_platforms,null,null, {'route' : grav.uri.query('page')}) } %}
             {% endif %}
 
             {% if conf.show_pagedetails_recent_views %}
-                {% include 'widgets/recently-viewed-pages.html.twig' with {'hide_page': true, 'data': stats.recentPagesByDay(conf.limit_pagedetails_recent_views,null,null, {'route' : grav.uri.query('page')}) } %}
+                {% include 'widgets/recently-viewed-pages.html.twig' with {'hide_page': true, 'data': pageStats.db.recentPagesByDay(conf.limit_pagedetails_recent_views,null,null, {'route' : grav.uri.query('page')}) } %}
             {% endif %}
         </div>
     </div>
