@@ -6,42 +6,29 @@ log_bot: true
 
 
 show_top_users_widget: true
-cols_top_users_widget: 4
+cols_top_users_widget: 'col-12 col-md-3'
 limit_top_users_widget: 10
-
 show_unique_users_widget: true
-cols_unique_users_widget: 4
-
-
+cols_unique_users_widget: 'col-12 col-md-4'
 show_unique_visitors_widget: true
-cols_unique_visitors_widget: 4
-
-
+cols_unique_visitors_widget: 'col-12 col-md-4'
 show_page_views_widget: true
-cols_page_views_widget: 4
-
-
+cols_page_views_widget: 'col-12 col-md-4'
 show_recently_viewed_pages: true
-cols_recently_viewed_pages: 12
+cols_recently_viewed_pages: col-12
 limit_recently_viewed_pages: 15
-
 show_top_pages: true
-cols_top_pages: 12
+cols_top_pages: col-12
 limit_top_pages_pages: 15
-
 show_top_countries: true
-cols_top_countries: 2
+cols_top_countries: 'col-12 col-md-3'
 limit_top_countries: 5
-
 show_top_browsers: true
-cols_top_browsers: 2
+cols_top_browsers: 'col-12 col-md-3'
 limit_top_browsers: 10
-
 show_top_platforms: true
-cols_top_platforms: 2
+cols_top_platforms: 'col-12 col-md-3'
 limit_top_platforms: 10
-
-
 show_pagedetails_recent_views: true
-cols_pagedetails_recent_views: 12
+cols_pagedetails_recent_views: col-12
 limit_pagedetails_recent_views: 15
