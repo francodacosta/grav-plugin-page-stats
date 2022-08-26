@@ -1,6 +1,7 @@
 <div class="mb-5  col-12{{ conf.cols_recently_viewed_pages }}">
-    <h5>
+    <h5 class="d-flex justify-content-between pe-2">
         Recently Viewed Pages
+        {% if hide_show_all is not defined %}<a href="{{ pageStats.urls.allPages }}"> View all</a>{% endif %}
     </h5>
 
     <table class="table table-hover">
