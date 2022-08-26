@@ -223,7 +223,7 @@ class PageStatsPlugin extends Plugin
                         'base' => $pageStatsRoute,
                         'pageDetails' =>  $pageDetailsRoute,
                         'userDetails' => $userDetailsRoute,
-                        'all{ages' => $allPagesRoute,
+                        'allPages' => $allPagesRoute,
                     ],
                 ];
                 break;
@@ -262,14 +262,10 @@ class PageStatsPlugin extends Plugin
                 break;
 
             case $allPagesRoute:
-                die('aaa');
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/all-pages.md'));
                 break;
 
         }
-
-
-        // var_dump($page->slug()); die;
     }
 }
