@@ -46,7 +46,7 @@ class Stats
     {
         $version = 0;
         try {
-            $q = 'SELECT version FROM migrations ORDER BY date Desc LIMIT 1';
+            $q = 'SELECT version FROM migrations ORDER BY id Desc LIMIT 1';
 
             $q = $this->query($q);
 
@@ -57,9 +57,12 @@ class Stats
             $version = 0;
         }
 
+        error_log("==> page-stats:last-migration " . $version);
+
         while (true) {
             $version++;
             $file = new \SplFileInfo(__DIR__ . '/../data/migrations/' . $version . '.sql');
+            error_log("==> page-stats:migrate " . $file->getBasename());
             if (!$file->isFile()) {
                 break;
             }
