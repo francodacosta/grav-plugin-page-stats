@@ -39,8 +39,8 @@ x-widget-size: &widget-size
 
 x-widget-limit: &widget-limit
     type: number
-    label: PLUGIN_PAGE_STATS.WIDGET.LIMIIT.TEXT
-    help: PLUGIN_PAGE_STATS.WIDGET.LIMIIT.HELP
+    label: PLUGIN_PAGE_STATS.WIDGET.LIMIT.TEXT
+    help: PLUGIN_PAGE_STATS.WIDGET.LIMIT.HELP
 form:
     validation: loose
     fields:
