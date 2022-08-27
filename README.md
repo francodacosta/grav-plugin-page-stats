@@ -41,27 +41,6 @@ When you first run this plugin it will:
 
 Before configuring this plugin, you should copy the `user/plugins/page-stats/page-stats.yaml` to `user/config/plugins/page-stats.yaml` and only edit that copy.
 
-Here is the default configuration and an explanation of available options:
-
-```yaml
-enabled: true
-db: user/data/page-data.sqlite
-log_admin: false
-log_bot: false
-show_top_users_widget: true
-show_unique_users_widget: true
-```
-
-
-| parameter | default | explanation |
-| --------- | ------- | ----------- |
-| db | ```user/data/page-data.sqlite``` | db is the path to the stats database file, relative to grav root. |
-| log_admin | ```false``` | if true admin user activity on main website will be logged |
-| log_bot   | ```false``` | if true bot activity on main website will be logged |
-| show_top_users_widget | ```true``` | Show the top users list (users with the most pageview |
-| show_unique_users_widget | ```true``` | Show unique users chart (count of unique logged in users) |
-
-
 > Note:
 > If DB file does not exists it will be created on first run
 >
@@ -86,6 +65,9 @@ page-stats:
 
 Installing the Page Stats plugin can be done in one of three ways: The GPM (Grav Package Manager) installation method lets you quickly install the plugin with a simple terminal command, the manual method lets you do so via a zip file, and the admin method lets you do so via the Admin Plugin.
 
+### Out of memory error when installing
+Because of the geolocation database (>300MB) you might get this error when using gpm or the admin plugin to install, if so you have to either increase the memory limit in `php.ini` or install the plugin manually
+
 ### GPM Installation (Preferred)
 
 To install the plugin via the [GPM](http://learn.getgrav.org/advanced/grav-gpm), through your system's terminal (also called the command line), navigate to the root of your Grav-installation, and enter:
@@ -96,13 +78,10 @@ This will install the Page Stats plugin into your `/user/plugins`-directory with
 
 ### Manual Installation
 
-To install the plugin manually, download the zip-version of this repository and unzip it under `/your/site/grav/user/plugins`. Then rename the folder to `page-stats`. You can find these files on [GitHub](https://github.com//grav-plugin-page-stats) or via [GetGrav.org](http://getgrav.org/downloads/plugins#extras).
-
-You should now have all the plugin files under
-
-    /your/site/grav/user/plugins/page-stats
-
-> NOTE: This plugin is a modular component for Grav which may require other plugins to operate, please see its [blueprints.yaml-file on GitHub](https://github.com//grav-plugin-page-stats/blob/master/blueprints.yaml).
+1. Download the zip-version of this repository and unzip it under `/your/site/grav/user/plugins`. You can find these files on [GitHub](https://github.com//grav-plugin-page-stats)
+2. Then rename the folder to `page-stats`
+2. Copy the `user/plugins/page-stats/page-stats.yaml` to `user/config/plugins/page-stats.yaml` and only edit that copy.
+4. Unzip the geolocation database file found on `user/plugins/page-stats/data/geolocation.sqlite.zip` and upload it to user/plugins/page-stats/data/geolocation.sqlite`
 
 ### Admin Plugin
 
