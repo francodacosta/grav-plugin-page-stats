@@ -50,6 +50,13 @@ page-stats:
 ---
 ```
 
+## Database Migrations/Updates
+From time to time database changes are published to support new features. Migrations should happen automatically but if you get errors like `Column XYZ not found` do the following
+
+1. Create an empty file on `user/plugins/page-stats/data/migrations/MUST_MIGRATE`
+2. Navigate to a page on your website
+
+This will trigger the plugin to execute the database migration and will delete the MUST_MIGRATE file
 
 ## Installation
 
