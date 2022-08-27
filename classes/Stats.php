@@ -115,9 +115,9 @@ class Stats
 
         $s = $this->db->prepare('
             INSERT INTO data
-                ("ip", "country", "city", "region", "route", "page_title", "user", "date", "user_agent", "is_bot", "browser", "browser_version", "platform")
+                ("ip", "country", "city", "region", "route", "page_title", "user", "date", "user_agent", "is_bot", "browser", "browser_version", "platform", "referer")
              VALUES
-                (:ip, :country, :city, :region, :route, :title, :user, :date, :user_agent, :is_bot, :browser, :browser_version, :platform)
+                (:ip, :country, :city, :region, :route, :title, :user, :date, :user_agent, :is_bot, :browser, :browser_version, :platform, :referer)
         ');
 
 
@@ -137,6 +137,7 @@ class Stats
         $s->bindValue(':browser', $browser->getBrowser());
         $s->bindValue(':browser_version', $browser->getVersion());
         $s->bindValue(':platform', $browser->getPlatform());
+        $s->bindValue(':referer', $_SERVER['HTTP_REFERER']);
 
         $s->execute();
     }

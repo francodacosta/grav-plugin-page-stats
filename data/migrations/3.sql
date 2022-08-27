@@ -1,0 +1,8 @@
+PRAGMA foreign_keys = off;
+
+BEGIN TRANSACTION;
+
+ALTER TABLE data ADD COLUMN referer STRING (500);
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;
