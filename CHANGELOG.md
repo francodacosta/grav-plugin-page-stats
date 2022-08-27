@@ -4,6 +4,28 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.0.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.3...v2.0.0) (2022-08-27)
+
+### ⚠ BREAKING CHANGES
+
+* Usin bin geolocation db ([54b6a9](https://github.com/francodacosta/grav-plugin-page-stats/commit/54b6a9e40e6b8c4ff8ad66d4aa3632d90635b843))
+
+### Features
+
+* Show all pages on most recent ([3c0784](https://github.com/francodacosta/grav-plugin-page-stats/commit/3c07842e1be491f99dce7b0264167417f0af0c20))
+* View all pages ([7cf039](https://github.com/francodacosta/grav-plugin-page-stats/commit/7cf0396f451896c16b7d4fdd80224fbac81fb416))
+
+### Bug Fixes
+
+* No limit on all pages ([cf3513](https://github.com/francodacosta/grav-plugin-page-stats/commit/cf3513c47ff25c748c1a09324284fd05e4840444))
+
+
+<!--- BEGIN HEADER -->
+# Changelog
+
+All notable changes to this project will be documented in this file.
+<!--- END HEADER -->
+
 ## [1.10.0](https://github.com/francodacosta/grav-plugin-page-stats/compare/1.9.3...v1.10.0) (2022-08-26)
 
 ### Features
