@@ -208,12 +208,14 @@ class PageStatsPlugin extends Plugin
         $dbPath = $config['db'];
 
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
+        $dashboardRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . '/dashboard';
         $pageStatsRoute = $adminRoute;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
         $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
 
         switch($uri->path()) {
+            case $dashboardRoute:
             case $userDetailsRoute:
             case $pageStatsRoute:
             case $pageDetailsRoute:

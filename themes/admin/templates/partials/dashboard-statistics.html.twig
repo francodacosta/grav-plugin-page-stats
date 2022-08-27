@@ -1,0 +1,53 @@
+{% if authorize(['admin.statistics', 'admin.super']) %}
+    {% set data = pageStats.db.siteSummary.hits %}
+
+    <div class="dashboard-item dashboard-right">
+        <div class="primary-accent default-box-shadow">
+            <h1>{{ "PLUGIN_ADMIN.VIEWS_STATISTICS"|t }}</h1>
+            <div style="height: 260px">
+                <canvas id="chart_hits"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    Chart.defaults.color = "#fff";
+    Chart.defaults.borderColor = "#999";
+        var ctx = document.getElementById("chart_hits").getContext("2d");
+        var myChart = new Chart(ctx, {
+            type: "line",
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    x: {
+                        display: false
+                    }
+                }
+            },
+            data: {
+                datasets: [
+
+                    {
+                        borderColor: "#fff",
+                        label: 'Page Views',
+                        data: [{% for s in data %}{
+                                    x: "{{ s.date }}",
+                                    y: {{ s.hits }}
+                                },{% endfor %}]
+                    }
+                ]
+            }
+        });
+    </script>
+{% endif %}
