@@ -29,10 +29,10 @@ class Geolocation
         $result = $this->db->lookup($ip);
 
         return new GeolocationData(
-            $result['countryCode'] ?? 'unkown',
-            $result['countryName'] ?? 'unkown',
-            $result['regionName'] ?? 'unkown',
-            $result['cityName'] ?? 'unkown'
+            $result['countryCode'] ?? 'unknown',
+            $result['countryName'] ?? 'unknown',
+            $result['regionName'] ?? 'unknown',
+            $result['cityName'] ?? 'unknown'
         );
     }
 }
