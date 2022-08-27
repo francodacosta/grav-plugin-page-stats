@@ -10,14 +10,15 @@ use RocketTheme\Toolbox\Event\Event;;
 use Grav\Plugin\PageStats\Geolocation\Geolocation;
 use Grav\Plugin\PageStats\Stats;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
-
+use IP2Location\Database;
 /**
  * Class PageStatsPlugin
  * @package Grav\Plugin
  */
 class PageStatsPlugin extends Plugin
 {
-    const GEO_DB = __DIR__ . '/data/geolocation.sqlite';
+    // const GEO_DB = __DIR__ . '/data/geolocation.sqlite';
+    const GEO_DB = __DIR__ . '/data/IP2LOCATION-LITE-DB3.BIN';
 
     const PATH_ADMIN_STATS = '/page-stats';
     const PATH_ADMIN_PAGE_DETAIL = '/page-details';
@@ -166,7 +167,7 @@ class PageStatsPlugin extends Plugin
             if (false === $this->isEnabledForIp($ip)) {
                 return;
             }
-            $geo = (new Geolocation(self::GEO_DB))->locate($ip);
+            $geo = (new Geolocation(new Database(self::GEO_DB)))->locate($ip);
 
             $config = $this->config();
             $browser = $this->grav['browser'];

@@ -1,6 +1,53 @@
 {
     "packages": [
         {
+            "name": "ip2location/ip2location-php",
+            "version": "8.3.0",
+            "version_normalized": "8.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chrislim2888/IP2Location-PHP-Module.git",
+                "reference": "4c501aa1f666ae85eab84d4df9d19399f2e6ce15"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chrislim2888/IP2Location-PHP-Module/zipball/4c501aa1f666ae85eab84d4df9d19399f2e6ce15",
+                "reference": "4c501aa1f666ae85eab84d4df9d19399f2e6ce15",
+                "shasum": ""
+            },
+            "time": "2020-11-23T04:30:39+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "IP2Location.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "IP2Location",
+                    "email": "support@ip2location.com",
+                    "homepage": "http://www.ip2location.com"
+                }
+            ],
+            "description": "[Official Release] IP2Location PHP API to get location info from IPv4 and IPv6 address.",
+            "homepage": "http://www.ip2location.com",
+            "keywords": [
+                "geolocation",
+                "ip2location",
+                "ip2locationlite"
+            ],
+            "support": {
+                "issues": "https://github.com/chrislim2888/IP2Location-PHP-Module/issues",
+                "source": "https://github.com/chrislim2888/IP2Location-PHP-Module/tree/8.3.0"
+            },
+            "install-path": "../ip2location/ip2location-php"
+        },
+        {
             "name": "marcocesarato/php-conventional-changelog",
             "version": "1.15.1",
             "version_normalized": "1.15.1.0",

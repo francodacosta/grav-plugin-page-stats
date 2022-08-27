@@ -17,7 +17,8 @@
     "require": {
         "php": ">=7.1.3",
         "ext-sqlite3": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ip2location/ip2location-php": "^8.3"
     },
     "autoload": {
         "psr-4": {
