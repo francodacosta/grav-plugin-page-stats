@@ -15,8 +15,13 @@ en:
         LIMIT:
             TEXT: Limit
             HELP: The number of records to fetch
+        STYLE:
+            TEXT: Style
+            HELP: The style used to present data (table or chart)
 
 
+    LOG_TIME_ON_PAGE_LABEL: Log time on page
+    LOG_TIME_ON_PAGE_HELP: If enabled Front End will trigger a ping event at regular intervals to mark the user as still on the page
     # STATS_DB_CREATE_LABEL: Recreate Stats database
     # STATS_DB_CREATE_HELP: This will create a db at the path specified and will overrite an existinf one without any questions
     # STATS_DB_CREATE_BTN_TEXT: Create new Stats database
@@ -27,40 +32,22 @@ en:
     LOG_BOT_HELP: By default we do not log activity of known BOTS, enable to log
 
     TOP_USERS_WIDGET: Top Users
-    SHOW_TOP_USERS_WIDGET_LABEL: Show Top Users Widget
-    SHOW_TOP_USERS_WIDGET_HELP: If enabled the Top Users Widget will be visible on the overview page
 
     UNIQUE_USERS_WIDGET: Unique Users
-    SHOW_UNIQUE_USERS_WIDGET_LABEL: Show Unique Users Widget
-    SHOW_UNIQUE_USERS_WIDGET_HELP: If enabled the Unique Users Widget will be visible on the overview page
 
     UNIQUE_VISITORS_WIDGET: Unique Visitors
-    SHOW_UNIQUE_VISITORS_WIDGET_LABEL: Show Unique Visitors Widget
-    SHOW_UNIQUE_VISITORS_WIDGET_HELP: If enabled the Unique Visitors Widget will be visible on the overview page
 
     PAGE_VIEWS_WIDGET: Page Views
-    SHOW_PAGE_VIEWS_WIDGET_LABEL: Show Page Views Widget
-    SHOW_PAGE_VIEWS_WIDGET_HELP: If enabled the Page Views Widget will be visible on the overview page
 
     RECENTLY_VIEWED_PAGES: Recently Viewed Pages
-    SHOW_RECENTLY_VIEWED_PAGES_LABEL: Show Recently Viewed Pages Widget
-    SHOW_RECENTLY_VIEWED_PAGES_HELP: If enabled the Recently Viewed Pages Widget will be visible on the overview page
 
     TOP_PAGES: Top Pages
-    SHOW_TOP_PAGES_LABEL: Show Top Pages Widget
-    SHOW_TOP_PAGES_HELP: If enabled the Top Pages  Widget will be visible on the overview page
 
     TOP_BROWSERS: Top Browsers
-    SHOW_TOP_BROWSERS_LABEL: Show Top Browsers Widget
-    SHOW_TOP_BROWSERS_HELP: If enabled the Top Browsers  Widget will be visible on the overview page
 
     TOP_COUNTRIES: Top Countries
-    SHOW_TOP_COUNTRIES_LABEL: Show Top Countries Widget
-    SHOW_TOP_COUNTRIES_HELP: If enabled the Top Countries  Widget will be visible on the overview page
 
     TOP_PLATFORMS: Top Platforms
-    SHOW_TOP_PLATFORMS_LABEL: Show Top Platforms Widget
-    SHOW_TOP_PLATFORMS_HELP: If enabled the Top Platforms (Operating Systems)  Widget will be visible on the overview page
 
     IGNORED_IPS_LABEL: "IP's to ignore"
     IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotter notation (eg: 127.0.0.1 or 127.*)"
@@ -85,6 +72,4 @@ en:
 
     PAGE_DETAILS:
       RECENT_VIEWS: Recent Views on Page Details
-      RECENT_VIEWS_LABEL: Show Widget
-      RECENT_VIEWS_HELP: If visible widget will be shown
 

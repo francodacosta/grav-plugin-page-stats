@@ -36,6 +36,13 @@ x-widget-size: &widget-size
         'col-12 col-md-4': 'medium'
         'col-12 col-md-6': 'large'
         'col-12': 'full width'
+x-widget-style: &widget-style
+    type: select
+    label: PLUGIN_PAGE_STATS.WIDGET.STYLE.TEXT
+    help: PLUGIN_PAGE_STATS.WIDGET.STYLE.HELP
+    options:
+        'table' : table
+        'chart': chart
 
 x-widget-limit: &widget-limit
     type: number
@@ -119,6 +126,7 @@ form:
                         show_top_browsers: *widget-enabled
                         cols_top_browsers: *widget-size
                         limit_top_browsers: *widget-limit
+                        style_top_browsers: *widget-style
                 fs8:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_COUNTRIES
@@ -137,6 +145,8 @@ form:
                         show_top_platforms: *widget-enabled
                         cols_top_platforms: *widget-size
                         limit_top_platforms: *widget-limit
+                        style_top_platforms: *widget-style
+
                 fs5:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.RECENTLY_VIEWED_PAGES
@@ -179,6 +189,17 @@ form:
                     help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
                     highlight: 0
                     default: 0
+                    options:
+                        1: PLUGIN_ADMIN.ENABLED
+                        0: PLUGIN_ADMIN.DISABLED
+                    validate:
+                        type: bool
+                log_time_on_page:
+                    type: toggle
+                    label: PLUGIN_PAGE_STATS.LOG_TIME_ON_PAGE_LABEL
+                    help: PLUGIN_PAGE_STATS.LOG_TIME_ON_PAGE_HELP
+                    highlight: 1
+                    default: 1
                     options:
                         1: PLUGIN_ADMIN.ENABLED
                         0: PLUGIN_ADMIN.DISABLED

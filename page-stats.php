@@ -194,9 +194,10 @@ class PageStatsPlugin extends Plugin
                     ]
             ];
 
-
-            $this->grav['assets']->addInlineJs('var pageStats = ' . json_encode($vars), ['position' => 'before']);
-            $this->grav['assets']->addJs('plugins://page-stats/js/ps.js', []);
+            if ($config['log_time_on_page']) {
+                $this->grav['assets']->addInlineJs('var pageStats = ' . json_encode($vars), ['position' => 'before']);
+                $this->grav['assets']->addJs('plugins://page-stats/js/ps.js', []);
+            }
         } catch (\Throwable $e) {
             error_log($e->getmessage());
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());

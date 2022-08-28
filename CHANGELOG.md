@@ -1,3 +1,12 @@
+# v2.2.0
+## 31/08/2022
+
+1. [](#new)
+    * Front End event collection support
+    * time on page
+    * top browsers as table or pie chart
+    * top platforms as table or pie chart
+
 
 # v2.1.0
 ## 27/08/2022

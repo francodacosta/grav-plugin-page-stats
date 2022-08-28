@@ -105,7 +105,8 @@ Flags from https://flagpedia.net
 - [X] Referer logging
 - [ ] World map view
 - [ ] Referer analysis, to better understand where users are comming from
-- [ ] Time on page
+- [X] Time on page
+- [ ] Enable/Disable front end event collection
 - [ ] custom events triggered by javascript
 
 

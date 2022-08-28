@@ -4,7 +4,8 @@ ignore_errors: true
 log_admin: true
 log_bot: true
 
-collector_ping_interval: 10
+collector_ping_interval: 15
+log_time_on_page: true
 
 show_top_users_widget: true
 cols_top_users_widget: 'col-12 col-md-3'
@@ -33,3 +34,5 @@ limit_top_platforms: 10
 show_pagedetails_recent_views: true
 cols_pagedetails_recent_views: col-12
 limit_pagedetails_recent_views: 15
+style_top_browsers: chart
+style_top_platforms: chart
