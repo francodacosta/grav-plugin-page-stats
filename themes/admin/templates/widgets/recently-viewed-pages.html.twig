@@ -14,12 +14,16 @@
                     Page
                 </th>
             {% endif %}
+            <th>User</th>
             <th>Location</th>
             <th>
                 Browser
             </th>
             <th>
                 Platform
+            </th>
+            <th>
+                Time on Page
             </th>
         </tr>
         {% for day, d in data %}
@@ -30,7 +34,7 @@
                 </td>
             </tr>
             {% for s in d %}
-                <tr>
+                   <tr>
                     <td>
                         {{ s.time }}
                     </td>
@@ -47,6 +51,9 @@
                     {% endif %}
 
                     <td>
+                        {{ s.user|default(s.ip)}}
+                    </td>
+                    <td>
                         {{ s.city }}
                         -
                         {{ s.country }}
@@ -57,6 +64,14 @@
                     </td>
                     <td>
                         {{ s.platform }}
+                    </td>
+                    <td>
+                    {% set top = pageStats.db.timeOnPage(s.id) %}
+                    {% if top.seconds %}
+                        {{ top.seconds }} s
+                    {% else %}
+                        -
+                    {% endif %}
                     </td>
                 </tr>
             {% endfor %}

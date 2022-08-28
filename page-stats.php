@@ -7,10 +7,12 @@ use DateTimeImmutable;
 use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
 use RocketTheme\Toolbox\Event\Event;;
+
 use Grav\Plugin\PageStats\Geolocation\Geolocation;
 use Grav\Plugin\PageStats\Stats;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
 use IP2Location\Database;
+
 /**
  * Class PageStatsPlugin
  * @package Grav\Plugin
@@ -24,6 +26,7 @@ class PageStatsPlugin extends Plugin
     const PATH_ADMIN_PAGE_DETAIL = '/page-details';
     const PATH_ADMIN_USER_DETAIL = '/user-details';
     const PATH_ADMIN_ALL_PAGES = '/all-pages';
+    const PATH_EVENTS_COLLECTION = '/event-collection';
 
     /**
      * @return array
@@ -140,10 +143,10 @@ class PageStatsPlugin extends Plugin
      */
     private function isEnabledForIp(string $ip): bool
     {
-        $config = $config = $this->config();
+        $config  = $this->config();
         if (isset($config['ignored_ips']) && is_array($config['ignored_ips'])) {
-            $ips = array_map(function($a) {
-                return isset($a['ip']) ? $a['ip']: '' ;
+            $ips = array_map(function ($a) {
+                return isset($a['ip']) ? $a['ip'] : '';
             }, $config['ignored_ips']);
 
             $regexp = implode('|', $ips);
@@ -155,9 +158,16 @@ class PageStatsPlugin extends Plugin
         return true;
     }
 
-    public function onPageInitialized()
+
+    /**
+     * collecs stats about page data
+     */
+    private function collectPageData()
     {
         try {
+            $config  = $this->config();
+            $collectorRoute =  self::PATH_ADMIN_STATS . self::PATH_EVENTS_COLLECTION;
+
             $page = $this->grav['page'];
             if (false === $this->isEnabledForPage((array)$page->header())) {
                 return;
@@ -169,12 +179,24 @@ class PageStatsPlugin extends Plugin
             }
             $geo = (new Geolocation(new Database(self::GEO_DB)))->locate($ip);
 
-            $config = $this->config();
             $browser = $this->grav['browser'];
             $dbPath = $config['db'];
 
+            $stats = new Stats($dbPath, $this->config());
 
-            (new Stats($dbPath, $this->config()))->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable(), $browser);
+            $sessionId = $stats->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable(), $browser);
+
+            $vars = [
+                    'sid' => $sessionId,
+                    'url' => $collectorRoute,
+                    'config' => [
+                        'ping' => $config["collector_ping_interval"],
+                    ]
+            ];
+
+
+            $this->grav['assets']->addInlineJs('var pageStats = ' . json_encode($vars), ['position' => 'before']);
+            $this->grav['assets']->addJs('plugins://page-stats/js/ps.js', []);
         } catch (\Throwable $e) {
             error_log($e->getmessage());
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());
@@ -185,6 +207,59 @@ class PageStatsPlugin extends Plugin
                 throw $e;
             }
         }
+    }
+
+    /**
+     * Collect event data passed to us by front end
+     */
+    private function collectEventData(): void
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            exit;
+        }
+
+        if(!isset($data['session_id'])) {
+            echo 'sid';
+            http_response_code(400);
+            exit();
+        }
+
+        if(!isset($data['event'])) {
+            echo 'event';
+            http_response_code(400);
+            exit();
+        }
+        if(!isset($data['value'])) {
+            echo 'value';
+            http_response_code(400);
+            exit();
+        }
+
+        $config  = $this->config();
+        $dbPath = $config['db'];
+
+
+        $stats = new Stats($dbPath, $this->config());
+        $stats->collectEvent($data['session_id'], $data['event'], $data['value']);
+
+        exit();
+    }
+    public function onPageInitialized()
+    {
+        $uri = $this->grav['uri'];
+
+        $collectorRoute =  self::PATH_ADMIN_STATS . self::PATH_EVENTS_COLLECTION;
+
+        switch ($uri->path()) {
+            case $collectorRoute:
+                $this->collectEventData();
+                break;
+            default:
+                $this->collectPageData();
+                break;
+        }
+
     }
 
 
@@ -214,7 +289,7 @@ class PageStatsPlugin extends Plugin
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
         $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
 
-        switch($uri->path()) {
+        switch ($uri->path()) {
             case $dashboardRoute:
             case $userDetailsRoute:
             case $pageStatsRoute:
@@ -230,8 +305,7 @@ class PageStatsPlugin extends Plugin
                     ],
                 ];
                 break;
-            }
-
+        }
     }
 
     public function onAdminPage(Event $event)
@@ -242,13 +316,13 @@ class PageStatsPlugin extends Plugin
 
 
         $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
-        $pageStatsRoute = $adminRoute ;
+        $pageStatsRoute = $adminRoute;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
         $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
 
 
-        switch($uri->path()) {
+        switch ($uri->path()) {
             case $pageStatsRoute:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
@@ -268,7 +342,6 @@ class PageStatsPlugin extends Plugin
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/all-pages.md'));
                 break;
-
         }
     }
 }

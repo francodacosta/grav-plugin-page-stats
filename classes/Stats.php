@@ -71,7 +71,7 @@ class Stats
             $this->db->exec('INSERT INTO migrations (version) VALUES(' . $version . ');');
         }
 
-        unlink (__DIR__ . self::FORCE_MIGRATION_FLAG);
+        unlink(__DIR__ . self::FORCE_MIGRATION_FLAG);
     }
 
     /**
@@ -95,22 +95,43 @@ class Stats
         ];
     }
 
+    /**
+     * collects stats about a page event
+     */
+    public function collectEvent(string $sid, string $name, string $value): void
+    {
+        $s = $this->db->prepare('
+            INSERT INTO events
+                ("session_id", "event", "value")
+            VALUES
+                (:session_id, :event, :value)
+        ');
+
+        $s->bindValue(':session_id', $sid);
+        $s->bindValue(':event', $name);
+        $s->bindValue(':value', $value);
+
+        $s->execute();
+    }
 
     /**
-     * save stats into db
+     * save stats into db.
+     * It returns the last inserted id on the table, this can be used and a FK for logging events for that session
+     *
+     * @returns string "0" on error or the last insert id otherwise
      */
-    public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date, Browser $browser): void
+    public function collect(string $ip, GeolocationData $geo, PageInterface $page, $uri,  UserInterface $user, DateTimeImmutable $date, Browser $browser): string
     {
         if ($this->isBot()) {
             if (false === $this->config['log_bot']) {
                 error_log('Bot detected and we are configured to not log bot activiy');
-                return;
+                return "0";
             }
         }
 
         if ($this->config['log_admin'] == false &&  $user->authorize('admin.login')) {
             error_log('=====>> Admin user detected, we are configured not to log admin activity.');
-            return;
+            return "0";
         }
 
         $s = $this->db->prepare('
@@ -140,6 +161,8 @@ class Stats
         $s->bindValue(':referer', $_SERVER['HTTP_REFERER']);
 
         $s->execute();
+
+        return $this->db->lastInsertId();
     }
 
     private function query(string $q, array $params = [], ?int $limit = null, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
@@ -152,14 +175,13 @@ class Stats
         }
 
         foreach ($params as $key => $value) {
-           $where[] = "$key = :$key";
+            $where[] = "$key = :$key";
         }
 
         if (count($where)) {
-          $q =  str_replace('%where', ' WHERE ' . implode(' AND ' , $where), $q);
+            $q =  str_replace('%where', ' WHERE ' . implode(' AND ', $where), $q);
         } else {
             $q = str_replace('%where', '', $q);
-
         }
 
         if ($limit && (int) $limit > 0) {
@@ -215,7 +237,7 @@ class Stats
 
 
         $result = [];
-        foreach($countries as  $country) {
+        foreach ($countries as  $country) {
             if (empty($country['country'])) {
                 $country['country'] = 'unknown';
             }
@@ -233,11 +255,11 @@ class Stats
     /**
      * returns the total page views
      */
-    public function totalPageViews( ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    public function totalPageViews(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $q = 'select count(route) as hits from data %where';
 
-        return $this->query($q,$params, null, $dateFrom, $dateTo);
+        return $this->query($q, $params, null, $dateFrom, $dateTo);
     }
 
     /**
@@ -253,7 +275,7 @@ class Stats
 
 
         $result = [];
-        foreach($browsers as  $browser) {
+        foreach ($browsers as  $browser) {
             if (empty($browser['browser'])) {
                 $browser['browser'] = 'unknown';
             }
@@ -280,7 +302,7 @@ class Stats
 
 
         $result = [];
-        foreach($platforms as  $platform) {
+        foreach ($platforms as  $platform) {
             if (empty($platform['platform'])) {
                 $platform['platform'] = 'unknown';
             }
@@ -313,8 +335,8 @@ class Stats
         $pages = $this->recentPages($limit, $dateFrom, $dateTo, $params);
 
         $result = [];
-        foreach($pages as $p) {
-            if (! array_key_exists($p['day'], $result)) {
+        foreach ($pages as $p) {
+            if (!array_key_exists($p['day'], $result)) {
                 $result[$p['day']] = [];
             }
             $result[$p['day']][] = $p;
@@ -337,5 +359,19 @@ class Stats
             'visitors' => $visitors,
             'users' => $users,
         ];
+    }
+
+
+    public function timeOnPage(?string $sid)
+    {
+        if (!$sid) {
+            return;
+        }
+        $params = [
+            'session_id' => $sid,
+            'event' => 'ping',
+        ];
+
+        return $this->query('select min(date) as start, max(date) as end, ROUND((JULIANDAY(max(date)) - JULIANDAY(min(date))) * 86400) AS seconds from events %where', $params)[0];
     }
 }
