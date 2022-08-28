@@ -158,7 +158,7 @@ class Stats
         $s->bindValue(':browser', $browser->getBrowser());
         $s->bindValue(':browser_version', $browser->getVersion());
         $s->bindValue(':platform', $browser->getPlatform());
-        $s->bindValue(':referer', $_SERVER['HTTP_REFERER']);
+        $s->bindValue(':referer', $_SERVER['HTTP_REFERER']??'');
 
         $s->execute();
 
