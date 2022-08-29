@@ -1,6 +1,16 @@
-{% set conf = config.plugins['page-stats'] %}
+<div class="mb-5 {{ conf.cols_top_countries }}">
+    <h5 class=" mb-2">
+         {% if hide_show_all is not defined %}
+            <a href="{{ pageStats.urls.topPlatforms }}" title="View All"><i class="fa fa-fw fa-line-chart"></i> Top Platforms</a>
+        {% else %}
+            Top Platforms
+        {% endif %}
+    </h5>
+
+    {% set conf = config.plugins['page-stats'] %}
 {% if conf.style_top_platforms == 'table' %}
     {% include 'widgets/top-platforms-table.html.twig' %}
 {% else %}
         {% include 'widgets/top-platforms-pie.html.twig' %}
 {% endif %}
+</div>

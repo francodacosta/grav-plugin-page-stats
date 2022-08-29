@@ -1,12 +1,5 @@
-<div class="mb-5 {{ conf.cols_top_browsers }}">
-    <h5>
-        Top Platforms
-
-    </h5>
-
-    <div style="width: w-100">
-        <canvas id="top_platforms"></canvas>
-    </div>
+<div style="width: w-100">
+    <canvas id="top_platforms"></canvas>
 </div>
 
 
@@ -29,7 +22,7 @@
                     callbacks: {
                         label: function (context) {
                             console.log(context)
-                            return context.label  + " : " + context.parsed   + ' %';
+                            return context.label + " : " + context.parsed + ' %';
                         }
                     }
                 }
