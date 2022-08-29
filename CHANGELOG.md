@@ -10,6 +10,7 @@
     * View stats for all countries
     * View stats for all browsers
     * View stats for all platforms
+    * View stats for all users
 1. [](#bugfix)
     * fix error message when http_referer is not set
     *  do not include FE tracker is not enabled for that page

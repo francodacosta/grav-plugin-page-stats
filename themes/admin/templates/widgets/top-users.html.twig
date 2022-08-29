@@ -1,7 +1,12 @@
 <div class="mb-5 {{ conf.cols_top_users_widget }}">
     <h5>
-        Top Users
-
+        {% if hide_show_all is not defined %}
+            <a href="{{ pageStats.urls.topUsers }}" title="View All">
+                <i class="fa fa-fw fa-line-chart"></i>
+                Top Users</a>
+        {% else %}
+            Top Users
+        {% endif %}
     </h5>
     <table class="table table-hover">
         <tr>

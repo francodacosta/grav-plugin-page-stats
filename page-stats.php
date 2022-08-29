@@ -29,6 +29,7 @@ class PageStatsPlugin extends Plugin
     const PATH_ADMIN_TOP_COUNTRIES = '/top-countries';
     const PATH_ADMIN_TOP_BROWSERS = '/top-browsers';
     const PATH_ADMIN_TOP_PLATFORMS = '/top-platforms';
+    const PATH_ADMIN_TOP_USERS = '/top-users';
     const PATH_EVENTS_COLLECTION = '/event-collection';
 
     /**
@@ -314,6 +315,7 @@ class PageStatsPlugin extends Plugin
         $topCountriesRoute = $adminRoute . self::PATH_ADMIN_TOP_COUNTRIES;
         $topBrowsersRoute = $adminRoute . self::PATH_ADMIN_TOP_BROWSERS;
         $topPlatformsRoute = $adminRoute . self::PATH_ADMIN_TOP_PLATFORMS;
+        $topUsersRoute = $adminRoute . self::PATH_ADMIN_TOP_USERS;
 
         return [
             'dashboard' => $dashboardRoute,
@@ -324,6 +326,7 @@ class PageStatsPlugin extends Plugin
             'topCountries' => $topCountriesRoute,
             'topBrowsers' => $topBrowsersRoute,
             'topPlatforms' => $topPlatformsRoute,
+            'topUsers' => $topUsersRoute,
         ];
     }
 
@@ -332,10 +335,6 @@ class PageStatsPlugin extends Plugin
         $uri = $this->grav['uri'];
         $routes = $this->getPluginRoutes();
         $page = new Page;
-
-
-
-
 
         switch ($uri->path()) {
             case $routes['base']:
@@ -371,6 +370,11 @@ class PageStatsPlugin extends Plugin
             case $routes['topPlatforms']:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/top-platforms.md'));
+                break;
+
+            case $routes['topUsers']:
+                $page = $event['page'];
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/top-users.md'));
                 break;
         }
     }
