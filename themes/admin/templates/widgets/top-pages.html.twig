@@ -1,7 +1,8 @@
 <div class="col-{{ conf.cols_top_pages }}">
     <h5 class="d-flex justify-content-between pe-2">
         {{ title|default('Most Viewed Pages') }}
-        {% if hide_show_all is not defined %}<a href="{{ pageStats.urls.allPages }}"> View all</a>{% endif %}
+        {% if hide_show_all is not defined %}<a href="{{ pageStats.urls.allPages }}"> <i class="fa fa-fw fa-line-chart"></i> View all</a>{% endif %}
+
     </h5>
     <table class="table">
         <tr>

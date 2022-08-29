@@ -103,9 +103,10 @@ Flags from https://flagpedia.net
 - [X] Top country stats
 - [X] Page details (select page and seee detailed stats about that page)
 - [X] Referer logging
-- [ ] World map view
 - [ ] Referer analysis, to better understand where users are comming from
 - [X] Time on page
+- [ ] World map view
+- [ ] Show city stats on all country stats page
 - [ ] Enable/Disable front end event collection
 - [ ] custom events triggered by javascript
 

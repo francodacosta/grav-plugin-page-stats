@@ -1,7 +1,10 @@
 <div class="mb-5 {{ conf.cols_top_countries }}">
-    <h5 class=" d-flex justify-content-between mb-2">
-        Top Countries
-         {% if hide_show_all is not defined %}<a href="{{ pageStats.urls.topCountries }}"> View all</a>{% endif %}
+    <h5 class=" mb-2">
+         {% if hide_show_all is not defined %}
+            <a href="{{ pageStats.urls.topCountries }}" title="View All"><i class="fa fa-fw fa-line-chart"></i> Top Countries</a>
+        {% else %}
+            Top Countries
+        {% endif %}
     </h5>
 
     {% set conf = config.plugins['page-stats'] %}
