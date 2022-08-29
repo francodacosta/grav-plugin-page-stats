@@ -169,33 +169,28 @@ class PageStatsPlugin extends Plugin
             $collectorRoute =  self::PATH_ADMIN_STATS . self::PATH_EVENTS_COLLECTION;
 
             $page = $this->grav['page'];
-            if (false === $this->isEnabledForPage((array)$page->header())) {
-                return;
-            }
-
             $ip = $this->getUserIP();
-            if (false === $this->isEnabledForIp($ip)) {
-                return;
-            }
             $geo = (new Geolocation(new Database(self::GEO_DB)))->locate($ip);
-
+            $uri = $this->grav['uri']->uri(false);
+            $user = $this->grav['user'];
+            $now = new DateTimeImmutable();
             $browser = $this->grav['browser'];
             $dbPath = $config['db'];
 
             $stats = new Stats($dbPath, $this->config());
 
-            $sessionId = $stats->collect($ip, $geo, $this->grav['page'], $this->grav['uri']->uri(false), $this->grav['user'], new DateTimeImmutable(), $browser);
+            $sessionId = $stats->collect($ip, $geo, $page, $uri, $user, $now, $browser);
 
-            $vars = [
+            if ($config['log_time_on_page']) {
+                $vars = json_encode([
                     'sid' => $sessionId,
                     'url' => $collectorRoute,
                     'config' => [
                         'ping' => $config["collector_ping_interval"],
                     ]
-            ];
+                ]);
 
-            if ($config['log_time_on_page']) {
-                $this->grav['assets']->addInlineJs('var pageStats = ' . json_encode($vars), ['position' => 'before']);
+                $this->grav['assets']->addInlineJs('var pageStats = ' . $vars, ['position' => 'before']);
                 $this->grav['assets']->addJs('plugins://page-stats/js/ps.js', []);
             }
         } catch (\Throwable $e) {
@@ -220,18 +215,18 @@ class PageStatsPlugin extends Plugin
             exit;
         }
 
-        if(!isset($data['session_id'])) {
+        if (!isset($data['session_id'])) {
             echo 'sid';
             http_response_code(400);
             exit();
         }
 
-        if(!isset($data['event'])) {
+        if (!isset($data['event'])) {
             echo 'event';
             http_response_code(400);
             exit();
         }
-        if(!isset($data['value'])) {
+        if (!isset($data['value'])) {
             echo 'value';
             http_response_code(400);
             exit();
@@ -252,6 +247,17 @@ class PageStatsPlugin extends Plugin
 
         $collectorRoute =  self::PATH_ADMIN_STATS . self::PATH_EVENTS_COLLECTION;
 
+
+        $page = $this->grav['page'];
+        if (false === $this->isEnabledForPage((array)$page->header())) {
+            return;
+        }
+
+        $ip = $this->getUserIP();
+        if (false === $this->isEnabledForIp($ip)) {
+            return;
+        }
+
         switch ($uri->path()) {
             case $collectorRoute:
                 $this->collectEventData();
@@ -260,7 +266,6 @@ class PageStatsPlugin extends Plugin
                 $this->collectPageData();
                 break;
         }
-
     }
 
 
