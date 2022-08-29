@@ -26,6 +26,7 @@ class PageStatsPlugin extends Plugin
     const PATH_ADMIN_PAGE_DETAIL = '/page-details';
     const PATH_ADMIN_USER_DETAIL = '/user-details';
     const PATH_ADMIN_ALL_PAGES = '/all-pages';
+    const PATH_ADMIN_TOP_COUNTRIES = '/top-countries';
     const PATH_EVENTS_COLLECTION = '/event-collection';
 
     /**
@@ -288,65 +289,72 @@ class PageStatsPlugin extends Plugin
         $config = $this->config();
         $dbPath = $config['db'];
 
-        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
+        $routes = $this->getPluginRoutes();
+
+        if (in_array($uri->path(), $routes)) {
+            $this->grav['twig']->twig_vars['pageStats'] = [
+                'db' =>  new Stats($dbPath, $this->config()),
+                'urls' => $this->getPluginRoutes(),
+            ];
+        }
+    }
+
+    private function getPluginRoutes(): array
+    {
+        $config = $this->config();
+
         $dashboardRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . '/dashboard';
+        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
         $pageStatsRoute = $adminRoute;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
         $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
+        $topCountriesRoute = $adminRoute . self::PATH_ADMIN_TOP_COUNTRIES;
 
-        switch ($uri->path()) {
-            case $dashboardRoute:
-            case $userDetailsRoute:
-            case $pageStatsRoute:
-            case $pageDetailsRoute:
-            case $allPagesRoute:
-                $this->grav['twig']->twig_vars['pageStats'] = [
-                    'db' =>  new Stats($dbPath, $this->config()),
-                    'urls' => [
-                        'base' => $pageStatsRoute,
-                        'pageDetails' =>  $pageDetailsRoute,
-                        'userDetails' => $userDetailsRoute,
-                        'allPages' => $allPagesRoute,
-                    ],
-                ];
-                break;
-        }
+        return [
+            'dashboard' => $dashboardRoute,
+            'base' => $pageStatsRoute,
+            'pageDetails' =>  $pageDetailsRoute,
+            'userDetails' => $userDetailsRoute,
+            'allPages' => $allPagesRoute,
+            'topCountries' => $topCountriesRoute,
+        ];
     }
 
     public function onAdminPage(Event $event)
     {
         $uri = $this->grav['uri'];
-        $pages = $this->grav['pages'];
+        $routes = $this->getPluginRoutes();
         $page = new Page;
 
 
-        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
-        $pageStatsRoute = $adminRoute;
-        $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
-        $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
-        $allPagesRoute = $adminRoute . self::PATH_ADMIN_ALL_PAGES;
+
 
 
         switch ($uri->path()) {
-            case $pageStatsRoute:
+            case $routes['base']:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/stats.md'));
                 break;
 
-            case $pageDetailsRoute:
+            case $routes['pageDetails']:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/page-details.md'));
                 break;
 
-            case $userDetailsRoute:
+            case $routes['userDetails']:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/user-details.md'));
                 break;
 
-            case $allPagesRoute:
+            case $routes['allPages']:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/all-pages.md'));
+                break;
+
+                case $routes['topCountries']:
+                $page = $event['page'];
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/top-countries.md'));
                 break;
         }
     }

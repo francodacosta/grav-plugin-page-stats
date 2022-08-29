@@ -1,11 +1,5 @@
-<div class="mb-5 {{ conf.cols_top_countries }}">
-    <h5>
-        Top Countries
-
-    </h5>
-    <div style="width: w-100">
-        <canvas id="top_countries"></canvas>
-    </div>
+<div style="width: w-100">
+    <canvas id="top_countries"></canvas>
 </div>
 
 
@@ -28,7 +22,7 @@
                     callbacks: {
                         label: function (context) {
                             console.log(context)
-                            return context.label  + " : " + context.parsed   + ' %';
+                            return context.label + " : " + context.parsed + ' %';
                         }
                     }
                 }
