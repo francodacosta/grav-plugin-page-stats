@@ -8,6 +8,7 @@
     * top platforms as table or pie chart
     * top countries as table or pie chart
     * View stats for all countries
+    * View stats for all browsers
 1. [](#bugfix)
     * fix error message when http_referer is not set
     *  do not include FE tracker is not enabled for that page

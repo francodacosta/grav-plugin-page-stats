@@ -1,33 +1,25 @@
-<div class="mb-5 {{ conf.cols_top_browsers }}">
-    <h5>
-        Top Browsers
+<table class="table table-hover">
+    <tr>
+        <th>
+            Browser
 
-    </h5>
-    <table class="table table-hover">
-                <tr>
-                    <th>
-                        Browser
+        </th>
+        <th>
+            % share
+        </th>
 
-                    </th>
-                    <th>
-                        % share
-                    </th>
+    </tr>
+    {% for s in data %}
+        <tr>
+            <td>
+                {{ s.browser }}
+            </td>
+            <td>
+                <span title="{{ s.hits }} views">{{ s.share }}
+                    %</span>
 
-                </tr>
-                {% for s in data %}
-                    <tr>
-                        <td>
-                            {{ s.browser }}
-                        </td>
-                        <td>
-                            <span title="{{ s.hits }} views">{{ s.share }}
-                                %</span>
+            </td>
 
-                        </td>
-
-                    </tr>
-                {% endfor %}
-            </table>
-</div>
-
-
+        </tr>
+    {% endfor %}
+</table>

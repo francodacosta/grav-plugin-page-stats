@@ -1,6 +1,18 @@
-{% set conf = config.plugins['page-stats'] %}
-{% if conf.style_top_browsers == 'table' %}
-    {% include 'widgets/top-browsers-table.html.twig' %}
-{% else %}
+<div class="mb-5 {{ conf.cols_top_countries }}">
+    <h5 class=" mb-2">
+        {% if hide_show_all is not defined %}
+            <a href="{{ pageStats.urls.topBrowsers }}" title="View All">
+                <i class="fa fa-fw fa-line-chart"></i>
+                Top Browsers</a>
+        {% else %}
+            Top Browsers
+        {% endif %}
+    </h5>
+
+    {% set conf = config.plugins['page-stats'] %}
+    {% if conf.style_top_browsers == 'table' %}
+        {% include 'widgets/top-browsers-table.html.twig' %}
+    {% else %}
         {% include 'widgets/top-browsers-pie.html.twig' %}
-{% endif %}
+    {% endif %}
+</div>
