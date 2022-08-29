@@ -14,22 +14,28 @@
                 User
 
             </th>
-            <th>
-                Page Views
+            {% if show_views is defined %}
+                <th>
+                    Page Views
 
-            </th>
+                </th>
+            {% endif %}
         </tr>
         {% for s in data %}
             <tr>
                 <td>
-                    <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="view information about {{ s.user|default(s.ip) }}">
+                    <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="{{ s.hits }} page views">
                         <i class="fa fa-fw fa-line-chart"></i>
-                    </a>
+
                     {{ s.user|default('not logged in') }}
+
+                    </a>
                 </td>
-                <td>
-                    {{ s.hits }}
-                </td>
+                {% if show_views is defined %}
+                    <td>
+                        {{ s.hits }}
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>

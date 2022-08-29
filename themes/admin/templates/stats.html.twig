@@ -43,7 +43,7 @@
                 {% include 'widgets/unique-users.html.twig' with {'data': siteStats.users} %}
             {% endif %}
             {% if conf.show_top_users_widget %}
-                {% include 'widgets/top-users.html.twig' with {'data': pageStats.db.topUsers(conf.limit_top_users_widget)} %}
+                {% include 'widgets/top-users.html.twig' with {'hide_views': true, 'data': pageStats.db.topUsers(conf.limit_top_users_widget)} %}
             {% endif %}
             {% if conf.show_top_countries %}
                 {% include 'widgets/top-countries.html.twig' with {'data': pageStats.db.topCountries(conf.limit_top_countries)} %}
