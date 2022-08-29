@@ -69,7 +69,7 @@ class PageStatsPlugin extends Plugin
         // Don't proceed if we are in the admin plugin
         if ($this->isAdmin()) {
             $this->enable([
-                'onAdminMenu' => ['onAdminMenu', 1000],
+                'onAdminDashboard' => ['onAdminDashboard', 1000],
                 'onAdminPage' => ['onAdminPage', 0],
                 'onTwigSiteVariables' => ['onTwigAdminVariables', 0],
 
@@ -264,7 +264,7 @@ class PageStatsPlugin extends Plugin
     }
 
 
-    public function onAdminMenu()
+    public function onAdminDashboard()
     {
         $twig = $this->grav['twig'];
 
@@ -273,7 +273,7 @@ class PageStatsPlugin extends Plugin
             'route' => 'page-stats',
             'icon' => 'fa-line-chart',
             'authorize' => ['admin.login', 'admin.super'],
-            'priority' => 10
+            'priority' => 900
         ];
     }
 
