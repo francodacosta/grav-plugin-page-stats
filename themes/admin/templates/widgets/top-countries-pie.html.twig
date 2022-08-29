@@ -1,0 +1,49 @@
+<div class="mb-5 {{ conf.cols_top_countries }}">
+    <h5>
+        Top Countries
+
+    </h5>
+    <div style="width: w-100">
+        <canvas id="top_countries"></canvas>
+    </div>
+</div>
+
+
+<script>
+    var dynamicColors = function () {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+    };
+
+    var ctx = document.getElementById("top_countries").getContext("2d");
+    var myChart = new Chart(ctx, {
+        type: "doughnut",
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            console.log(context)
+                            return context.label  + " : " + context.parsed   + ' %';
+                        }
+                    }
+                }
+
+            }
+        },
+        data: {
+            labels: [{% for s in data %}"{{ s.country }}",{% endfor %}],
+
+            datasets: [
+                {
+                    data: [{% for s in data %}{{ s.share }},{% endfor %}],
+                    backgroundColor: [{% for s in data %}dynamicColors(),{% endfor %}]
+                }
+            ]
+        }
+    });
+</script>

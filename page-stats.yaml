@@ -36,3 +36,4 @@ cols_pagedetails_recent_views: col-12
 limit_pagedetails_recent_views: 15
 style_top_browsers: chart
 style_top_platforms: chart
+style_top_countries: chart

@@ -6,8 +6,11 @@
     * time on page
     * top browsers as table or pie chart
     * top platforms as table or pie chart
+    * top countries as table or pie chart
 1. [](#bugfix)
     * fix error message when http_referer is not set
+1. [](#improvements)
+    * moved sidebar menu entry to bottom of list
 
 # v2.1.0
 ## 27/08/2022

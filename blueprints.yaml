@@ -136,6 +136,7 @@ form:
                         show_top_countries: *widget-enabled
                         cols_top_countries: *widget-size
                         limit_top_countries: *widget-limit
+                        style_top_countries: *widget-style
                 fs9:
                     type: fieldset
                     title: PLUGIN_PAGE_STATS.TOP_PLATFORMS
