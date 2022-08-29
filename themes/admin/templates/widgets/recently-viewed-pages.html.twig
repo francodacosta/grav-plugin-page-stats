@@ -18,7 +18,9 @@
                     Page
                 </th>
             {% endif %}
+            {% if hide_user is not defined %}
             <th>User</th>
+            {% endif %}
             <th>Location</th>
             <th>
                 Browser
@@ -54,12 +56,14 @@
                         </td>
                     {% endif %}
 
+                    {% if hide_user is not defined %}
                     <td>
                         <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="View stats for user">
                              <i class="fa fa-fw fa-line-chart"></i>
                              {{ s.user|default(s.ip)}}
                         </a>
                     </td>
+                    {% endif %}
                     <td>
                         {{ s.city }}
                         -

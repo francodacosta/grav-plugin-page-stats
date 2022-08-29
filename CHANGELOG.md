@@ -17,7 +17,7 @@
     *  do not include FE tracker is not enabled for that page
 1. [](#improvements)
     * moved sidebar menu entry to bottom of list
-    * top users only shows user name, page vires are shown on hover
+    * top users only shows user name, page views are shown on hover
 
 # v2.1.0
 ## 27/08/2022
