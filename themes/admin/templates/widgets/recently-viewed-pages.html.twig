@@ -1,7 +1,11 @@
 <div class="mb-5  col-12{{ conf.cols_recently_viewed_pages }}">
     <h5 class="pe-2 d-flex justify-content-between">
         Recently Viewed Pages
-        {% if hide_show_all is not defined %}<a href="{{ pageStats.urls.allPages }}"> <i class="fa fa-fw fa-line-chart"></i> View all</a>{% endif %}
+        {% if hide_show_all is not defined %}
+            <a href="{{ pageStats.urls.allPages }}">
+                <i class="fa fa-fw fa-line-chart"></i>
+                View all</a>
+        {% endif %}
     </h5>
 
     <table class="table table-hover">
@@ -34,7 +38,7 @@
                 </td>
             </tr>
             {% for s in d %}
-                   <tr>
+                <tr>
                     <td>
                         {{ s.time }}
                     </td>
@@ -51,7 +55,10 @@
                     {% endif %}
 
                     <td>
-                        {{ s.user|default(s.ip)}}
+                        <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="View stats for user">
+                             <i class="fa fa-fw fa-line-chart"></i>
+                             {{ s.user|default(s.ip)}}
+                        </a>
                     </td>
                     <td>
                         {{ s.city }}
@@ -66,12 +73,13 @@
                         {{ s.platform }}
                     </td>
                     <td>
-                    {% set top = pageStats.db.timeOnPage(s.id) %}
-                    {% if top.seconds %}
-                        {{ top.seconds }} s
-                    {% else %}
-                        -
-                    {% endif %}
+                        {% set top = pageStats.db.timeOnPage(s.id) %}
+                        {% if top.seconds %}
+                            {{ top.seconds }}
+                            s
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

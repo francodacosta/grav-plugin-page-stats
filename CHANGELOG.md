@@ -11,11 +11,13 @@
     * View stats for all browsers
     * View stats for all platforms
     * View stats for all users
+    * recently viewed page has link to user stats page
 1. [](#bugfix)
     * fix error message when http_referer is not set
     *  do not include FE tracker is not enabled for that page
 1. [](#improvements)
     * moved sidebar menu entry to bottom of list
+    * top users only shows user name, page vires are shown on hover
 
 # v2.1.0
 ## 27/08/2022
