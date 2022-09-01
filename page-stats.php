@@ -162,6 +162,30 @@ class PageStatsPlugin extends Plugin
         return true;
     }
 
+        /**
+     * returns false if Url (or regexp) are in the plugin config list
+     *
+     * @param string $url
+     * @return bool
+     */
+    private function isEnabledForUrl(string $url): bool
+    {
+        $config  = $this->config();
+
+        if (isset($config['ignored_urls']) && is_array($config['ignored_urls'])) {
+            $urls = array_map(function ($a) {
+                return isset($a['url']) ? $a['url'] : '';
+            }, $config['ignored_urls']);
+
+            $regexp = implode('|', $urls);
+
+            return 0 === preg_match("/$regexp/", $url);
+        }
+
+
+        return true;
+    }
+
 
     /**
      * collecs stats about page data
@@ -262,7 +286,13 @@ class PageStatsPlugin extends Plugin
             return;
         }
 
-        switch ($uri->path()) {
+        $url =$uri->path();
+        if (false === $this->isEnabledForUrl($url)) {
+            return;
+        }
+
+
+        switch ($url) {
             case $collectorRoute:
                 $this->collectEventData();
                 break;

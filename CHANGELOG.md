@@ -12,6 +12,7 @@
     * View stats for all platforms
     * View stats for all users
     * recently viewed page has link to user stats page
+    * list of urls to exclude from processing
 1. [](#bugfix)
     * fix error message when http_referer is not set
     *  do not include FE tracker is not enabled for that page

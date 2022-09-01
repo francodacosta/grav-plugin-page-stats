@@ -50,8 +50,13 @@ en:
     TOP_PLATFORMS: Top Platforms
 
     IGNORED_IPS_LABEL: "IP's to ignore"
-    IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotter notation (eg: 127.0.0.1 or 127.*)"
-    IP: "IP or Regular Expression"
+    IGNORED_IPS_HELP: "IP's in this list will be ignored, you can use regular expressions or normal IP dotted notation (eg: 127.0.0.1 or 127.*)"
+    IP: "IP to ignore"
+
+    IGNORED_URLS:
+        TEXT: "Url to Ignore"
+        LABEL: "Urls to ignone"
+        HELP: "URL's in this list will be ignored, you can use regular expressions or a string"
 
     SECTION_WIDGETS: Widgets Config
     SECTION_WIDGETS_LABEL: Configure Page Stats widgets

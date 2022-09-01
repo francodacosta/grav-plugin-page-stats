@@ -227,3 +227,13 @@ form:
                             type: text
                             label: PLUGIN_PAGE_STATS.IP
                             help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
+                ignored_urls:
+                    type: list
+                    label: PLUGIN_PAGE_STATS.IGNORED_URLS.LABEL
+                    help: PLUGIN_PAGE_STATS.IGNORED_URLS.HELP
+                    style: vertical
+                    fields:
+                        .url:
+                            type: text
+                            label: PLUGIN_PAGE_STATS.IGNORED_URLS.TEXT
+                            help: PLUGIN_PAGE_STATS.IGNORED_URLS.HELP
