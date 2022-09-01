@@ -42,6 +42,6 @@ style_top_countries: chart
 
 ignored_urls:
   -
-    url: foo
+    url: .*wp-includes.*
   -
-    url: bar
+    url: /wp-.*

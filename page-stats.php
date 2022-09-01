@@ -172,14 +172,22 @@ class PageStatsPlugin extends Plugin
     {
         $config  = $this->config();
 
+
         if (isset($config['ignored_urls']) && is_array($config['ignored_urls'])) {
+
+            if (count($config['ignored_urls']) === 0 ) {
+                return true;
+            }
+
             $urls = array_map(function ($a) {
-                return isset($a['url']) ? $a['url'] : '';
+                return isset($a['url']) ?  $a['url'] : '';
             }, $config['ignored_urls']);
 
             $regexp = implode('|', $urls);
-
-            return 0 === preg_match("/$regexp/", $url);
+            var_dump($url);
+            var_dump($urls);
+            var_dump($regexp);
+            return 0 === preg_match("#$regexp#", $url);
         }
 
 
@@ -286,13 +294,14 @@ class PageStatsPlugin extends Plugin
             return;
         }
 
-        $url =$uri->path();
+        $url = (string) $uri;
+        var_dump($this->isEnabledForUrl($url));die;
         if (false === $this->isEnabledForUrl($url)) {
             return;
         }
 
 
-        switch ($url) {
+        switch ($uri->path()) {
             case $collectorRoute:
                 $this->collectEventData();
                 break;
