@@ -306,8 +306,9 @@ class PageStatsPlugin extends Plugin
     {
         $config = $this->config();
 
-        $dashboardRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . '/dashboard';
-        $adminRoute =  rtrim($this->config->get('plugins.admin.route'), '/') . self::PATH_ADMIN_STATS;
+        $adminHomeRule = rtrim($this->config->get('plugins.admin.route'), '/');
+        $dashboardRoute = $adminHomeRule . '/dashboard';
+        $adminRoute = $adminHomeRule . self::PATH_ADMIN_STATS;
         $pageStatsRoute = $adminRoute;
         $pageDetailsRoute = $adminRoute . self::PATH_ADMIN_PAGE_DETAIL;
         $userDetailsRoute = $adminRoute . self::PATH_ADMIN_USER_DETAIL;
@@ -318,6 +319,7 @@ class PageStatsPlugin extends Plugin
         $topUsersRoute = $adminRoute . self::PATH_ADMIN_TOP_USERS;
 
         return [
+            'adminHome' => $adminHomeRule,
             'dashboard' => $dashboardRoute,
             'base' => $pageStatsRoute,
             'pageDetails' =>  $pageDetailsRoute,

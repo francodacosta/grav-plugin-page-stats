@@ -15,6 +15,7 @@
 1. [](#bugfix)
     * fix error message when http_referer is not set
     *  do not include FE tracker is not enabled for that page
+    * page stats widget not displaying on main dashboard page if url does not end in `/dasboard`
 1. [](#improvements)
     * moved sidebar menu entry to bottom of list
     * top users only shows user name, page views are shown on hover
