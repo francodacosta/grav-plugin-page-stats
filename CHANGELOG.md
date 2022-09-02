@@ -1,7 +1,14 @@
+# v2.3.0
+## 6/09/2022
+
+1. [New Features](#new)
+    * Show user agent on user detail page
+
+
 # v2.2.0
 ## 31/08/2022
 
-1. [](#new)
+1. [New Features](#new)
     * Front End event collection support
     * time on page
     * top browsers as table or pie chart
@@ -13,11 +20,11 @@
     * View stats for all users
     * recently viewed page has link to user stats page
     * list of urls to exclude from processing
-1. [](#bugfix)
+1. [Bug Fixes](#bugfix)
     * fix error message when http_referer is not set
     *  do not include FE tracker is not enabled for that page
     * page stats widget not displaying on main dashboard page if url does not end in `/dasboard`
-1. [](#improvements)
+1. [Improvements](#improvements)
     * moved sidebar menu entry to bottom of list
     * top users only shows user name, page views are shown on hover
 

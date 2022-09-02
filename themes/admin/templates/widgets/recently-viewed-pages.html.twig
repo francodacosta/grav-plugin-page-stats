@@ -35,7 +35,7 @@
         {% for day, d in data %}
 
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     <strong>{{ day|date('F jS') }}</strong>
                 </td>
             </tr>
@@ -86,6 +86,14 @@
                         {% endif %}
                     </td>
                 </tr>
+
+                {% if 'show_user_agent' is defined %}
+                    <tr>
+                <td colspan="6">
+                    <strong class="ps-5">User Agent: </strong> {{ s.user_agent }}
+                </td>
+            </tr>
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </table>

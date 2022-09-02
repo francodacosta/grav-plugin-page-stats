@@ -41,7 +41,7 @@
             {% endif %}
 
             {% if conf.show_pagedetails_recent_views %}
-                {% include 'widgets/recently-viewed-pages.html.twig' with {'hide_user': true, 'data':  pageStats.db.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) } %}
+                {% include 'widgets/recently-viewed-pages.html.twig' with {'show_user_agent': true, 'hide_user': true, 'data':  pageStats.db.recentPagesByDay(1000,null,null, {(queryKey) : grav.uri.query('user')}) } %}
             {% endif %}
 
         </div>
