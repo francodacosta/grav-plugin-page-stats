@@ -1,3 +1,12 @@
+# vXXX
+## 5/09/2022
+
+1. [New Features](#new)
+1. [Bug Fixes](#bugfix)
+1. [Improvements](#improvements)
+    * page stats now shows details about all page views, not only the last 10 views
+
+
 # v2.3.0
 ## 5/09/2022
 
