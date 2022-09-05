@@ -1,9 +1,10 @@
 # v2.3.0
-## 6/09/2022
+## 5/09/2022
 
 1. [New Features](#new)
     * Show user agent on user detail page
-
+1. [Bug Fixes](#bugfix)
+    * Top country pages not showing
 
 # v2.2.0
 ## 31/08/2022
