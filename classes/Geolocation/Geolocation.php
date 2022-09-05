@@ -26,7 +26,11 @@ class Geolocation
      */
     public function locate($ip): GeolocationData
     {
-        $result = $this->db->lookup($ip);
+        try {
+            $result = $this->db->lookup($ip);
+        } catch (\Throwable $e) {
+            error_log('could not locate ip ' . $ip . ' because of ' . $e->getMessage());
+        }
 
         return new GeolocationData(
             $result['countryCode'] ?? 'unknown',

@@ -275,6 +275,7 @@ class PageStatsPlugin extends Plugin
 
         exit();
     }
+
     public function onPageInitialized()
     {
         $uri = $this->grav['uri'];
