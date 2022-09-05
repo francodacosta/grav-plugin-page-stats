@@ -5,6 +5,7 @@
 1. [Bug Fixes](#bugfix)
 1. [Improvements](#improvements)
     * page stats now shows details about all page views, not only the last 10 views
+    * time on page collect metrics once a second until the first `ping interval` value you specified and then every `ping interval` seconds, this is so that initial time on page is more accurate
 
 
 # v2.3.0
