@@ -1,7 +1,8 @@
-# vXXX
-## 5/09/2022
+# v2.4.0
+## 20/09/2022
 
 1. [New Features](#new)
+    * configuration option to show page title our route
 1. [Bug Fixes](#bugfix)
     * don't error out if ip2location lib throws exception when geolocating ip
     * add debug message with IP on error
