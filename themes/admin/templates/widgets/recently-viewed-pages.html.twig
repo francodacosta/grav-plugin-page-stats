@@ -1,3 +1,5 @@
+{% import 'macros/macros.html.twig' as macros %}
+
 <div class="mb-5  col-12{{ conf.cols_recently_viewed_pages }}">
     <h5 class="pe-2 d-flex justify-content-between">
         Recently Viewed Pages
@@ -52,7 +54,7 @@
                             <a class="me-2" title="view page stats" href="{{ pageStats.urls.pageDetails}}?page={{ s.route }}" title="{{ s.route }}">
                                 <i class="fa fa-fw fa-line-chart"></i>
                             </a>
-                            {{ s.page_title }}
+                            {{ macros.page_title(s, conf)  }}
                         </td>
                     {% endif %}
 

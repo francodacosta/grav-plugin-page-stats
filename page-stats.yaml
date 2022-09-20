@@ -3,6 +3,8 @@ db: user/data/page-data.sqlite
 ignore_errors: true
 log_admin: true
 log_bot: true
+page_url_format: 'url'
+
 
 collector_ping_interval: 15
 log_time_on_page: true

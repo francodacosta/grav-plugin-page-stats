@@ -1,0 +1,7 @@
+{% macro page_title(page, conf) %}
+    {% if conf.page_url_format == 'url' %}
+        {{ page.route }}
+    {% else %}
+        {{ page.page_title }}
+    {% endif %}
+{% endmacro %}

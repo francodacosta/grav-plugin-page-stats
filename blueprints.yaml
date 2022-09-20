@@ -176,8 +176,6 @@ form:
                         cols_pagedetails_recent_views: *widget-size
                         limit_pagedetails_recent_views: *widget-limit
 
-
-
         section_behaviour:
             type: section
             title: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR
@@ -217,6 +215,13 @@ form:
                         0: PLUGIN_ADMIN.DISABLED
                     validate:
                         type: bool
+                page_url_format:
+                    type: select
+                    label: PLUGIN_PAGE_STATS.PAGE_URL.TEXT
+                    help: PLUGIN_PAGE_STATS.PAGE_URL.HELP
+                    options:
+                        'url': 'Url'
+                        'title': 'Title'
                 ignored_ips:
                     type: list
                     label: PLUGIN_PAGE_STATS.IGNORED_IPS_LABEL
