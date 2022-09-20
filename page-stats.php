@@ -229,6 +229,8 @@ class PageStatsPlugin extends Plugin
             }
         } catch (\Throwable $e) {
             error_log($e->getmessage());
+            $this->grav['log']->addDebug('IP : ' . $ip);
+
             $this->grav['log']->addError('PageStats plugin : ' . $e->getMessage() . ' - File: ' . $e->getFile() . ' - Line: ' . $e->getLine() . ' - Trace: ' . $e->getTraceAsString());
             // $this->grav['log']->addDebug('GEO DB : ' . self::GEO_DB);
             // $this->grav['log']->addDebug('STATS DB : ' . $dbPath);
