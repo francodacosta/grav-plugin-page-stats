@@ -1,3 +1,5 @@
+{% import 'macros/macros.html.twig' as macros %}
+
 <div class="col-{{ conf.cols_top_pages }}">
     <h5 class="d-flex justify-content-between pe-2">
         {{ title|default('Most Viewed Pages') }}
@@ -32,7 +34,7 @@
                     <a class="me-2" title="view page stats" href="{{ pageStats.urls.pageDetails}}?page={{ s.route }}" title="{{ s.route }}">
                         <i class="fa fa-fw fa-line-chart"></i>
                     </a>
-                    {{ s.page_title }}
+                    {{ macros.page_title(s, conf) }}
                 </td>
                 <td>
                     {{ s.hits }}

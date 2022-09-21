@@ -1,4 +1,12 @@
-# v2.4.0
+# v2.4.1
+## 21/09/2022
+
+1. [New Features](#new)
+1. [Bug Fixes](#bugfix)
+    *   Add missing translation strings
+1. [Improvements](#improvements)
+
+    # v2.4.0
 ## 20/09/2022
 
 1. [New Features](#new)
