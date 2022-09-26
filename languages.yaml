@@ -82,3 +82,9 @@ en:
         TEXT: Show page as
         HELP: Should a page be shown as an URL or the page Titlt
 
+    SECTION_BOTS: Bots
+    SECTION_BOTS_TEXT: Identify Crawlers
+    BOT_REGEXP:
+        TEXT: Bot User Agents
+        HELP: USer agents to classify as bots (can use regular expression)
+

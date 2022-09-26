@@ -1,3 +1,11 @@
+# v2.5.0
+## 26/09/2022
+
+1. [New Features](#new)
+    * You can noe define a list of user agents to classify as bots/crawlers
+1. [Bug Fixes](#bugfix)
+1. [Improvements](#improvements)
+
 # v2.4.1
 ## 21/09/2022
 
