@@ -1,3 +1,11 @@
+# v2.5.1
+## 05/01/2023
+
+1. [New Features](#new)
+1. [Bug Fixes](#bugfix)
+    * click on view all on recently pages viewed will now show you a list of recently viewed pages grouped by date
+1. [Improvements](#improvements)
+
 # v2.5.0
 ## 26/09/2022
 

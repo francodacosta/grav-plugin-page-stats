@@ -4,9 +4,9 @@
     <h5 class="pe-2 d-flex justify-content-between">
         Recently Viewed Pages
         {% if hide_show_all is not defined %}
-            <a href="{{ pageStats.urls.allPages }}">
+            <a href="{{ pageStats.urls.recentlyedViewdPages }}">
                 <i class="fa fa-fw fa-line-chart"></i>
-                View all</a>
+                View last 1000 pages</a>
         {% endif %}
     </h5>
 
@@ -21,7 +21,7 @@
                 </th>
             {% endif %}
             {% if hide_user is not defined %}
-            <th>User</th>
+                <th>User</th>
             {% endif %}
             <th>Location</th>
             <th>
@@ -59,12 +59,12 @@
                     {% endif %}
 
                     {% if hide_user is not defined %}
-                    <td>
-                        <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="View stats for user">
-                             <i class="fa fa-fw fa-line-chart"></i>
-                             {{ s.user|default(s.ip)}}
-                        </a>
-                    </td>
+                        <td>
+                            <a class="me-2" href="{{ pageStats.urls.userDetails}}?user={{ s.user|default(s.ip) }}" title="View stats for user">
+                                <i class="fa fa-fw fa-line-chart"></i>
+                                {{ s.user|default(s.ip)}}
+                            </a>
+                        </td>
                     {% endif %}
                     <td>
                         {{ s.city }}
@@ -91,10 +91,12 @@
 
                 {% if show_user_agent is defined %}
                     <tr>
-                <td colspan="6">
-                    <strong class="ps-5">User Agent: </strong> {{ s.user_agent }}
-                </td>
-            </tr>
+                        <td colspan="6">
+                            <strong class="ps-5">User Agent:
+                            </strong>
+                            {{ s.user_agent }}
+                        </td>
+                    </tr>
                 {% endif %}
             {% endfor %}
         {% endfor %}

@@ -55,9 +55,13 @@
                 {% include 'widgets/top-platforms.html.twig' with {'data': pageStats.db.topPlatforms(conf.limit_top_platforms)} %}
             {% endif %}
             {% if conf.show_recently_viewed_pages %}
-                {% include 'widgets/recently-viewed-pages.html.twig' with {'data': pageStats.db.recentPagesByDay(conf.limit_recently_viewed_pages)}  %}
+                {% set limit = conf.limit_recently_viewed_pages%}
+                {% if show_all_recent_views is defined %}
+                    {% set limit = 1000 %}
+                {% endif %}
+                {% include 'widgets/recently-viewed-pages.html.twig' with {'data': pageStats.db.recentPagesByDay(limit)}  %}
             {% endif %}
-            {% if conf.show_top_pages %}
+            {% if conf.show_top_pages and (hide_top_pages is not defined) %}
                 {% include 'widgets/top-pages.html.twig' with {'data': pageStats.db.pagesSummary(conf.limit_top_pages_pages) }  %}
             {% endif %}
         </div>

@@ -31,6 +31,7 @@ class PageStatsPlugin extends Plugin
     const PATH_ADMIN_TOP_PLATFORMS = '/top-platforms';
     const PATH_ADMIN_TOP_USERS = '/top-users';
     const PATH_EVENTS_COLLECTION = '/event-collection';
+    const PATH_ADMIN_RECENTLY_VIEWED_PAGES = '/recently-viewed-pages';
 
     /**
      * @return array
@@ -356,6 +357,7 @@ class PageStatsPlugin extends Plugin
         $topBrowsersRoute = $adminRoute . self::PATH_ADMIN_TOP_BROWSERS;
         $topPlatformsRoute = $adminRoute . self::PATH_ADMIN_TOP_PLATFORMS;
         $topUsersRoute = $adminRoute . self::PATH_ADMIN_TOP_USERS;
+        $recentlyedViewdPagesRoute = $adminRoute . self::PATH_ADMIN_RECENTLY_VIEWED_PAGES;
 
         return [
             'adminHome' => $adminHomeRule,
@@ -368,6 +370,7 @@ class PageStatsPlugin extends Plugin
             'topBrowsers' => $topBrowsersRoute,
             'topPlatforms' => $topPlatformsRoute,
             'topUsers' => $topUsersRoute,
+            'recentlyedViewdPages' => $recentlyedViewdPagesRoute,
         ];
     }
 
@@ -416,6 +419,11 @@ class PageStatsPlugin extends Plugin
             case $routes['topUsers']:
                 $page = $event['page'];
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/top-users.md'));
+                break;
+
+            case $routes['recentlyedViewdPages']:
+                $page = $event['page'];
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/recently-viewed-pages.md'));
                 break;
         }
     }
