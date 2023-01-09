@@ -41,6 +41,15 @@ class Stats
         }
     }
 
+    private function getUserAgent()
+    {
+        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+            return $_SERVER['HTTP_USER_AGENT'];
+        }
+
+        return '';
+    }
+
     /**
      * executes a db migration by running the <int>.sql files not executted yet
      */
@@ -82,7 +91,7 @@ class Stats
     private function isBot()
     {
 
-        return preg_match('/'. $this->botRegExp .'/i', $_SERVER['HTTP_USER_AGENT']);
+        return preg_match('/'. $this->botRegExp .'/i', $this->getUserAgent());
     }
 
     /**
@@ -155,7 +164,7 @@ class Stats
         $s->bindValue(':title', $pageTitle ?? $page->title());
         $s->bindValue(':user', $user->username);
         $s->bindValue(':date', $date->format('c'));
-        $s->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
+        $s->bindValue(':user_agent', $this->getUserAgent());
         $s->bindValue(':is_bot', $this->isBot());
         $s->bindValue(':browser', $browser->getBrowser());
         $s->bindValue(':browser_version', $browser->getVersion());

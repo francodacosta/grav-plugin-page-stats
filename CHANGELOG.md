@@ -1,3 +1,19 @@
+# v2.5.3
+## 09/01/2023
+
+1. [New Features](#new)
+1. [Bug Fixes](#bugfix)
+    * fix: Undefined index: HTTP_USER_AGENT (#32)
+1. [Improvements](#improvements)
+
+# v2.5.2
+## 09/01/2023
+
+1. [New Features](#new)
+1. [Bug Fixes](#bugfix)
+    * dummy release to correct typo in release versions (#33)
+1. [Improvements](#improvements)
+
 # v2.5.1
 ## 05/01/2023
 
