@@ -212,6 +212,16 @@ class PageStatsPlugin extends Plugin
             $browser = $this->grav['browser'];
             $dbPath = $config['db'];
 
+            if ($config['anonymize_ips']) {
+                if (str_contains($ip, ':')) {
+                    // IPv6 (truncate after second ':', i.e. after 4 bytes)
+                    $ip = substr($ip, 0, strpos($ip, ':', strpos($ip, ':')+1)) . '::0';
+                } else {
+                    // IPv4 (truncate after second '.', i.e. after 2 bytes)
+                    $ip = substr($ip, 0, strpos($ip, '.', strpos($ip, '.')+1)) . '.0.0';
+                }
+            }
+
             $stats = new Stats($dbPath, $this->config());
 
             $sessionId = $stats->collect($ip, $geo, $page, $uri, $user, $now, $browser);
