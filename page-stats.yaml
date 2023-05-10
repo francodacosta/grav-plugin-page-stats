@@ -1,6 +1,7 @@
 enabled: true
 db: user/data/page-data.sqlite
 ignore_errors: true
+anonymize_ips: false
 log_admin: true
 log_bot: true
 page_url_format: 'url'
