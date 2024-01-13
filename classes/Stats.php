@@ -333,7 +333,7 @@ class Stats
     public function recentPages(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         // $q = 'SELECT route, page_title, count(route) as hits, date FROM data GROUP BY route ORDER BY date DESC';
-        $q = 'SELECT *, date(data.date) as day, time(data.date) as time  FROM data %where ORDER BY date DESC';
+        $q = 'SELECT *, date(datetime(data.date), \'localtime\') as day, time(datetime(data.date), \'localtime\') as time  FROM data %where ORDER BY date DESC';
 
         return $this->query($q, $params, $limit, $dateFrom, $dateTo);
     }
@@ -361,9 +361,9 @@ class Stats
      */
     public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $hits = $this->query('SELECT date(date) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(date)', $params, $dateFrom, $dateTo);
-        $visitors = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(date)',  $params, $dateFrom, $dateTo);
-        $users = $this->query('SELECT date(date) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(date)',  $params, $dateFrom, $dateTo);
+        $hits = $this->query('SELECT date(datetime(date), \'localtime\') as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(datetime(date), \'localtime\')', $params, $dateFrom, $dateTo);
+        $visitors = $this->query('SELECT date(datetime(date), \'localtime\') as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(datetime(date), \'localtime\')',  $params, $dateFrom, $dateTo);
+        $users = $this->query('SELECT date(datetime(date), \'localtime\') as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(datetime(date), \'localtime\')',  $params, $dateFrom, $dateTo);
 
         return [
             'hits' => $hits,
