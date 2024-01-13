@@ -8,6 +8,7 @@ page_url_format: 'url'
 
 collector_ping_interval: 15
 log_time_on_page: true
+datetime_offset: 'localtime'
 
 show_top_users_widget: true
 cols_top_users_widget: 'col-12 col-md-3'
