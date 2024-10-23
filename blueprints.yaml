@@ -194,6 +194,13 @@ form:
             text: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR_LABEL
             underline: true
             fields:
+                datetime_offset:
+                    type: text
+                    label: PLUGIN_PAGE_STATS.DATETIME_OFFSET_LABEL
+                    help: PLUGIN_PAGE_STATS.DATETIME_OFFSET_HELP
+                    default: 'localtime'
+                    validate:
+                      pattern: '[+-][[:digit:]]{2,2}:[[:digit:]]{2,2}|localtime'
                 log_admin:
                     type: toggle
                     label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL

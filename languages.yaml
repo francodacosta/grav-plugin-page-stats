@@ -22,6 +22,9 @@ en:
     ANONYMIZE_IPS_LABEL: Anonymize IP-addresses
     ANONYMIZE_IPS_HELP: "If enabled IP-addresses will be truncated after 2 Bytes (for IPv4) and 4 Bytes (for IPv6) before storing to database for eased GDPR compliance. NOTICE: This ONLY applies for NEWLY recorded visits, NOT for entries already recorded in the database."
 
+    DATETIME_OFFSET_LABEL: Date Time Offset From UTC
+    DATETIME_OFFSET_HELP: Display date/time values adjusted from UTC by specified offset
+
     LOG_TIME_ON_PAGE_LABEL: Log time on page
     LOG_TIME_ON_PAGE_HELP: If enabled Front End will trigger a ping event at regular intervals to mark the user as still on the page
     # STATS_DB_CREATE_LABEL: Recreate Stats database
