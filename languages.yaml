@@ -32,7 +32,7 @@ en:
     # STATS_DB_CREATE_BTN_TEXT: Create new Stats database
 
     LOG_ADMIN_LABEL: Log Admin users Activity
-    LOG_ADMIN_HELP: Log admin user activity on site, they will never be logged whil using admin panel
+    LOG_ADMIN_HELP: Log admin user activity on site, they will never be logged while using admin panel
     LOG_BOT_LABEL: Log Bot Activity
     LOG_BOT_HELP: By default we do not log activity of known BOTS, enable to log
 
