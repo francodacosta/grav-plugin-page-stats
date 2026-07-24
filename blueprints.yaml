@@ -22,7 +22,8 @@ dependencies:
 # onAdminDashboard/onAdminPage hooks in page-stats.php.
 compatibility:
     grav:
-        - 2.0
+        - '1.7'
+        - '2.0'
     api:
         - 1.0
 
