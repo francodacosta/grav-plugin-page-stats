@@ -184,10 +184,13 @@ class PageStatsPage extends HTMLElement {
         const usersSeries = this._buildDailySeries(this.#summary?.users, from, to);
 
         body.innerHTML = `
+            <div class="charts">
+                ${this._chartCard('Page views', o.total_page_views, hitsSeries, 'var(--primary)')}
+                ${this._chartCard('Unique visitors', o.total_unique_visitors, visitorsSeries, '#22d3ee')}
+                ${this._chartCard('Unique users', o.total_unique_users, usersSeries, '#f59e0b')}
+            </div>
+
             <div class="kpis">
-                ${this._kpi('Page views', o.total_page_views, hitsSeries)}
-                ${this._kpi('Unique visitors', o.total_unique_visitors, visitorsSeries)}
-                ${this._kpi('Unique users', o.total_unique_users, usersSeries)}
                 ${this._kpi('Database size', `${o.db?.mb ?? 0} MB`)}
             </div>
 
@@ -242,14 +245,107 @@ class PageStatsPage extends HTMLElement {
         `;
     }
 
-    _kpi(label, value, series) {
-        const spark = series && series.length > 1 ? this._sparkline(series) : '';
+    _kpi(label, value) {
         return `
             <div class="kpi">
                 <div class="kpi-value">${this._esc(String(value ?? '0'))}</div>
                 <div class="kpi-label">${this._esc(label)}</div>
-                ${spark}
             </div>`;
+    }
+
+    _chartCard(title, total, series, color) {
+        const chart = series.length ? this._lineChart(series, color) : `<div class="state">No data.</div>`;
+        return `
+            <div class="card chart-card">
+                <div class="chart-head">
+                    <h3>${this._esc(title)}</h3>
+                    <span class="chart-total">${this._esc(String(total ?? '0'))}</span>
+                </div>
+                ${chart}
+            </div>`;
+    }
+
+    /**
+     * 'YYYY-MM-DD' -> 'DD.MM.' for compact axis labels.
+     */
+    _formatDayLabel(iso) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+        return m ? `${m[3]}.${m[2]}.` : iso || '';
+    }
+
+    /**
+     * A proper axis chart (y-axis gridlines/labels, x-axis date labels,
+     * hover tooltips via native SVG <title> per point) rather than a bare
+     * sparkline - closer to what the classic-admin version of this plugin
+     * showed (three full charts with axes), while still fitting a
+     * dashboard card instead of a whole separate admin page.
+     */
+    _lineChart(series, color) {
+        const width = 480;
+        const height = 170;
+        const padLeft = 34;
+        const padRight = 8;
+        const padTop = 10;
+        const padBottom = 20;
+        const plotW = width - padLeft - padRight;
+        const plotH = height - padTop - padBottom;
+
+        const max = Math.max(...series.map((p) => p.value), 1);
+        const yTickCount = 4;
+        const yTicks = Array.from({ length: yTickCount + 1 }, (_, i) => Math.round((max / yTickCount) * i));
+
+        const stepX = series.length > 1 ? plotW / (series.length - 1) : plotW;
+        const points = series.map((p, i) => ({
+            ...p,
+            x: padLeft + i * stepX,
+            y: padTop + plotH - (p.value / max) * plotH,
+        }));
+
+        const linePath = `M${points.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')}`;
+        const baseline = (padTop + plotH).toFixed(1);
+        const areaPath = `${linePath} L${points[points.length - 1].x.toFixed(1)},${baseline} L${points[0].x.toFixed(1)},${baseline} Z`;
+
+        const gridlines = yTicks
+            .map((v) => {
+                const y = padTop + plotH - (v / max) * plotH;
+                return `
+                    <line class="grid-line" x1="${padLeft}" y1="${y.toFixed(1)}" x2="${width - padRight}" y2="${y.toFixed(1)}"></line>
+                    <text class="axis-label y-label" x="${padLeft - 6}" y="${(y + 3).toFixed(1)}" text-anchor="end">${v}</text>`;
+            })
+            .join('');
+
+        // A handful of evenly spaced x-axis labels rather than one per day -
+        // that many labels overlap on anything but a 7-day range.
+        const labelCount = Math.min(6, points.length);
+        const labelStep = points.length > 1 ? (points.length - 1) / Math.max(1, labelCount - 1) : 0;
+        const seenX = new Set();
+        const xAxisLabels = Array.from({ length: labelCount }, (_, i) => points[Math.round(i * labelStep)])
+            .filter((p) => {
+                if (seenX.has(p.x)) return false;
+                seenX.add(p.x);
+                return true;
+            })
+            .map(
+                (p) =>
+                    `<text class="axis-label x-label" x="${p.x.toFixed(1)}" y="${height - 4}" text-anchor="middle">${this._esc(this._formatDayLabel(p.date))}</text>`
+            )
+            .join('');
+
+        const dots = points
+            .map(
+                (p) =>
+                    `<circle class="chart-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.5"><title>${this._esc(this._formatDayLabel(p.date))}: ${p.value}</title></circle>`
+            )
+            .join('');
+
+        return `
+            <svg class="line-chart" viewBox="0 0 ${width} ${height}" style="color:${color}">
+                ${gridlines}
+                <path class="chart-area" d="${areaPath}"></path>
+                <path class="chart-line" d="${linePath}"></path>
+                ${dots}
+                ${xAxisLabels}
+            </svg>`;
     }
 
     /**
@@ -287,35 +383,37 @@ class PageStatsPage extends HTMLElement {
         return series;
     }
 
-    _sparkline(series, width = 160, height = 36) {
-        const max = Math.max(...series.map((p) => p.value), 1);
-        const stepX = series.length > 1 ? width / (series.length - 1) : width;
-        const points = series.map((p, i) => {
-            const x = i * stepX;
-            const y = height - (p.value / max) * height;
-            return `${x.toFixed(1)},${y.toFixed(1)}`;
-        });
-        const linePath = `M${points.join(' L')}`;
-        const areaPath = `${linePath} L${width},${height} L0,${height} Z`;
-        return `
-            <svg class="sparkline" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-                <path class="spark-area" d="${areaPath}"></path>
-                <path class="spark-line" d="${linePath}"></path>
-            </svg>`;
-    }
-
     /**
      * Converts a 2-letter ISO country code (as stored by Geolocation /
      * classes/Stats.php: $geo->countryCode(), empty falls back to the
-     * literal string "unknown") into a flag emoji via Unicode regional
-     * indicator symbols. Anything that isn't a clean 2-letter code
-     * (including "unknown") falls back to a globe icon rather than
-     * guessing.
+     * literal string "unknown") into a small flag image.
+     *
+     * Deliberately NOT using the Unicode "flag" emoji (combined regional
+     * indicator symbols) here: whether that renders as an actual flag
+     * depends entirely on the OS/browser having a matching color-emoji
+     * font installed, and on several common desktop Linux setups it just
+     * shows as two plain letters or a blank box. An <img> renders
+     * consistently everywhere. flagcdn.com is the same kind of external,
+     * free flag source the classic-admin version of this plugin used
+     * (flagpedia.net, per its README credits) - current CSP
+     * (img-src 'self' https:, both public and /admin blocks, see
+     * grav-chat-2026-07-18-user-folder-exposure-csp-htaccess.md) already
+     * allows this without further Apache changes.
      */
-    _flagEmoji(code) {
-        if (typeof code !== 'string' || !/^[A-Za-z]{2}$/.test(code)) return '\u{1F310}';
-        const codePoints = [...code.toUpperCase()].map((c) => 0x1f1e6 + (c.charCodeAt(0) - 65));
-        return String.fromCodePoint(...codePoints);
+    _flagIcon(code) {
+        if (typeof code === 'string' && /^[A-Za-z]{2}$/.test(code)) {
+            const lower = code.toLowerCase();
+            return `<img class="bar-flag" src="https://flagcdn.com/${lower}.svg" alt="${this._esc(code.toUpperCase())}" loading="lazy" width="18" height="13">`;
+        }
+        return `<span class="bar-flag bar-flag-unknown" title="Unknown">${this._globeIcon()}</span>`;
+    }
+
+    _globeIcon() {
+        return `<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.2"></circle>
+            <ellipse cx="8" cy="8" rx="3" ry="7" fill="none" stroke="currentColor" stroke-width="1.2"></ellipse>
+            <line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"></line>
+        </svg>`;
     }
 
     _bars(items, key) {
@@ -324,7 +422,7 @@ class PageStatsPage extends HTMLElement {
         return `<div class="bars">${items
             .map((i) => {
                 const pct = Math.max(4, Math.round(((Number(i.hits) || 0) / max) * 100));
-                const flag = key === 'country' ? `<span class="bar-flag">${this._flagEmoji(i[key])}</span>` : '';
+                const flag = key === 'country' ? this._flagIcon(i[key]) : '';
                 return `
                     <div class="bar-row">
                         <span class="bar-label">${flag}${this._esc(String(i[key] || 'unknown'))}</span>
