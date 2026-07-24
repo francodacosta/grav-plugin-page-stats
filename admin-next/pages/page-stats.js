@@ -492,6 +492,7 @@ class PageStatsPage extends HTMLElement {
         return `
             :host { display: block; color: var(--foreground); font-family: inherit; padding-top: 16px; }
             .wrap { display: flex; flex-direction: column; gap: 16px; }
+            .body { display: flex; flex-direction: column; gap: 16px; }
             .toolbar { display: flex; justify-content: space-between; align-items: center; }
             .range { display: flex; gap: 4px; }
             .range button, .refresh, .lookup-row button {
@@ -508,6 +509,17 @@ class PageStatsPage extends HTMLElement {
             .kpi { border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; }
             .kpi-value { font-size: 22px; font-weight: 700; }
             .kpi-label { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+            .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+            .chart-card { display: flex; flex-direction: column; }
+            .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+            .chart-head h3 { margin: 0; }
+            .chart-total { font-size: 15px; font-weight: 700; }
+            .line-chart { display: block; width: 100%; height: auto; }
+            .grid-line { stroke: var(--border); stroke-width: 1; }
+            .axis-label { font-size: 9px; fill: var(--muted-foreground); }
+            .chart-area { fill: currentColor; opacity: 0.15; stroke: none; }
+            .chart-line { fill: none; stroke: currentColor; stroke-width: 1.75; }
+            .chart-dot { fill: currentColor; }
             .sparkline { width: 100%; height: 36px; margin-top: 10px; }
             .spark-area { fill: var(--primary); opacity: 0.12; }
             .spark-line { fill: none; stroke: var(--primary); stroke-width: 1.5; }
