@@ -111,7 +111,10 @@ class PageStatsPage extends HTMLElement {
                         <button data-range="90">90d</button>
                         <button data-range="all">All time</button>
                     </div>
-                    <button class="refresh" title="Refresh">&#8635; Refresh</button>
+                    <div class="toolbar-end">
+                        <span class="db-size" title="SQLite database file size"></span>
+                        <button class="refresh" title="Refresh">&#8635; Refresh</button>
+                    </div>
                 </div>
                 <div class="body"></div>
 
@@ -178,6 +181,9 @@ class PageStatsPage extends HTMLElement {
         }
 
         const o = this.#overview;
+        const dbBadge = this.shadowRoot.querySelector('.db-size');
+        if (dbBadge) dbBadge.textContent = o.db?.mb !== undefined ? `${o.db.mb} MB` : '';
+
         const { from, to } = this._currentDateRange();
         const hitsSeries = this._buildDailySeries(this.#summary?.hits, from, to);
         const visitorsSeries = this._buildDailySeries(this.#summary?.visitors, from, to);
@@ -188,10 +194,6 @@ class PageStatsPage extends HTMLElement {
                 ${this._chartCard('Page views', o.total_page_views, hitsSeries, 'var(--primary)')}
                 ${this._chartCard('Unique visitors', o.total_unique_visitors, visitorsSeries, '#22d3ee')}
                 ${this._chartCard('Unique users', o.total_unique_users, usersSeries, '#f59e0b')}
-            </div>
-
-            <div class="kpis">
-                ${this._kpi('Database size', `${o.db?.mb ?? 0} MB`)}
             </div>
 
             <div class="grid">
@@ -243,14 +245,6 @@ class PageStatsPage extends HTMLElement {
                 </div>
             </div>
         `;
-    }
-
-    _kpi(label, value) {
-        return `
-            <div class="kpi">
-                <div class="kpi-value">${this._esc(String(value ?? '0'))}</div>
-                <div class="kpi-label">${this._esc(label)}</div>
-            </div>`;
     }
 
     _chartCard(title, total, series, color) {
@@ -505,10 +499,8 @@ class PageStatsPage extends HTMLElement {
                 font-size: 13px;
             }
             .range button.active { background: var(--primary); color: var(--primary-foreground, #fff); border-color: var(--primary); }
-            .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-            .kpi { border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-            .kpi-value { font-size: 22px; font-weight: 700; }
-            .kpi-label { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+            .toolbar-end { display: flex; align-items: center; gap: 10px; }
+            .db-size { font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
             .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
             .chart-card { display: flex; flex-direction: column; }
             .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
