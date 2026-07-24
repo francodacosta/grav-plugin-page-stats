@@ -182,7 +182,7 @@ class PageStatsPage extends HTMLElement {
 
         const o = this.#overview;
         const dbBadge = this.shadowRoot.querySelector('.db-size');
-        if (dbBadge) dbBadge.textContent = o.db?.mb !== undefined ? `${o.db.mb} MB` : '';
+        if (dbBadge) dbBadge.textContent = o.db?.mb !== undefined ? `Database size: ${o.db.mb} MB` : '';
 
         const { from, to } = this._currentDateRange();
         const hitsSeries = this._buildDailySeries(this.#summary?.hits, from, to);
