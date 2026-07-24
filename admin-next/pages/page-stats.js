@@ -17,6 +17,7 @@ const TAG = window.__GRAV_PAGE_TAG || 'grav-page-stats--page-stats';
 class PageStatsPage extends HTMLElement {
     #range = '30';
     #overview = null;
+    #summary = null;
     #loading = false;
 
     connectedCallback() {
@@ -50,12 +51,23 @@ class PageStatsPage extends HTMLElement {
         return json.data !== undefined ? json.data : json;
     }
 
-    _dateRangeParams() {
-        if (this.#range === 'all') return {};
+    /**
+     * @returns {{from: Date|null, to: Date|null}} 'all time' is represented
+     * as {from: null, to: null} - there's no meaningful start date to zero-fill
+     * a chart from.
+     */
+    _currentDateRange() {
+        if (this.#range === 'all') return { from: null, to: null };
         const days = parseInt(this.#range, 10);
         const to = new Date();
         const from = new Date();
         from.setDate(from.getDate() - days);
+        return { from, to };
+    }
+
+    _dateRangeParams() {
+        const { from, to } = this._currentDateRange();
+        if (!from || !to) return {};
         return {
             date_from: from.toISOString(),
             date_to: to.toISOString(),
@@ -65,16 +77,27 @@ class PageStatsPage extends HTMLElement {
     async _load() {
         this.#loading = true;
         this._renderBody();
-        try {
-            this.#overview = await this._apiGet('/page-stats/overview', this._dateRangeParams());
-        } catch (err) {
-            this.#overview = null;
-            this._error = err.message;
-            window.__GRAV_TOAST?.error(err.message || 'Could not load page stats');
-        } finally {
-            this.#loading = false;
-            this._renderBody();
+
+        const params = this._dateRangeParams();
+        const [overviewResult, summaryResult] = await Promise.allSettled([
+            this._apiGet('/page-stats/overview', params),
+            this._apiGet('/page-stats/summary', params),
+        ]);
+
+        this.#overview = overviewResult.status === 'fulfilled' ? overviewResult.value : null;
+        this.#summary = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
+
+        if (overviewResult.status === 'rejected') {
+            this._error = overviewResult.reason?.message || 'Could not load page stats';
+            window.__GRAV_TOAST?.error(this._error);
+        } else if (summaryResult.status === 'rejected') {
+            // Non-fatal: the KPI numbers and top lists come from /overview
+            // and still work, only the trend sparklines are missing.
+            window.__GRAV_TOAST?.error(summaryResult.reason?.message || 'Could not load trend data');
         }
+
+        this.#loading = false;
+        this._renderBody();
     }
 
     _render() {
@@ -155,12 +178,16 @@ class PageStatsPage extends HTMLElement {
         }
 
         const o = this.#overview;
+        const { from, to } = this._currentDateRange();
+        const hitsSeries = this._buildDailySeries(this.#summary?.hits, from, to);
+        const visitorsSeries = this._buildDailySeries(this.#summary?.visitors, from, to);
+        const usersSeries = this._buildDailySeries(this.#summary?.users, from, to);
 
         body.innerHTML = `
             <div class="kpis">
-                ${this._kpi('Page views', o.total_page_views)}
-                ${this._kpi('Unique visitors', o.total_unique_visitors)}
-                ${this._kpi('Unique users', o.total_unique_users)}
+                ${this._kpi('Page views', o.total_page_views, hitsSeries)}
+                ${this._kpi('Unique visitors', o.total_unique_visitors, visitorsSeries)}
+                ${this._kpi('Unique users', o.total_unique_users, usersSeries)}
                 ${this._kpi('Database size', `${o.db?.mb ?? 0} MB`)}
             </div>
 
@@ -215,8 +242,80 @@ class PageStatsPage extends HTMLElement {
         `;
     }
 
-    _kpi(label, value) {
-        return `<div class="kpi"><div class="kpi-value">${this._esc(String(value ?? '0'))}</div><div class="kpi-label">${this._esc(label)}</div></div>`;
+    _kpi(label, value, series) {
+        const spark = series && series.length > 1 ? this._sparkline(series) : '';
+        return `
+            <div class="kpi">
+                <div class="kpi-value">${this._esc(String(value ?? '0'))}</div>
+                <div class="kpi-label">${this._esc(label)}</div>
+                ${spark}
+            </div>`;
+    }
+
+    /**
+     * Turns the raw rows from Stats::siteSummary() (one row per day *that
+     * has data*, in no guaranteed order - see classes/Stats.php) into a
+     * chronologically sorted array of {date, value}. When we know the
+     * selected range (from/to), missing days are filled in with 0 so the
+     * sparkline has an evenly spaced timeline instead of gaps wherever a
+     * day had zero visits. For 'all time' (from/to unknown) we just sort
+     * whatever days came back, without filling - the range could span
+     * years and the exact start date isn't known client-side.
+     */
+    _buildDailySeries(rows, from, to) {
+        const byDate = new Map();
+        (rows || []).forEach((r) => {
+            if (r && r.date) byDate.set(r.date, Number(r.hits) || 0);
+        });
+
+        if (!from || !to) {
+            return [...byDate.entries()]
+                .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+                .map(([date, value]) => ({ date, value }));
+        }
+
+        const series = [];
+        const cursor = new Date(from);
+        cursor.setHours(0, 0, 0, 0);
+        const end = new Date(to);
+        end.setHours(0, 0, 0, 0);
+        while (cursor <= end) {
+            const key = cursor.toISOString().slice(0, 10);
+            series.push({ date: key, value: byDate.get(key) || 0 });
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        return series;
+    }
+
+    _sparkline(series, width = 160, height = 36) {
+        const max = Math.max(...series.map((p) => p.value), 1);
+        const stepX = series.length > 1 ? width / (series.length - 1) : width;
+        const points = series.map((p, i) => {
+            const x = i * stepX;
+            const y = height - (p.value / max) * height;
+            return `${x.toFixed(1)},${y.toFixed(1)}`;
+        });
+        const linePath = `M${points.join(' L')}`;
+        const areaPath = `${linePath} L${width},${height} L0,${height} Z`;
+        return `
+            <svg class="sparkline" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                <path class="spark-area" d="${areaPath}"></path>
+                <path class="spark-line" d="${linePath}"></path>
+            </svg>`;
+    }
+
+    /**
+     * Converts a 2-letter ISO country code (as stored by Geolocation /
+     * classes/Stats.php: $geo->countryCode(), empty falls back to the
+     * literal string "unknown") into a flag emoji via Unicode regional
+     * indicator symbols. Anything that isn't a clean 2-letter code
+     * (including "unknown") falls back to a globe icon rather than
+     * guessing.
+     */
+    _flagEmoji(code) {
+        if (typeof code !== 'string' || !/^[A-Za-z]{2}$/.test(code)) return '\u{1F310}';
+        const codePoints = [...code.toUpperCase()].map((c) => 0x1f1e6 + (c.charCodeAt(0) - 65));
+        return String.fromCodePoint(...codePoints);
     }
 
     _bars(items, key) {
@@ -225,9 +324,10 @@ class PageStatsPage extends HTMLElement {
         return `<div class="bars">${items
             .map((i) => {
                 const pct = Math.max(4, Math.round(((Number(i.hits) || 0) / max) * 100));
+                const flag = key === 'country' ? `<span class="bar-flag">${this._flagEmoji(i[key])}</span>` : '';
                 return `
                     <div class="bar-row">
-                        <span class="bar-label">${this._esc(String(i[key] || 'unknown'))}</span>
+                        <span class="bar-label">${flag}${this._esc(String(i[key] || 'unknown'))}</span>
                         <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
                         <span class="bar-value">${this._esc(String(i.hits))}${i.share !== undefined ? ` (${i.share}%)` : ''}</span>
                     </div>`;
@@ -292,7 +392,7 @@ class PageStatsPage extends HTMLElement {
 
     _styles() {
         return `
-            :host { display: block; color: var(--foreground); font-family: inherit; }
+            :host { display: block; color: var(--foreground); font-family: inherit; padding-top: 16px; }
             .wrap { display: flex; flex-direction: column; gap: 16px; }
             .toolbar { display: flex; justify-content: space-between; align-items: center; }
             .range { display: flex; gap: 4px; }
@@ -307,9 +407,12 @@ class PageStatsPage extends HTMLElement {
             }
             .range button.active { background: var(--primary); color: var(--primary-foreground, #fff); border-color: var(--primary); }
             .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-            .kpi { border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+            .kpi { border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; }
             .kpi-value { font-size: 22px; font-weight: 700; }
             .kpi-label { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+            .sparkline { width: 100%; height: 36px; margin-top: 10px; }
+            .spark-area { fill: var(--primary); opacity: 0.12; }
+            .spark-line { fill: none; stroke: var(--primary); stroke-width: 1.5; }
             .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
             .card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
             .card.wide { grid-column: 1 / -1; }
@@ -320,6 +423,7 @@ class PageStatsPage extends HTMLElement {
             .bars { display: flex; flex-direction: column; gap: 8px; }
             .bar-row { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 8px; font-size: 13px; }
             .bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .bar-flag { margin-right: 4px; }
             .bar-track { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
             .bar-fill { background: var(--primary); height: 100%; }
             .bar-value { text-align: right; color: var(--muted-foreground); }

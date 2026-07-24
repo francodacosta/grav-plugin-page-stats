@@ -415,9 +415,9 @@ class Stats
      */
     public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $hits = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(datetime(date), :offset)', $params, null, $dateFrom, $dateTo);
-        $visitors = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(datetime(date), :offset)',  $params, null, $dateFrom, $dateTo);
-        $users = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(datetime(date), :offset)',  $params, null, $dateFrom, $dateTo);
+        $hits = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(datetime(date), :offset) ORDER BY date ASC', $params, null, $dateFrom, $dateTo);
+        $visitors = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(datetime(date), :offset) ORDER BY date ASC',  $params, null, $dateFrom, $dateTo);
+        $users = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(datetime(date), :offset) ORDER BY date ASC',  $params, null, $dateFrom, $dateTo);
 
         return [
             'hits' => $hits,
