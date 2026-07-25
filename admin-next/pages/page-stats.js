@@ -356,10 +356,17 @@ class PageStatsPage extends HTMLElement {
                 seenX.add(p.x);
                 return true;
             })
-            .map(
-                (p) =>
-                    `<text class="axis-label x-label" x="${p.x.toFixed(1)}" y="${height - 4}" text-anchor="middle">${this._esc(this._formatDayLabel(p.date))}</text>`
-            )
+            .map((p) => {
+                // Middle labels can grow symmetrically; the first/last one
+                // would grow past the viewBox edge with text-anchor="middle"
+                // and get clipped (seen with the rightmost date, e.g.
+                // "24.07." showing as "24.0"), so they anchor toward the
+                // inside instead.
+                const isFirst = p === points[0];
+                const isLast = p === points[points.length - 1];
+                const anchor = isLast ? 'end' : isFirst ? 'start' : 'middle';
+                return `<text class="axis-label x-label" x="${p.x.toFixed(1)}" y="${height - 4}" text-anchor="${anchor}">${this._esc(this._formatDayLabel(p.date))}</text>`;
+            })
             .join('');
 
         const dots = points
