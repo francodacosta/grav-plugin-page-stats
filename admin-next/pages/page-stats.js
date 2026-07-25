@@ -19,6 +19,9 @@ class PageStatsPage extends HTMLElement {
     #overview = null;
     #summary = null;
     #loading = false;
+    #recentLimit = 10;
+    #recentPages = [];
+    #recentHasMore = true;
 
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
@@ -76,6 +79,7 @@ class PageStatsPage extends HTMLElement {
 
     async _load() {
         this.#loading = true;
+        this.#recentLimit = 10;
         this._renderBody();
 
         const params = this._dateRangeParams();
@@ -86,6 +90,8 @@ class PageStatsPage extends HTMLElement {
 
         this.#overview = overviewResult.status === 'fulfilled' ? overviewResult.value : null;
         this.#summary = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
+        this.#recentPages = this.#overview?.recent_pages || [];
+        this.#recentHasMore = this.#recentPages.length >= this.#recentLimit;
 
         if (overviewResult.status === 'rejected') {
             this._error = overviewResult.reason?.message || 'Could not load page stats';
@@ -235,16 +241,44 @@ class PageStatsPage extends HTMLElement {
                 <div class="card wide">
                     <h3>Recently viewed pages</h3>
                     ${this._table(
-                        ['Route', 'User', 'Date'],
-                        (o.recent_pages || []).map((r) => [
-                            this._esc(r.route),
+                        ['Page', 'User', 'Browser', 'Platform', 'Date'],
+                        this.#recentPages.map((r) => [
+                            `<a href="${this._esc(r.route)}" target="_blank" rel="noopener noreferrer" title="${this._esc(r.route)}">${this._esc(r.route)}</a>`,
                             this._esc(r.user || '(anonymous)'),
+                            this._esc(r.browser || 'unknown'),
+                            this._esc(r.platform || 'unknown'),
                             `${this._esc(r.day || '')} ${this._esc(r.time || '')}`,
                         ])
                     )}
+                    ${this.#recentPages.length && this.#recentHasMore ? `<button class="load-more-recent">Load more</button>` : ''}
                 </div>
             </div>
         `;
+
+        body.querySelector('.load-more-recent')?.addEventListener('click', () => this._loadMoreRecent());
+    }
+
+    /**
+     * Re-requests /page-stats/recent with a larger `limit` (10 -> 20 -> 30 ...)
+     * and re-renders just the body. Deliberately not an offset/cursor-based
+     * pagination: re-fetching the whole newest-first list with a bigger
+     * limit avoids duplicate/missing rows if new hits arrive between clicks,
+     * and needs no extra server-side state.
+     */
+    async _loadMoreRecent() {
+        const nextLimit = this.#recentLimit + 10;
+        try {
+            const data = await this._apiGet('/page-stats/recent', {
+                ...this._dateRangeParams(),
+                limit: nextLimit,
+            });
+            this.#recentPages = data.pages || [];
+            this.#recentLimit = nextLimit;
+            this.#recentHasMore = this.#recentPages.length >= nextLimit;
+        } catch (err) {
+            window.__GRAV_TOAST?.error(err.message || 'Could not load more recently viewed pages');
+        }
+        this._renderBody();
     }
 
     _chartCard(title, total, series, color) {

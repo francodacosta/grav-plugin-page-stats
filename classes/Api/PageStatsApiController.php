@@ -189,6 +189,13 @@ class PageStatsApiController extends AbstractApiController
 
     /**
      * GET /page-stats/recent
+     *
+     * Powers the dashboard's "Recently viewed pages" card. Returns a flat,
+     * newest-first list ('pages') used for the initial render and for the
+     * "Load more" button (which simply re-requests this endpoint with a
+     * larger `limit`), alongside the same data grouped by day ('by_day',
+     * unchanged) for any future admin page wanting a day-by-day breakdown
+     * akin to the classic-admin "Recently viewed pages" sub-page.
      */
     public function recent(ServerRequestInterface $request): ResponseInterface
     {
@@ -196,9 +203,11 @@ class PageStatsApiController extends AbstractApiController
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 50);
+        $stats = $this->getStats();
 
         return ApiResponse::create([
-            'by_day' => $this->getStats()->recentPagesByDay($limit, $dateFrom, $dateTo),
+            'pages' => $stats->recentPages($limit, $dateFrom, $dateTo),
+            'by_day' => $stats->recentPagesByDay($limit, $dateFrom, $dateTo),
         ]);
     }
 
