@@ -243,8 +243,11 @@ class PageStatsPage extends HTMLElement {
                     ${this._table(
                         ['Page', 'User', 'Browser', 'Platform', 'Date'],
                         this.#recentPages.map((r) => [
-                            `<a href="${this._esc(r.route)}" target="_blank" rel="noopener noreferrer" title="${this._esc(r.route)}">${this._esc(r.route)}</a>`,
-                            this._esc(r.user || '(anonymous)'),
+                            `<span class="recent-page-cell">
+                                <a href="${this._esc(r.route)}" target="_blank" rel="noopener noreferrer" class="recent-page-link" title="${this._esc(r.route)} in neuem Tab öffnen">${this._externalLinkIcon()}</a>
+                                <span class="recent-page-route" title="${this._esc(r.route)}">${this._esc(r.route)}</span>
+                            </span>`,
+                            this._esc(r.user || r.ip || '(anonymous)'),
                             this._esc(r.browser || 'unknown'),
                             this._esc(r.platform || 'unknown'),
                             `${this._esc(r.day || '')} ${this._esc(r.time || '')}`,
@@ -444,6 +447,21 @@ class PageStatsPage extends HTMLElement {
         </svg>`;
     }
 
+    /**
+     * Small "open in new tab" glyph used in front of a route in the
+     * "Recently viewed pages" table. Deliberately only this icon is
+     * wrapped in the <a>, not the route text itself - a full-text link
+     * would pick up the browser's default link color/underline, which
+     * looks out of place next to plain-text table cells (route text stays
+     * themed via .recent-page-route, see _styles()).
+     */
+    _externalLinkIcon() {
+        return `<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+            <path d="M6.5 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5V9.5" fill="none" stroke="currentColor" stroke-width="1.3"></path>
+            <path d="M9.5 2H14v4.5M14 2 7 9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>`;
+    }
+
     _bars(items, key) {
         if (!items || !items.length) return `<div class="state">No data.</div>`;
         const max = Math.max(...items.map((i) => Number(i.hits) || 0), 1);
@@ -563,6 +581,10 @@ class PageStatsPage extends HTMLElement {
             .bar-track { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
             .bar-fill { background: var(--primary); height: 100%; }
             .bar-value { text-align: right; color: var(--muted-foreground); }
+            .recent-page-cell { display: inline-flex; align-items: center; gap: 6px; }
+            .recent-page-link { color: var(--muted-foreground); display: inline-flex; text-decoration: none; }
+            .recent-page-link:hover { color: var(--foreground); }
+            .recent-page-route { color: var(--foreground); }
             .state { color: var(--muted-foreground); font-size: 13px; padding: 8px 0; }
             .state.error { color: var(--destructive, #dc2626); }
             .lookup { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
