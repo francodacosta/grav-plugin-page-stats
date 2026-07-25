@@ -541,7 +541,7 @@ class PageStatsPage extends HTMLElement {
             .body { display: flex; flex-direction: column; gap: 16px; }
             .toolbar { display: flex; justify-content: space-between; align-items: center; }
             .range { display: flex; gap: 4px; }
-            .range button, .refresh, .lookup-row button {
+            .range button, .refresh, .lookup-row button, .load-more-recent {
                 background: var(--background);
                 color: var(--foreground);
                 border: 1px solid var(--border);
@@ -585,6 +585,7 @@ class PageStatsPage extends HTMLElement {
             .recent-page-link { color: var(--muted-foreground); display: inline-flex; text-decoration: none; }
             .recent-page-link:hover { color: var(--foreground); }
             .recent-page-route { color: var(--foreground); }
+            .load-more-recent { display: block; margin-top: 12px; }
             .state { color: var(--muted-foreground); font-size: 13px; padding: 8px 0; }
             .state.error { color: var(--destructive, #dc2626); }
             .lookup { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
