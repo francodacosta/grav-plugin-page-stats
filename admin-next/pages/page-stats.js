@@ -500,7 +500,7 @@ class PageStatsPage extends HTMLElement {
                 ${this._table(
                     ['User', 'Date', 'Browser'],
                     (data.views || []).map((v) => [
-                        this._esc(v.user || '(anonymous)'),
+                        this._esc(v.user || v.ip || '(anonymous)'),
                         `${this._esc(v.day || '')} ${this._esc(v.time || '')}`,
                         this._esc(v.browser || ''),
                     ])
