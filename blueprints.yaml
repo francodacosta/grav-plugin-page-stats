@@ -201,6 +201,8 @@ form:
                             type: section
                             text: PLUGIN_PAGE_STATS.TAB_CLASSIC_ADMIN_INFO
                             underline: true
+                            wrapper_classes: "rounded-lg border p-4"
+                            fields: {}
                         page_url_format:
                             type: select
                             label: PLUGIN_PAGE_STATS.PAGE_URL.TEXT
@@ -315,4 +317,6 @@ form:
                             type: section
                             text: PLUGIN_PAGE_STATS.TAB_ADMIN2_INFO
                             underline: true
+                            wrapper_classes: "rounded-lg border p-4"
+                            fields: {}
 
