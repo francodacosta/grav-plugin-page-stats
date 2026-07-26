@@ -62,236 +62,257 @@ x-widget-limit: &widget-limit
 form:
     validation: loose
     fields:
-        enabled:
-            type: toggle
-            label: PLUGIN_ADMIN.PLUGIN_STATUS
-            highlight: 1
-            default: 0
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-        ignore_errors:
-            type: toggle
-            label: PLUGIN_PAGE_STATS.IGNORE_ERRORS_LABEL
-            help: PLUGIN_PAGE_STATS.IGNORE_ERRORS_HELP
-            highlight: 1
-            default: 0
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-        db:
-            type: text
-            label: PLUGIN_PAGE_STATS.STATS_DB_LABEL
-            help: PLUGIN_PAGE_STATS.STATS_DB_HELP
-
-        anonymize_ips:
-            type: toggle
-            label: PLUGIN_PAGE_STATS.ANONYMIZE_IPS_LABEL
-            help: PLUGIN_PAGE_STATS.ANONYMIZE_IPS_HELP
-            highlight: 1
-            default: 0
-            options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-            validate:
-                type: bool
-
-
-        section_widgets:
-            type: section
-            title: PLUGIN_PAGE_STATS.SECTION_WIDGETS
-            text: PLUGIN_PAGE_STATS.SECTION_WIDGETS_LABEL
-            underline: true
+        tabs:
+            type: tabs
             fields:
-                fs2:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.UNIQUE_USERS_WIDGET
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
+                tab_general:
+                    type: tab
+                    title: PLUGIN_PAGE_STATS.TAB_GENERAL
                     fields:
-                        show_unique_users_widget: *widget-enabled
-                        cols_unique_users_widget: *widget-size
-                fs3:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.UNIQUE_VISITORS_WIDGET
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_unique_visitors_widget: *widget-enabled
-                        cols_unique_visitors_widget: *widget-size
-                fs4:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.PAGE_VIEWS_WIDGET
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_page_views_widget: *widget-enabled
-                        cols_page_views_widget: *widget-size
-                fs1:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_USERS_WIDGET
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_users_widget: *widget-enabled
-                        cols_top_users_widget: *widget-size
-                        limit_top_users_widget: *widget-limit
-                fs7:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_BROWSERS
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_browsers: *widget-enabled
-                        cols_top_browsers: *widget-size
-                        limit_top_browsers: *widget-limit
-                        style_top_browsers: *widget-style
-                fs8:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_COUNTRIES
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_countries: *widget-enabled
-                        cols_top_countries: *widget-size
-                        limit_top_countries: *widget-limit
-                        style_top_countries: *widget-style
-                fs9:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_PLATFORMS
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_platforms: *widget-enabled
-                        cols_top_platforms: *widget-size
-                        limit_top_platforms: *widget-limit
-                        style_top_platforms: *widget-style
-
-                fs5:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.RECENTLY_VIEWED_PAGES
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_recently_viewed_pages: *widget-enabled
-                        cols_recently_viewed_pages: *widget-size
-                        limit_recently_viewed_pages: *widget-limit
-                fs6:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.TOP_PAGES
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_top_pages: *widget-enabled
-                        cols_top_pages: *widget-size
-                        limit_top_pages_pages: *widget-limit
-                fs10:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.PAGE_DETAILS.RECENT_VIEWS
-                    collapsed: false      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
-                    fields:
-                        show_pagedetails_recent_views: *widget-enabled
-                        cols_pagedetails_recent_views: *widget-size
-                        limit_pagedetails_recent_views: *widget-limit
-
-        section_behaviour:
-            type: section
-            title: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR
-            text: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR_LABEL
-            underline: true
-            fields:
-                datetime_offset:
-                    type: text
-                    label: PLUGIN_PAGE_STATS.DATETIME_OFFSET_LABEL
-                    help: PLUGIN_PAGE_STATS.DATETIME_OFFSET_HELP
-                    default: 'localtime'
-                    validate:
-                      pattern: '[+-][[:digit:]]{2,2}:[[:digit:]]{2,2}|localtime'
-                log_admin:
-                    type: toggle
-                    label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
-                    help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
-                    highlight: 0
-                    default: 0
-                    options:
-                        1: PLUGIN_ADMIN.ENABLED
-                        0: PLUGIN_ADMIN.DISABLED
-                    validate:
-                        type: bool
-                log_time_on_page:
-                    type: toggle
-                    label: PLUGIN_PAGE_STATS.LOG_TIME_ON_PAGE_LABEL
-                    help: PLUGIN_PAGE_STATS.LOG_TIME_ON_PAGE_HELP
-                    highlight: 1
-                    default: 1
-                    options:
-                        1: PLUGIN_ADMIN.ENABLED
-                        0: PLUGIN_ADMIN.DISABLED
-                    validate:
-                        type: bool
-                collector_ping_interval:
-                    type: number
-                    label: PLUGIN_PAGE_STATS.COLLECTOR_PING_INTERVAL_LABEL
-                    help: PLUGIN_PAGE_STATS.COLLECTOR_PING_INTERVAL_HELP
-                    default: 15
-                    validate:
-                        type: number
-                        min: 1
-                log_bot:
-                    type: toggle
-                    label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
-                    help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
-                    highlight: 0
-                    default: 0
-                    options:
-                        1: PLUGIN_ADMIN.ENABLED
-                        0: PLUGIN_ADMIN.DISABLED
-                    validate:
-                        type: bool
-                page_url_format:
-                    type: select
-                    label: PLUGIN_PAGE_STATS.PAGE_URL.TEXT
-                    help: PLUGIN_PAGE_STATS.PAGE_URL.HELP
-                    options:
-                        'url': 'Url'
-                        'title': 'Title'
-                ignored_ips:
-                    type: list
-                    label: PLUGIN_PAGE_STATS.IGNORED_IPS_LABEL
-                    help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
-                    style: vertical
-                    fields:
-                        .ip:
+                        enabled:
+                            type: toggle
+                            label: PLUGIN_ADMIN.PLUGIN_STATUS
+                            highlight: 1
+                            default: 0
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+                        ignore_errors:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.IGNORE_ERRORS_LABEL
+                            help: PLUGIN_PAGE_STATS.IGNORE_ERRORS_HELP
+                            highlight: 1
+                            default: 0
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+                        db:
                             type: text
-                            label: PLUGIN_PAGE_STATS.IP
-                            help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
-                ignored_urls:
-                    type: list
-                    label: PLUGIN_PAGE_STATS.IGNORED_URLS.LABEL
-                    help: PLUGIN_PAGE_STATS.IGNORED_URLS.HELP
-                    style: vertical
+                            label: PLUGIN_PAGE_STATS.STATS_DB_LABEL
+                            help: PLUGIN_PAGE_STATS.STATS_DB_HELP
+
+                        anonymize_ips:
+                            type: toggle
+                            label: PLUGIN_PAGE_STATS.ANONYMIZE_IPS_LABEL
+                            help: PLUGIN_PAGE_STATS.ANONYMIZE_IPS_HELP
+                            highlight: 1
+                            default: 0
+                            options:
+                                1: PLUGIN_ADMIN.ENABLED
+                                0: PLUGIN_ADMIN.DISABLED
+                            validate:
+                                type: bool
+
+                        section_behaviour:
+                            type: section
+                            title: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR
+                            text: PLUGIN_PAGE_STATS.SECTION_BEHAVIOUR_LABEL
+                            underline: true
+                            fields:
+                                datetime_offset:
+                                    type: text
+                                    label: PLUGIN_PAGE_STATS.DATETIME_OFFSET_LABEL
+                                    help: PLUGIN_PAGE_STATS.DATETIME_OFFSET_HELP
+                                    default: 'localtime'
+                                    validate:
+                                      pattern: '[+-][[:digit:]]{2,2}:[[:digit:]]{2,2}|localtime'
+                                log_admin:
+                                    type: toggle
+                                    label: PLUGIN_PAGE_STATS.LOG_ADMIN_LABEL
+                                    help: PLUGIN_PAGE_STATS.LOG_ADMIN_HELP
+                                    highlight: 0
+                                    default: 0
+                                    options:
+                                        1: PLUGIN_ADMIN.ENABLED
+                                        0: PLUGIN_ADMIN.DISABLED
+                                    validate:
+                                        type: bool
+                                log_time_on_page:
+                                    type: toggle
+                                    label: PLUGIN_PAGE_STATS.LOG_TIME_ON_PAGE_LABEL
+                                    help: PLUGIN_PAGE_STATS.LOG_TIME_ON_PAGE_HELP
+                                    highlight: 1
+                                    default: 1
+                                    options:
+                                        1: PLUGIN_ADMIN.ENABLED
+                                        0: PLUGIN_ADMIN.DISABLED
+                                    validate:
+                                        type: bool
+                                collector_ping_interval:
+                                    type: number
+                                    label: PLUGIN_PAGE_STATS.COLLECTOR_PING_INTERVAL_LABEL
+                                    help: PLUGIN_PAGE_STATS.COLLECTOR_PING_INTERVAL_HELP
+                                    default: 15
+                                    validate:
+                                        type: number
+                                        min: 1
+                                log_bot:
+                                    type: toggle
+                                    label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
+                                    help: PLUGIN_PAGE_STATS.LOG_BOT_HELP
+                                    highlight: 0
+                                    default: 0
+                                    options:
+                                        1: PLUGIN_ADMIN.ENABLED
+                                        0: PLUGIN_ADMIN.DISABLED
+                                    validate:
+                                        type: bool
+                                ignored_ips:
+                                    type: list
+                                    label: PLUGIN_PAGE_STATS.IGNORED_IPS_LABEL
+                                    help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
+                                    style: vertical
+                                    fields:
+                                        .ip:
+                                            type: text
+                                            label: PLUGIN_PAGE_STATS.IP
+                                            help: PLUGIN_PAGE_STATS.IGNORED_IPS_HELP
+                                ignored_urls:
+                                    type: list
+                                    label: PLUGIN_PAGE_STATS.IGNORED_URLS.LABEL
+                                    help: PLUGIN_PAGE_STATS.IGNORED_URLS.HELP
+                                    style: vertical
+                                    fields:
+                                        .url:
+                                            type: text
+                                            label: PLUGIN_PAGE_STATS.IGNORED_URLS.TEXT
+                                            help: PLUGIN_PAGE_STATS.IGNORED_URLS.HELP
+                                fs11:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.BOT_REGEXP.TEXT
+                                    collapsed: true      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        bot_regexp:
+                                            type: array
+                                            value_only: true
+                                            label: PLUGIN_PAGE_STATS.BOT_REGEXP.TEXT
+                                            help: PLUGIN_PAGE_STATS.BOT_REGEXP.HELP
+
+                tab_classic_admin:
+                    type: tab
+                    title: PLUGIN_PAGE_STATS.TAB_CLASSIC_ADMIN
                     fields:
-                        .url:
-                            type: text
-                            label: PLUGIN_PAGE_STATS.IGNORED_URLS.TEXT
-                            help: PLUGIN_PAGE_STATS.IGNORED_URLS.HELP
-                fs11:
-                    type: fieldset
-                    title: PLUGIN_PAGE_STATS.BOT_REGEXP.TEXT
-                    collapsed: true      # Initial state of fieldset (see collapsible option)
-                    collapsible: true    # Whether one can expand the fieldset or not
+                        classic_admin_info:
+                            type: section
+                            text: PLUGIN_PAGE_STATS.TAB_CLASSIC_ADMIN_INFO
+                            underline: true
+                        page_url_format:
+                            type: select
+                            label: PLUGIN_PAGE_STATS.PAGE_URL.TEXT
+                            help: PLUGIN_PAGE_STATS.PAGE_URL.HELP
+                            options:
+                                'url': 'Url'
+                                'title': 'Title'
+
+                        section_widgets:
+                            type: section
+                            title: PLUGIN_PAGE_STATS.SECTION_WIDGETS
+                            text: PLUGIN_PAGE_STATS.SECTION_WIDGETS_LABEL
+                            underline: true
+                            fields:
+                                fs2:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.UNIQUE_USERS_WIDGET
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_unique_users_widget: *widget-enabled
+                                        cols_unique_users_widget: *widget-size
+                                fs3:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.UNIQUE_VISITORS_WIDGET
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_unique_visitors_widget: *widget-enabled
+                                        cols_unique_visitors_widget: *widget-size
+                                fs4:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.PAGE_VIEWS_WIDGET
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_page_views_widget: *widget-enabled
+                                        cols_page_views_widget: *widget-size
+                                fs1:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.TOP_USERS_WIDGET
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_top_users_widget: *widget-enabled
+                                        cols_top_users_widget: *widget-size
+                                        limit_top_users_widget: *widget-limit
+                                fs7:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.TOP_BROWSERS
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_top_browsers: *widget-enabled
+                                        cols_top_browsers: *widget-size
+                                        limit_top_browsers: *widget-limit
+                                        style_top_browsers: *widget-style
+                                fs8:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.TOP_COUNTRIES
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_top_countries: *widget-enabled
+                                        cols_top_countries: *widget-size
+                                        limit_top_countries: *widget-limit
+                                        style_top_countries: *widget-style
+                                fs9:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.TOP_PLATFORMS
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_top_platforms: *widget-enabled
+                                        cols_top_platforms: *widget-size
+                                        limit_top_platforms: *widget-limit
+                                        style_top_platforms: *widget-style
+
+                                fs5:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.RECENTLY_VIEWED_PAGES
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_recently_viewed_pages: *widget-enabled
+                                        cols_recently_viewed_pages: *widget-size
+                                        limit_recently_viewed_pages: *widget-limit
+                                fs6:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.TOP_PAGES
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_top_pages: *widget-enabled
+                                        cols_top_pages: *widget-size
+                                        limit_top_pages_pages: *widget-limit
+                                fs10:
+                                    type: fieldset
+                                    title: PLUGIN_PAGE_STATS.PAGE_DETAILS.RECENT_VIEWS
+                                    collapsed: false      # Initial state of fieldset (see collapsible option)
+                                    collapsible: true    # Whether one can expand the fieldset or not
+                                    fields:
+                                        show_pagedetails_recent_views: *widget-enabled
+                                        cols_pagedetails_recent_views: *widget-size
+                                        limit_pagedetails_recent_views: *widget-limit
+
+                tab_admin2:
+                    type: tab
+                    title: PLUGIN_PAGE_STATS.TAB_ADMIN2
                     fields:
-                        bot_regexp:
-                            type: array
-                            value_only: true
-                            label: PLUGIN_PAGE_STATS.BOT_REGEXP.TEXT
-                            help: PLUGIN_PAGE_STATS.BOT_REGEXP.HELP
-
-
-
+                        admin2_info:
+                            type: section
+                            text: PLUGIN_PAGE_STATS.TAB_ADMIN2_INFO
+                            underline: true
 
