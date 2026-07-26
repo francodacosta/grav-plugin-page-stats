@@ -9,6 +9,7 @@ en:
     TAB_ADMIN2: "Grav 2.0 / Admin2"
     TAB_CLASSIC_ADMIN_INFO: "These settings only affect the classic Admin (Grav 1.x) dashboard widgets and detail pages. They have no effect on the Admin2 (Grav 2.0) dashboard."
     TAB_ADMIN2_INFO: "The Admin2 dashboard currently has no additional settings of its own - its layout is defined directly in admin-next/pages/page-stats.js. This tab is reserved for future Admin2-specific options."
+    TAB_INFO_TITLE: Information
 
     WIDGET:
         ENABLED:
@@ -145,6 +146,7 @@ fr:
     TAB_ADMIN2: "Grav 2.0 / Admin2"
     TAB_CLASSIC_ADMIN_INFO: "Ces réglages n'affectent que les widgets et pages de détail du tableau de bord de l'admin classique (Grav 1.x). Ils n'ont aucun effet sur le tableau de bord Admin2 (Grav 2.0)."
     TAB_ADMIN2_INFO: "Le tableau de bord Admin2 n'a actuellement pas de réglages supplémentaires propres - sa mise en page est définie directement dans admin-next/pages/page-stats.js. Cet onglet est réservé aux futures options spécifiques à Admin2."
+    TAB_INFO_TITLE: Information
 
     WIDGET:
         ENABLED:
