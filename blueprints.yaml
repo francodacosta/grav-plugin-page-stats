@@ -198,10 +198,12 @@ form:
                     title: PLUGIN_PAGE_STATS.TAB_CLASSIC_ADMIN
                     fields:
                         classic_admin_info:
-                            type: display
+                            type: section
+                            title: PLUGIN_PAGE_STATS.TAB_INFO_TITLE
                             text: PLUGIN_PAGE_STATS.TAB_CLASSIC_ADMIN_INFO
                             underline: true
                             wrapper_classes: "rounded-lg border p-4"
+                            fields: {}
                         page_url_format:
                             type: select
                             label: PLUGIN_PAGE_STATS.PAGE_URL.TEXT
@@ -313,8 +315,10 @@ form:
                     title: PLUGIN_PAGE_STATS.TAB_ADMIN2
                     fields:
                         admin2_info:
-                            type: display
+                            type: section
+                            title: PLUGIN_PAGE_STATS.TAB_INFO_TITLE
                             text: PLUGIN_PAGE_STATS.TAB_ADMIN2_INFO
                             underline: true
                             wrapper_classes: "rounded-lg border p-4"
+                            fields: {}
 
