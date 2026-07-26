@@ -234,6 +234,14 @@ form:
                         0: PLUGIN_ADMIN.DISABLED
                     validate:
                         type: bool
+                collector_ping_interval:
+                    type: number
+                    label: PLUGIN_PAGE_STATS.COLLECTOR_PING_INTERVAL_LABEL
+                    help: PLUGIN_PAGE_STATS.COLLECTOR_PING_INTERVAL_HELP
+                    default: 15
+                    validate:
+                        type: number
+                        min: 1
                 log_bot:
                     type: toggle
                     label: PLUGIN_PAGE_STATS.LOG_BOT_LABEL
