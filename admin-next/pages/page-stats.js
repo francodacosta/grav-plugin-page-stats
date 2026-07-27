@@ -13,6 +13,20 @@ const TAG = window.__GRAV_PAGE_TAG || 'grav-page-stats--page-stats';
  * top-browsers / top-platforms / top-users / recently-viewed-pages) into
  * one dashboard with inline lookups, since Admin2 component pages are a
  * single route rather than a set of admin-theme templates.
+ *
+ * Page/User Detail sub-views: Admin2's client-side router only defines a
+ * single dynamic segment for plugin pages (/plugin/[slug]) - no catch-all
+ * for anything deeper, so an actual extra path segment would 404 client-
+ * side on a hard reload. Instead, sub-views live on the exact same route
+ * and are addressed purely via query string (?view=page-detail&route=...),
+ * driven by plain history.pushState()/popstate (this custom element has no
+ * access to SvelteKit's $app/navigation, only the native History API - but
+ * that's what SvelteKit's own helpers wrap anyway, and this route has no
+ * +page.ts load function tied to it, so query-string-only navigation never
+ * triggers SvelteKit's own router). Currently only empty placeholder shells
+ * - the point of this pass is establishing the routing/back-button/deep-
+ * link behaviour and wiring up the overview's links, not the detail
+ * content itself (see docs/FORK-NOTES.md / session notes).
  */
 class PageStatsPage extends HTMLElement {
     #range = '30';
@@ -22,11 +36,94 @@ class PageStatsPage extends HTMLElement {
     #recentLimit = 10;
     #recentPages = [];
     #recentHasMore = true;
+    #view = 'dashboard'; // 'dashboard' | 'page-detail' | 'user-detail'
+    #viewParams = {};
+    #onPopState = null;
 
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
+        this._syncViewFromLocation();
+        this.#onPopState = () => this._handlePopState();
+        window.addEventListener('popstate', this.#onPopState);
         this._render();
-        this._load();
+        if (this.#view === 'dashboard') this._load();
+    }
+
+    disconnectedCallback() {
+        if (this.#onPopState) window.removeEventListener('popstate', this.#onPopState);
+    }
+
+    /**
+     * Reads ?view=...&route=...|user=...|ip=... from the current URL into
+     * #view/#viewParams. Falls back to 'dashboard' for anything malformed
+     * (missing/unknown view, or a detail view without its required param)
+     * rather than showing a broken detail shell.
+     */
+    _syncViewFromLocation() {
+        const params = new URLSearchParams(location.search);
+        const view = params.get('view');
+
+        if (view === 'page-detail' && params.get('route')) {
+            this.#view = 'page-detail';
+            this.#viewParams = { route: params.get('route') };
+            return;
+        }
+        if (view === 'user-detail' && (params.get('user') || params.get('ip'))) {
+            this.#view = 'user-detail';
+            this.#viewParams = params.get('user') ? { user: params.get('user') } : { ip: params.get('ip') };
+            return;
+        }
+        this.#view = 'dashboard';
+        this.#viewParams = {};
+    }
+
+    _handlePopState() {
+        this._syncViewFromLocation();
+        this._render();
+        if (this.#view === 'dashboard') this._load();
+    }
+
+    /**
+     * Internal navigation between the dashboard and a detail sub-view.
+     * Pushes a real history entry (so the browser Back button works) but
+     * never changes the path, only the query string - see class doc
+     * comment for why that matters here.
+     */
+    _navigate(view, params = {}) {
+        this.#view = view;
+        this.#viewParams = params;
+
+        let search = '';
+        if (view !== 'dashboard') {
+            search = `?${new URLSearchParams({ view, ...params }).toString()}`;
+        }
+        history.pushState({ view, params }, '', `${location.pathname}${search}`);
+
+        this._render();
+        if (view === 'dashboard') this._load();
+    }
+
+    /**
+     * Delegated click handling for internal nav links (data-nav="...",
+     * optionally data-nav-route/-user/-ip). Real <a href> elements so
+     * right-click / middle-click / ctrl-click "open in new tab" keeps
+     * working (a fresh tab re-syncs from the URL via _syncViewFromLocation
+     * on connectedCallback); a plain left click is intercepted to do an
+     * in-place SPA navigation instead of a full page reload.
+     */
+    _bindNavLinks(root) {
+        root.querySelectorAll('[data-nav]').forEach((el) => {
+            el.addEventListener('click', (e) => {
+                if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                const view = el.dataset.nav;
+                const params = {};
+                if (el.dataset.navRoute) params.route = el.dataset.navRoute;
+                if (el.dataset.navUser) params.user = el.dataset.navUser;
+                if (el.dataset.navIp) params.ip = el.dataset.navIp;
+                this._navigate(view, params);
+            });
+        });
     }
 
     _apiUrl(path) {
@@ -78,6 +175,8 @@ class PageStatsPage extends HTMLElement {
     }
 
     async _load() {
+        if (this.#view !== 'dashboard') return;
+
         this.#loading = true;
         this.#recentLimit = 10;
         this._renderBody();
@@ -107,6 +206,14 @@ class PageStatsPage extends HTMLElement {
     }
 
     _render() {
+        if (this.#view === 'dashboard') {
+            this._renderDashboardShell();
+        } else {
+            this._renderDetailShell();
+        }
+    }
+
+    _renderDashboardShell() {
         this.shadowRoot.innerHTML = `
             <style>${this._styles()}</style>
             <div class="wrap">
@@ -164,6 +271,38 @@ class PageStatsPage extends HTMLElement {
         });
 
         this._highlightRange();
+    }
+
+    /**
+     * Empty skeleton for Page Detail / User Detail. Deliberately just a
+     * back-link + title for now (this pass is about establishing routing/
+     * linking, not the detail content) - see class doc comment.
+     */
+    _renderDetailShell() {
+        this.shadowRoot.innerHTML = `
+            <style>${this._styles()}</style>
+            <div class="wrap">
+                <div class="detail-header">
+                    <a href="${this._esc(location.pathname)}" class="back-link" data-nav="dashboard">&larr; Back to dashboard</a>
+                    <h2>${this._esc(this._detailTitle())}</h2>
+                </div>
+                <div class="card">
+                    <div class="state">This view is coming in a future session - for now it only wires up the URL, back-button and links from the overview.</div>
+                </div>
+            </div>
+        `;
+        this._bindNavLinks(this.shadowRoot);
+    }
+
+    _detailTitle() {
+        if (this.#view === 'page-detail') {
+            return `Page detail: ${this.#viewParams.route || ''}`;
+        }
+        if (this.#view === 'user-detail') {
+            if (this.#viewParams.user) return `User detail: ${this.#viewParams.user}`;
+            if (this.#viewParams.ip) return `User detail: ${this.#viewParams.ip} (anonymous)`;
+        }
+        return '';
     }
 
     _highlightRange() {
@@ -234,7 +373,10 @@ class PageStatsPage extends HTMLElement {
                     <h3>Top users</h3>
                     ${this._table(
                         ['User', 'Hits'],
-                        (o.top_users || []).map((u) => [this._esc(u.user || '(anonymous)'), u.hits])
+                        (o.top_users || []).map((u) => [
+                            u.user ? this._userCellHtml({ user: u.user }) : this._esc('(anonymous)'),
+                            u.hits,
+                        ])
                     )}
                 </div>
 
@@ -243,11 +385,8 @@ class PageStatsPage extends HTMLElement {
                     ${this._table(
                         ['Page', 'User', 'Browser', 'Platform', 'Date'],
                         this.#recentPages.map((r) => [
-                            `<span class="recent-page-cell">
-                                <a href="${this._esc(r.route)}" target="_blank" rel="noopener noreferrer" class="recent-page-link" title="${this._esc(r.route)} in neuem Tab öffnen">${this._externalLinkIcon()}</a>
-                                <span class="recent-page-route" title="${this._esc(r.route)}">${this._esc(r.route)}</span>
-                            </span>`,
-                            this._esc(r.user || r.ip || '(anonymous)'),
+                            this._pageCellHtml(r.route),
+                            this._userCellHtml({ user: r.user, ip: r.ip }),
                             this._esc(r.browser || 'unknown'),
                             this._esc(r.platform || 'unknown'),
                             `${this._esc(r.day || '')} ${this._esc(r.time || '')}`,
@@ -259,6 +398,45 @@ class PageStatsPage extends HTMLElement {
         `;
 
         body.querySelector('.load-more-recent')?.addEventListener('click', () => this._loadMoreRecent());
+        this._bindNavLinks(body);
+    }
+
+    /**
+     * "Page" cell for the Recently viewed pages table: a small trend icon
+     * linking to the (currently empty) Page Detail sub-view, the existing
+     * "open in a new tab" icon linking to the real site page, then the
+     * route text itself (unlinked, see _externalLinkIcon() doc comment for
+     * why the text stays plain). Mirrors the classic-admin 1.7 "Recently
+     * Viewed Pages" widget, which showed the same pair of icons per row.
+     */
+    _pageCellHtml(route) {
+        const encoded = encodeURIComponent(route || '');
+        return `<span class="recent-page-cell">
+            <a href="?view=page-detail&route=${encoded}" class="recent-page-link nav-link" data-nav="page-detail" data-nav-route="${this._esc(route)}" title="View page detail">${this._trendIcon()}</a>
+            <a href="${this._esc(route)}" target="_blank" rel="noopener noreferrer" class="recent-page-link" title="${this._esc(route)} in neuem Tab öffnen">${this._externalLinkIcon()}</a>
+            <span class="recent-page-route" title="${this._esc(route)}">${this._esc(route)}</span>
+        </span>`;
+    }
+
+    /**
+     * "User" cell shared by Recently viewed pages and Top users: a trend
+     * icon linking to User Detail plus the label. Links by username when
+     * available; falls back to linking by IP for anonymous-but-identifiable
+     * visitors (see PageStatsApiController::userDetail(), which accepts
+     * either param). Pass neither (Top users' aggregated anonymous bucket)
+     * to get a plain, unlinked "(anonymous)" label.
+     */
+    _userCellHtml({ user, ip } = {}) {
+        const label = user || ip || '(anonymous)';
+        if (!user && !ip) {
+            return this._esc(label);
+        }
+        const param = user ? `user=${encodeURIComponent(user)}` : `ip=${encodeURIComponent(ip)}`;
+        const navAttr = user ? `data-nav-user="${this._esc(user)}"` : `data-nav-ip="${this._esc(ip)}"`;
+        return `<span class="recent-page-cell">
+            <a href="?view=user-detail&${param}" class="recent-page-link nav-link" data-nav="user-detail" ${navAttr} title="View user detail">${this._trendIcon()}</a>
+            <span class="recent-page-route">${this._esc(label)}</span>
+        </span>`;
     }
 
     /**
@@ -469,6 +647,18 @@ class PageStatsPage extends HTMLElement {
         </svg>`;
     }
 
+    /**
+     * Small "trending up" glyph used as the Page/User Detail link icon in
+     * "Recently viewed pages" and "Top users" - the same role the small
+     * chart icon played next to each row in the classic-admin 1.7 widget.
+     */
+    _trendIcon() {
+        return `<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+            <path d="M2 12 6 7 9 9.5 14 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M10.5 3H14v3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>`;
+    }
+
     _bars(items, key) {
         if (!items || !items.length) return `<div class="state">No data.</div>`;
         const max = Math.max(...items.map((i) => Number(i.hits) || 0), 1);
@@ -593,6 +783,10 @@ class PageStatsPage extends HTMLElement {
             .recent-page-link:hover { color: var(--foreground); }
             .recent-page-route { color: var(--foreground); }
             .load-more-recent { display: block; margin-top: 12px; }
+            .detail-header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+            .back-link { color: var(--muted-foreground); text-decoration: none; font-size: 13px; align-self: flex-start; }
+            .back-link:hover { color: var(--foreground); }
+            .detail-header h2 { margin: 0; font-size: 16px; font-weight: 600; word-break: break-all; }
             .state { color: var(--muted-foreground); font-size: 13px; padding: 8px 0; }
             .state.error { color: var(--destructive, #dc2626); }
             .lookup { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }

@@ -162,26 +162,37 @@ class PageStatsApiController extends AbstractApiController
     }
 
     /**
-     * GET /page-stats/users/detail?user=someuser
+     * GET /page-stats/users/detail?user=someuser  -or-  ?ip=1.2.3.4
+     *
+     * Accepts either a "user" or an "ip" query parameter. The "ip" variant
+     * exists for anonymous visitors that have no username but are still
+     * individually identifiable by IP (see admin-next/pages/page-stats.js,
+     * "Recently viewed pages" - a row with no user falls back to showing/
+     * linking the IP instead of a flat "(anonymous)", mirroring how the
+     * classic-admin user-details.html.twig template detected an IP-shaped
+     * "user" parameter and filtered by the ip column instead).
      */
     public function userDetail(ServerRequestInterface $request): ResponseInterface
     {
         $this->requirePermission($request, self::READ_PERMISSION);
 
         $user = $this->getQueryParam($request, 'user');
-        if (!$user) {
-            throw new ValidationException('A "user" query parameter is required.', [
-                ['field' => 'user', 'message' => 'This field is required.'],
+        $ip = $this->getQueryParam($request, 'ip');
+        if (!$user && !$ip) {
+            throw new ValidationException('A "user" or "ip" query parameter is required.', [
+                ['field' => 'user', 'message' => 'Either "user" or "ip" is required.'],
             ]);
         }
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 100);
 
-        $views = $this->getStats()->recentPages($limit, $dateFrom, $dateTo, ['user' => $user]);
+        $filter = $user ? ['user' => $user] : ['ip' => $ip];
+        $views = $this->getStats()->recentPages($limit, $dateFrom, $dateTo, $filter);
 
         return ApiResponse::create([
             'user' => $user,
+            'ip' => $ip,
             'hits' => count($views),
             'views' => $views,
         ]);
