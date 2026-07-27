@@ -90,13 +90,18 @@ class PageStatsApiController extends AbstractApiController
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 100);
+        $stats = $this->getStats();
+        $filter = ['route' => $route];
 
-        $views = $this->getStats()->recentPages($limit, $dateFrom, $dateTo, ['route' => $route]);
+        $views = $stats->recentPages($limit, $dateFrom, $dateTo, $filter);
 
         return ApiResponse::create([
             'route' => $route,
             'hits' => count($views),
             'visitors' => count(array_unique(array_column($views, 'ip'))),
+            'top_countries' => $stats->topCountries(5, $dateFrom, $dateTo, $filter),
+            'top_browsers' => $stats->topBrowsers(5, $dateFrom, $dateTo, $filter),
+            'top_platforms' => $stats->topPlatforms(5, $dateFrom, $dateTo, $filter),
             'views' => $views,
         ]);
     }
@@ -186,14 +191,16 @@ class PageStatsApiController extends AbstractApiController
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 100);
+        $stats = $this->getStats();
 
         $filter = $user ? ['user' => $user] : ['ip' => $ip];
-        $views = $this->getStats()->recentPages($limit, $dateFrom, $dateTo, $filter);
+        $views = $stats->recentPages($limit, $dateFrom, $dateTo, $filter);
 
         return ApiResponse::create([
             'user' => $user,
             'ip' => $ip,
             'hits' => count($views),
+            'top_pages' => $stats->pagesSummary(5, $dateFrom, $dateTo, $filter),
             'views' => $views,
         ]);
     }
@@ -223,18 +230,48 @@ class PageStatsApiController extends AbstractApiController
     }
 
     /**
-     * GET /page-stats/summary
+     * GET /page-stats/summary  (dashboard)
+     *  or  /page-stats/summary?route=...  /  ?user=...  /  ?ip=...  (detail views)
      *
      * Time series data (hits/visitors/users per day) used to draw the trend
-     * chart on the dashboard.
+     * chart on the dashboard, and - filtered by one of route/user/ip - the
+     * equivalent per-entity trend chart on the Page/User Detail views.
      */
     public function summary(ServerRequestInterface $request): ResponseInterface
     {
         $this->requirePermission($request, self::READ_PERMISSION);
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
+        $filter = $this->getEntityFilter($request);
 
-        return ApiResponse::create($this->getStats()->siteSummary($dateFrom, $dateTo));
+        return ApiResponse::create($this->getStats()->siteSummary($dateFrom, $dateTo, $filter));
+    }
+
+    /**
+     * Builds the same style of equality-filter array Stats::query() expects
+     * (['route' => ...] / ['user' => ...] / ['ip' => ...]) from whichever of
+     * those query params is present. Returns [] (no filter) if none are -
+     * that's what keeps the dashboard's own /summary call, which passes
+     * none of them, working exactly as before.
+     */
+    private function getEntityFilter(ServerRequestInterface $request): array
+    {
+        $route = $this->getQueryParam($request, 'route');
+        if ($route) {
+            return ['route' => $route];
+        }
+
+        $user = $this->getQueryParam($request, 'user');
+        if ($user) {
+            return ['user' => $user];
+        }
+
+        $ip = $this->getQueryParam($request, 'ip');
+        if ($ip) {
+            return ['ip' => $ip];
+        }
+
+        return [];
     }
 
     private function getStats(): Stats

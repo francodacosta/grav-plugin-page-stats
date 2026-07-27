@@ -23,10 +23,10 @@ const TAG = window.__GRAV_PAGE_TAG || 'grav-page-stats--page-stats';
  * access to SvelteKit's $app/navigation, only the native History API - but
  * that's what SvelteKit's own helpers wrap anyway, and this route has no
  * +page.ts load function tied to it, so query-string-only navigation never
- * triggers SvelteKit's own router). Currently only empty placeholder shells
- * - the point of this pass is establishing the routing/back-button/deep-
- * link behaviour and wiring up the overview's links, not the detail
- * content itself (see docs/FORK-NOTES.md / session notes).
+ * triggers SvelteKit's own router). Page/User Detail reuse the same chart/
+ * bars/table building blocks as the dashboard, filtered server-side by
+ * route/user/ip (see PageStatsApiController::pageDetail()/userDetail()/
+ * summary()).
  */
 class PageStatsPage extends HTMLElement {
     #range = '30';
@@ -46,7 +46,7 @@ class PageStatsPage extends HTMLElement {
         this.#onPopState = () => this._handlePopState();
         window.addEventListener('popstate', this.#onPopState);
         this._render();
-        if (this.#view === 'dashboard') this._load();
+        this._load();
     }
 
     disconnectedCallback() {
@@ -80,7 +80,7 @@ class PageStatsPage extends HTMLElement {
     _handlePopState() {
         this._syncViewFromLocation();
         this._render();
-        if (this.#view === 'dashboard') this._load();
+        this._load();
     }
 
     /**
@@ -100,7 +100,7 @@ class PageStatsPage extends HTMLElement {
         history.pushState({ view, params }, '', `${location.pathname}${search}`);
 
         this._render();
-        if (view === 'dashboard') this._load();
+        this._load();
     }
 
     /**
@@ -175,8 +175,12 @@ class PageStatsPage extends HTMLElement {
     }
 
     async _load() {
-        if (this.#view !== 'dashboard') return;
+        if (this.#view === 'page-detail') return this._loadPageDetail();
+        if (this.#view === 'user-detail') return this._loadUserDetail();
+        return this._loadDashboard();
+    }
 
+    async _loadDashboard() {
         this.#loading = true;
         this.#recentLimit = 10;
         this._renderBody();
@@ -203,6 +207,129 @@ class PageStatsPage extends HTMLElement {
 
         this.#loading = false;
         this._renderBody();
+    }
+
+    _detailBodyEl() {
+        return this.shadowRoot.querySelector('.detail-body');
+    }
+
+    /**
+     * Page Detail: KPI + trend chart + Top countries/browsers/platforms,
+     * all filtered server-side to this one route, plus the raw recent
+     * views list. Mirrors the classic-admin 1.7 page-details.html.twig
+     * widget set (see grav-chat-2026-07-26-page-stats-blueprint-config-tabs.md,
+     * Teil 2) using the same building blocks as the dashboard.
+     */
+    async _loadPageDetail() {
+        const body = this._detailBodyEl();
+        if (!body) return;
+        body.innerHTML = `<div class="state">Loading…</div>`;
+
+        const route = this.#viewParams.route;
+        const params = { ...this._dateRangeParams(), route, limit: 100 };
+        const [detailResult, summaryResult] = await Promise.allSettled([
+            this._apiGet('/page-stats/pages/detail', params),
+            this._apiGet('/page-stats/summary', params),
+        ]);
+
+        if (detailResult.status === 'rejected') {
+            body.innerHTML = `<div class="state error">${this._esc(detailResult.reason?.message || 'Could not load page detail')}</div>`;
+            return;
+        }
+
+        const d = detailResult.value;
+        const summary = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
+        const { from, to } = this._currentDateRange();
+        const hitsSeries = this._buildDailySeries(summary?.hits, from, to);
+
+        body.innerHTML = `
+            <div class="charts">
+                ${this._chartCard('Page views', d.hits, hitsSeries, 'var(--primary)')}
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Top countries</h3>
+                    ${this._bars(d.top_countries, 'country')}
+                </div>
+                <div class="card">
+                    <h3>Top browsers</h3>
+                    ${this._bars(d.top_browsers, 'browser')}
+                </div>
+                <div class="card">
+                    <h3>Top platforms</h3>
+                    ${this._bars(d.top_platforms, 'platform')}
+                </div>
+                <div class="card wide">
+                    <h3>Recent views (${this._esc(String(d.hits))} hits, ${this._esc(String(d.visitors))} unique visitors)</h3>
+                    ${this._table(
+                        ['User', 'Browser', 'Platform', 'Date'],
+                        (d.views || []).map((v) => [
+                            this._userCellHtml({ user: v.user, ip: v.ip }),
+                            this._esc(v.browser || 'unknown'),
+                            this._esc(v.platform || 'unknown'),
+                            `${this._esc(v.day || '')} ${this._esc(v.time || '')}`,
+                        ])
+                    )}
+                </div>
+            </div>
+        `;
+        this._bindNavLinks(body);
+    }
+
+    /**
+     * User Detail: KPI + trend chart + Top pages visited, filtered
+     * server-side to this one user/IP, plus the raw recent views list.
+     * Mirrors the classic-admin 1.7 user-details.html.twig widget set.
+     */
+    async _loadUserDetail() {
+        const body = this._detailBodyEl();
+        if (!body) return;
+        body.innerHTML = `<div class="state">Loading…</div>`;
+
+        const identity = this.#viewParams.user ? { user: this.#viewParams.user } : { ip: this.#viewParams.ip };
+        const params = { ...this._dateRangeParams(), ...identity, limit: 100 };
+        const [detailResult, summaryResult] = await Promise.allSettled([
+            this._apiGet('/page-stats/users/detail', params),
+            this._apiGet('/page-stats/summary', params),
+        ]);
+
+        if (detailResult.status === 'rejected') {
+            body.innerHTML = `<div class="state error">${this._esc(detailResult.reason?.message || 'Could not load user detail')}</div>`;
+            return;
+        }
+
+        const d = detailResult.value;
+        const summary = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
+        const { from, to } = this._currentDateRange();
+        const hitsSeries = this._buildDailySeries(summary?.hits, from, to);
+
+        body.innerHTML = `
+            <div class="charts">
+                ${this._chartCard('Page views', d.hits, hitsSeries, 'var(--primary)')}
+            </div>
+            <div class="grid">
+                <div class="card wide">
+                    <h3>Top pages</h3>
+                    ${this._table(
+                        ['Page', 'Hits'],
+                        (d.top_pages || []).map((p) => [this._pageCellHtml(p.route), p.hits])
+                    )}
+                </div>
+                <div class="card wide">
+                    <h3>Recent views (${this._esc(String(d.hits))} hits)</h3>
+                    ${this._table(
+                        ['Page', 'Browser', 'Platform', 'Date'],
+                        (d.views || []).map((v) => [
+                            this._pageCellHtml(v.route),
+                            this._esc(v.browser || 'unknown'),
+                            this._esc(v.platform || 'unknown'),
+                            `${this._esc(v.day || '')} ${this._esc(v.time || '')}`,
+                        ])
+                    )}
+                </div>
+            </div>
+        `;
+        this._bindNavLinks(body);
     }
 
     _render() {
@@ -274,9 +401,10 @@ class PageStatsPage extends HTMLElement {
     }
 
     /**
-     * Empty skeleton for Page Detail / User Detail. Deliberately just a
-     * back-link + title for now (this pass is about establishing routing/
-     * linking, not the detail content) - see class doc comment.
+     * Shell for Page Detail / User Detail: back-link + title, the same
+     * range/refresh toolbar as the dashboard (state is shared via #range,
+     * so the range picked on the dashboard carries over when you drill in),
+     * and a .detail-body container filled by _loadPageDetail()/_loadUserDetail().
      */
     _renderDetailShell() {
         this.shadowRoot.innerHTML = `
@@ -286,12 +414,32 @@ class PageStatsPage extends HTMLElement {
                     <a href="${this._esc(location.pathname)}" class="back-link" data-nav="dashboard">&larr; Back to dashboard</a>
                     <h2>${this._esc(this._detailTitle())}</h2>
                 </div>
-                <div class="card">
-                    <div class="state">This view is coming in a future session - for now it only wires up the URL, back-button and links from the overview.</div>
+                <div class="toolbar">
+                    <div class="range">
+                        <button data-range="7">7d</button>
+                        <button data-range="30">30d</button>
+                        <button data-range="90">90d</button>
+                        <button data-range="all">All time</button>
+                    </div>
+                    <div class="toolbar-end">
+                        <button class="refresh" title="Refresh">&#8635; Refresh</button>
+                    </div>
                 </div>
+                <div class="detail-body"></div>
             </div>
         `;
-        this._bindNavLinks(this.shadowRoot);
+
+        const root = this.shadowRoot;
+        root.querySelectorAll('.range button').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                this.#range = btn.dataset.range;
+                this._highlightRange();
+                this._load();
+            });
+        });
+        root.querySelector('.refresh').addEventListener('click', () => this._load());
+        this._bindNavLinks(root);
+        this._highlightRange();
     }
 
     _detailTitle() {

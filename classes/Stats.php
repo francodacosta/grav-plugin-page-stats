@@ -248,12 +248,17 @@ class Stats
 
     /**
      * gets most viewed pages
+     *
+     * $params is an optional equality-filter array (same convention as
+     * topBrowsers()/topCountries()/recentPages() etc.), e.g. ['user' => ...]
+     * or ['ip' => ...] to get the pages a specific visitor viewed most,
+     * for Admin2's User Detail view.
      */
-    public function pagesSummary(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
+    public function pagesSummary(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $q = 'SELECT route, page_title, count(route) as hits, count(distinct ip) as visitors, count(distinct user) as users FROM data %where GROUP BY page_title ORDER BY hits DESC';
 
-        return $this->query($q, [], $limit, $dateFrom, $dateTo);
+        return $this->query($q, $params, $limit, $dateFrom, $dateTo);
     }
 
     /**
