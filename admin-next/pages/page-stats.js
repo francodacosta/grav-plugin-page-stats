@@ -697,11 +697,12 @@ class PageStatsPage extends HTMLElement {
                 ${this._table(
                     ['User', 'Date', 'Browser'],
                     (data.views || []).map((v) => [
-                        this._esc(v.user || v.ip || '(anonymous)'),
+                        this._userCellHtml({ user: v.user, ip: v.ip }),
                         `${this._esc(v.day || '')} ${this._esc(v.time || '')}`,
                         this._esc(v.browser || ''),
                     ])
                 )}`;
+            this._bindNavLinks(resultEl);
         } catch (err) {
             resultEl.innerHTML = `<div class="state error">${this._esc(err.message)}</div>`;
         }
@@ -718,8 +719,9 @@ class PageStatsPage extends HTMLElement {
                 <p>${data.hits} hits</p>
                 ${this._table(
                     ['Route', 'Date'],
-                    (data.views || []).map((v) => [this._esc(v.route || ''), `${this._esc(v.day || '')} ${this._esc(v.time || '')}`])
+                    (data.views || []).map((v) => [this._pageCellHtml(v.route), `${this._esc(v.day || '')} ${this._esc(v.time || '')}`])
                 )}`;
+            this._bindNavLinks(resultEl);
         } catch (err) {
             resultEl.innerHTML = `<div class="state error">${this._esc(err.message)}</div>`;
         }
