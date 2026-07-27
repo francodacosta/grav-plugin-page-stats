@@ -412,8 +412,8 @@ class PageStatsPage extends HTMLElement {
     _pageCellHtml(route) {
         const encoded = encodeURIComponent(route || '');
         return `<span class="recent-page-cell">
-            <a href="?view=page-detail&route=${encoded}" class="recent-page-link nav-link" data-nav="page-detail" data-nav-route="${this._esc(route)}" title="View page detail">${this._trendIcon()}</a>
             <a href="${this._esc(route)}" target="_blank" rel="noopener noreferrer" class="recent-page-link" title="${this._esc(route)} in neuem Tab öffnen">${this._externalLinkIcon()}</a>
+            <a href="?view=page-detail&route=${encoded}" class="recent-page-link nav-link" data-nav="page-detail" data-nav-route="${this._esc(route)}" title="View page detail">${this._trendIcon()}</a>
             <span class="recent-page-route" title="${this._esc(route)}">${this._esc(route)}</span>
         </span>`;
     }
