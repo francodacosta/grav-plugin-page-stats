@@ -885,7 +885,7 @@ class PageStatsPage extends HTMLElement {
         return `
             :host { display: block; color: var(--foreground); font-family: inherit; padding-top: 16px; }
             .wrap { display: flex; flex-direction: column; gap: 16px; }
-            .body { display: flex; flex-direction: column; gap: 16px; }
+            .body, .detail-body { display: flex; flex-direction: column; gap: 16px; }
             .toolbar { display: flex; justify-content: space-between; align-items: center; }
             .range { display: flex; gap: 4px; }
             .range button, .refresh, .lookup-row button, .load-more-recent {
