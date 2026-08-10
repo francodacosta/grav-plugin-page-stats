@@ -4,6 +4,13 @@ en:
     STATS_DB_LABEL: Page Stats DB path
     STATS_DB_HELP: Path to db relative to Grav root
 
+    TAB_GENERAL: General
+    TAB_CLASSIC_ADMIN: "Grav 1.7 / Classic Admin"
+    TAB_ADMIN2: "Grav 2.0 / Admin2"
+    TAB_CLASSIC_ADMIN_INFO: "These settings only affect the classic Admin (Grav 1.x) dashboard widgets and detail pages. They have no effect on the Admin2 (Grav 2.0) dashboard."
+    TAB_ADMIN2_INFO: "The Admin2 dashboard currently has no additional settings of its own - its layout is defined directly in admin-next/pages/page-stats.js. This tab is reserved for future Admin2-specific options."
+    TAB_INFO_TITLE: Information
+
     WIDGET:
         ENABLED:
             TEXT: Enabled
@@ -26,6 +33,8 @@ en:
 
     LOG_TIME_ON_PAGE_LABEL: Log time on page
     LOG_TIME_ON_PAGE_HELP: If enabled Front End will trigger a ping event at regular intervals to mark the user as still on the page
+    COLLECTOR_PING_INTERVAL_LABEL: Time on page ping interval (seconds)
+    COLLECTOR_PING_INTERVAL_HELP: How often (in seconds) the Front End sends a ping while "Log time on page" is enabled. Only takes effect if that option is on.
     # STATS_DB_CREATE_LABEL: Recreate Stats database
     # STATS_DB_CREATE_HELP: This will create a db at the path specified and will overrite an existinf one without any questions
     # STATS_DB_CREATE_BTN_TEXT: Create new Stats database
@@ -132,6 +141,13 @@ fr:
     STATS_DB_LABEL: Chemin de la base de données des statistiques
     STATS_DB_HELP: Chemin vers la base de données, relatif à la racine de Grav
 
+    TAB_GENERAL: Général
+    TAB_CLASSIC_ADMIN: "Grav 1.7 / Admin classique"
+    TAB_ADMIN2: "Grav 2.0 / Admin2"
+    TAB_CLASSIC_ADMIN_INFO: "Ces réglages n'affectent que les widgets et pages de détail du tableau de bord de l'admin classique (Grav 1.x). Ils n'ont aucun effet sur le tableau de bord Admin2 (Grav 2.0)."
+    TAB_ADMIN2_INFO: "Le tableau de bord Admin2 n'a actuellement pas de réglages supplémentaires propres - sa mise en page est définie directement dans admin-next/pages/page-stats.js. Cet onglet est réservé aux futures options spécifiques à Admin2."
+    TAB_INFO_TITLE: Information
+
     WIDGET:
         ENABLED:
             TEXT: Activé
@@ -154,6 +170,8 @@ fr:
 
     LOG_TIME_ON_PAGE_LABEL: Enregistrer le temps passé sur la page
     LOG_TIME_ON_PAGE_HELP: "Si activé, le front-end déclenchera un événement de ping à intervalles réguliers pour indiquer que l'utilisateur est toujours sur la page"
+    COLLECTOR_PING_INTERVAL_LABEL: "Intervalle de ping (temps passé sur la page, en secondes)"
+    COLLECTOR_PING_INTERVAL_HELP: "Fréquence (en secondes) à laquelle le front-end envoie un ping lorsque « Enregistrer le temps passé sur la page » est activé. N'a d'effet que si cette option est active."
     # STATS_DB_CREATE_LABEL: Reconstruire la base de données des statistiques
     # STATS_DB_CREATE_HELP: "Cela créera une base de données à l'emplacement spécifié et écrasera celle existante sans confirmation"
     # STATS_DB_CREATE_BTN_TEXT: Créer une nouvelle base de données des statistiques

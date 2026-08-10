@@ -90,13 +90,18 @@ class PageStatsApiController extends AbstractApiController
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 100);
+        $stats = $this->getStats();
+        $filter = ['route' => $route];
 
-        $views = $this->getStats()->recentPages($limit, $dateFrom, $dateTo, ['route' => $route]);
+        $views = $stats->recentPages($limit, $dateFrom, $dateTo, $filter);
 
         return ApiResponse::create([
             'route' => $route,
             'hits' => count($views),
             'visitors' => count(array_unique(array_column($views, 'ip'))),
+            'top_countries' => $stats->topCountries(5, $dateFrom, $dateTo, $filter),
+            'top_browsers' => $stats->topBrowsers(5, $dateFrom, $dateTo, $filter),
+            'top_platforms' => $stats->topPlatforms(5, $dateFrom, $dateTo, $filter),
             'views' => $views,
         ]);
     }
@@ -162,33 +167,53 @@ class PageStatsApiController extends AbstractApiController
     }
 
     /**
-     * GET /page-stats/users/detail?user=someuser
+     * GET /page-stats/users/detail?user=someuser  -or-  ?ip=1.2.3.4
+     *
+     * Accepts either a "user" or an "ip" query parameter. The "ip" variant
+     * exists for anonymous visitors that have no username but are still
+     * individually identifiable by IP (see admin-next/pages/page-stats.js,
+     * "Recently viewed pages" - a row with no user falls back to showing/
+     * linking the IP instead of a flat "(anonymous)", mirroring how the
+     * classic-admin user-details.html.twig template detected an IP-shaped
+     * "user" parameter and filtered by the ip column instead).
      */
     public function userDetail(ServerRequestInterface $request): ResponseInterface
     {
         $this->requirePermission($request, self::READ_PERMISSION);
 
         $user = $this->getQueryParam($request, 'user');
-        if (!$user) {
-            throw new ValidationException('A "user" query parameter is required.', [
-                ['field' => 'user', 'message' => 'This field is required.'],
+        $ip = $this->getQueryParam($request, 'ip');
+        if (!$user && !$ip) {
+            throw new ValidationException('A "user" or "ip" query parameter is required.', [
+                ['field' => 'user', 'message' => 'Either "user" or "ip" is required.'],
             ]);
         }
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 100);
+        $stats = $this->getStats();
 
-        $views = $this->getStats()->recentPages($limit, $dateFrom, $dateTo, ['user' => $user]);
+        $filter = $user ? ['user' => $user] : ['ip' => $ip];
+        $views = $stats->recentPages($limit, $dateFrom, $dateTo, $filter);
 
         return ApiResponse::create([
             'user' => $user,
+            'ip' => $ip,
             'hits' => count($views),
+            'top_pages' => $stats->pagesSummary(5, $dateFrom, $dateTo, $filter),
             'views' => $views,
         ]);
     }
 
     /**
      * GET /page-stats/recent
+     *
+     * Powers the dashboard's "Recently viewed pages" card. Returns a flat,
+     * newest-first list ('pages') used for the initial render and for the
+     * "Load more" button (which simply re-requests this endpoint with a
+     * larger `limit`), alongside the same data grouped by day ('by_day',
+     * unchanged) for any future admin page wanting a day-by-day breakdown
+     * akin to the classic-admin "Recently viewed pages" sub-page.
      */
     public function recent(ServerRequestInterface $request): ResponseInterface
     {
@@ -196,25 +221,57 @@ class PageStatsApiController extends AbstractApiController
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
         $limit = $this->getLimit($request, 50);
+        $stats = $this->getStats();
 
         return ApiResponse::create([
-            'by_day' => $this->getStats()->recentPagesByDay($limit, $dateFrom, $dateTo),
+            'pages' => $stats->recentPages($limit, $dateFrom, $dateTo),
+            'by_day' => $stats->recentPagesByDay($limit, $dateFrom, $dateTo),
         ]);
     }
 
     /**
-     * GET /page-stats/summary
+     * GET /page-stats/summary  (dashboard)
+     *  or  /page-stats/summary?route=...  /  ?user=...  /  ?ip=...  (detail views)
      *
      * Time series data (hits/visitors/users per day) used to draw the trend
-     * chart on the dashboard.
+     * chart on the dashboard, and - filtered by one of route/user/ip - the
+     * equivalent per-entity trend chart on the Page/User Detail views.
      */
     public function summary(ServerRequestInterface $request): ResponseInterface
     {
         $this->requirePermission($request, self::READ_PERMISSION);
 
         [$dateFrom, $dateTo] = $this->getDateRange($request);
+        $filter = $this->getEntityFilter($request);
 
-        return ApiResponse::create($this->getStats()->siteSummary($dateFrom, $dateTo));
+        return ApiResponse::create($this->getStats()->siteSummary($dateFrom, $dateTo, $filter));
+    }
+
+    /**
+     * Builds the same style of equality-filter array Stats::query() expects
+     * (['route' => ...] / ['user' => ...] / ['ip' => ...]) from whichever of
+     * those query params is present. Returns [] (no filter) if none are -
+     * that's what keeps the dashboard's own /summary call, which passes
+     * none of them, working exactly as before.
+     */
+    private function getEntityFilter(ServerRequestInterface $request): array
+    {
+        $route = $this->getQueryParam($request, 'route');
+        if ($route) {
+            return ['route' => $route];
+        }
+
+        $user = $this->getQueryParam($request, 'user');
+        if ($user) {
+            return ['user' => $user];
+        }
+
+        $ip = $this->getQueryParam($request, 'ip');
+        if ($ip) {
+            return ['ip' => $ip];
+        }
+
+        return [];
     }
 
     private function getStats(): Stats
