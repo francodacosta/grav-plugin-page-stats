@@ -1,7 +1,7 @@
 name: Page Stats
 slug: page-stats
 type: plugin
-version: 2.7.1
+version: 2.8.0
 description: Enhaced Analytics for grav
 icon: plug
 author:
@@ -15,6 +15,17 @@ license: MIT
 
 dependencies:
     - { name: grav, version: ">=1.6.0" }
+
+# Declares compatibility with the Grav 2.0 API plugin / Admin2.
+# See classes/Api/PageStatsApiController.php and admin-next/pages/page-stats.js.
+# Classic Admin (Grav < 2.0) continues to work unchanged via the existing
+# onAdminDashboard/onAdminPage hooks in page-stats.php.
+compatibility:
+    grav:
+        - '1.7'
+        - '2.0'
+    api:
+        - 1.0
 
 x-widget-enabled: &widget-enabled
     type: toggle

@@ -36,5 +36,5 @@
     "require-dev": {
         "marcocesarato/php-conventional-changelog": "^1.15"
     },
-    "version": "2.7.1"
+    "version": "2.8.0"
 }

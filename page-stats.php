@@ -10,6 +10,7 @@ use RocketTheme\Toolbox\Event\Event;;
 
 use Grav\Plugin\PageStats\Geolocation\Geolocation;
 use Grav\Plugin\PageStats\Stats;
+use Grav\Plugin\PageStats\Api\PageStatsApiController;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
 use IP2Location\Database;
 
@@ -33,6 +34,12 @@ class PageStatsPlugin extends Plugin
     const PATH_EVENTS_COLLECTION = '/event-collection';
     const PATH_ADMIN_RECENTLY_VIEWED_PAGES = '/recently-viewed-pages';
 
+    // Admin2 sidebar id / route / API prefix (see onApiSidebarItems,
+    // onApiPluginPageInfo, onApiRegisterRoutes)
+    const ADMIN2_PAGE_ID = 'page-stats';
+    const ADMIN2_ROUTE = '/plugin/page-stats';
+    const API_PREFIX = '/page-stats';
+
     /**
      * @return array
      *
@@ -51,7 +58,15 @@ class PageStatsPlugin extends Plugin
                 // ['autoload', 100000],
                 ['onPluginsInitialized', 0]
             ],
-            'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0]
+            // Classic Admin (Grav < 2.0 / Admin plugin). No-op when the
+            // classic Admin plugin isn't installed.
+            'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
+
+            // Admin2 / grav-plugin-api (Grav 2.0+). No-op when the API
+            // plugin isn't installed - Grav simply never fires these events.
+            'onApiRegisterRoutes' => ['onApiRegisterRoutes', 0],
+            'onApiSidebarItems' => ['onApiSidebarItems', 0],
+            'onApiPluginPageInfo' => ['onApiPluginPageInfo', 0],
         ];
     }
 
@@ -96,16 +111,19 @@ class PageStatsPlugin extends Plugin
         $event['paths'] = $paths;
     }
 
-    function getUserIP()
+    function getUserIP(): ?string
     {
         // Get real visitor IP behind CloudFlare network
         if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
             $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
             $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
         }
-        $client  = @$_SERVER['HTTP_CLIENT_IP'];
-        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $remote  = $_SERVER['REMOTE_ADDR'];
+        $client  = $_SERVER['HTTP_CLIENT_IP'] ?? null;
+        $forward = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null;
+        // Not every request context has a real client IP (e.g. `bin/grav`
+        // CLI commands such as page-system-validator, which still fire
+        // onPageInitialized). REMOTE_ADDR is simply unset there.
+        $remote  = $_SERVER['REMOTE_ADDR'] ?? null;
 
         if (filter_var($client, FILTER_VALIDATE_IP)) {
             $ip = $client;
@@ -143,11 +161,18 @@ class PageStatsPlugin extends Plugin
     /**
      * returns false if IP (or regexp) are in the plugin config list
      *
-     * @param string $ip
+     * @param string|null $ip
      * @return bool
      */
-    private function isEnabledForIp(string $ip): bool
+    private function isEnabledForIp(?string $ip): bool
     {
+        if ($ip === null) {
+            // No real client IP available (e.g. a CLI context like
+            // `bin/grav page-system-validator`, which still fires
+            // onPageInitialized) - nothing meaningful to log.
+            return false;
+        }
+
         $config  = $this->config();
         if (isset($config['ignored_ips']) && is_array($config['ignored_ips'])) {
             $ips = array_map(function ($a) {
@@ -436,5 +461,67 @@ class PageStatsPlugin extends Plugin
                 $page->init(new \SplFileInfo(__DIR__ . '/pages/recently-viewed-pages.md'));
                 break;
         }
+    }
+
+    /**
+     * Admin2 / grav-plugin-api: registers the REST endpoints consumed by the
+     * Admin2 dashboard page (admin-next/pages/page-stats.js). Fired by the
+     * API plugin's router; never fired if the API plugin isn't installed.
+     */
+    public function onApiRegisterRoutes(Event $event): void
+    {
+        $routes = $event['routes'];
+        $controller = PageStatsApiController::class;
+
+        $routes->group(self::API_PREFIX, function ($group) use ($controller) {
+            $group->get('/overview', [$controller, 'overview']);
+            $group->get('/summary', [$controller, 'summary']);
+            $group->get('/pages', [$controller, 'pages']);
+            $group->get('/pages/detail', [$controller, 'pageDetail']);
+            $group->get('/countries', [$controller, 'countries']);
+            $group->get('/browsers', [$controller, 'browsers']);
+            $group->get('/platforms', [$controller, 'platforms']);
+            $group->get('/users', [$controller, 'users']);
+            $group->get('/users/detail', [$controller, 'userDetail']);
+            $group->get('/recent', [$controller, 'recent']);
+        });
+    }
+
+    /**
+     * Admin2: adds the "Page Stats" entry to the Admin2 sidebar.
+     */
+    public function onApiSidebarItems(Event $event): void
+    {
+        $items = $event['items'] ?? [];
+        $items[] = [
+            'id' => self::ADMIN2_PAGE_ID,
+            'plugin' => 'page-stats',
+            'label' => $this->grav['language']->translate('PLUGIN_PAGE_STATS.PAGE_STATS'),
+            'icon' => 'fa-line-chart',
+            'route' => self::ADMIN2_ROUTE,
+            'authorize' => ['admin.login', 'admin.super'],
+            'priority' => 10,
+        ];
+        $event['items'] = $items;
+    }
+
+    /**
+     * Admin2: declares the "Page Stats" page as a component-mode page,
+     * rendered by admin-next/pages/page-stats.js.
+     */
+    public function onApiPluginPageInfo(Event $event): void
+    {
+        if ($event['plugin'] !== 'page-stats') {
+            return;
+        }
+
+        $event['definition'] = [
+            'id' => self::ADMIN2_PAGE_ID,
+            'plugin' => 'page-stats',
+            'title' => $this->grav['language']->translate('PLUGIN_PAGE_STATS.PAGE_STATS'),
+            'icon' => 'fa-line-chart',
+            'page_type' => 'component',
+            'actions' => [],
+        ];
     }
 }

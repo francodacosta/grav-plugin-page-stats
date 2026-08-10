@@ -36,6 +36,18 @@ class Stats
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
 
+        // Without these, concurrent requests writing to the same SQLite file
+        // fail fast with "database is locked" (default busy_timeout is 0)
+        // and every commit fsyncs the whole rollback journal by default.
+        // Under real traffic (many simultaneous page views) that can pile up
+        // PHP-FPM workers waiting on the same lock and, in the worst case,
+        // exhaust the whole pool - taking down unrelated requests too.
+        // WAL allows one writer + many concurrent readers instead of
+        // serializing everything on a single file lock.
+        $this->db->exec('PRAGMA busy_timeout = 5000');
+        $this->db->exec('PRAGMA journal_mode = WAL');
+        $this->db->exec('PRAGMA synchronous = NORMAL');
+
 
         if ($migrate) {
             $this->migrate();
@@ -180,14 +192,22 @@ class Stats
     private function query(string $q, array $params = [], ?int $limit = null, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
         $where = [];
-        if ($dateFrom && $dateTo) {
-            $where[] = ' date BETWEEN :date_from AND :dateTo';
-            $params['date_from'] = $dateFrom;
-            $params['date_to'] = $dateTo;
-        }
+        $bindings = [];
 
+        // Equality filters passed in by the caller (e.g. ['route' => $route])
         foreach ($params as $key => $value) {
             $where[] = "$key = :$key";
+            $bindings[$key] = $value;
+        }
+
+        // Date range, handled separately so it never gets run back through
+        // the equality-filter loop above (that previously generated a bogus
+        // "date_from = :date_from" clause - there is no such column, only
+        // "date" - and used a mismatched :dateTo/:date_to placeholder).
+        if ($dateFrom && $dateTo) {
+            $where[] = ' date BETWEEN :date_from AND :date_to';
+            $bindings['date_from'] = $dateFrom->format('c');
+            $bindings['date_to'] = $dateTo->format('c');
         }
 
         if (count($where)) {
@@ -198,13 +218,21 @@ class Stats
 
         if ($limit && (int) $limit > 0) {
             $q .= ' LIMIT :limit';
-            $params['limit'] = $limit;
+            $bindings['limit'] = $limit;
         }
 
         $s = $this->db->prepare($q);
 
-        foreach ($params as $key => $value) {
-            $s->bindValue(':' . $key, $value);
+        foreach ($bindings as $key => $value) {
+            // Defensive: only bind values whose placeholder actually made it
+            // into the final SQL. A couple of query builder methods in this
+            // class accept $dateFrom/$dateTo (or other $params) but forget
+            // to include '%where' in their SQL, which meant these bindings
+            // had nothing to attach to and SQLite rejected them with
+            // "column index out of range".
+            if (str_contains($q, ':' . $key)) {
+                $s->bindValue(':' . $key, $value);
+            }
         }
 
         if (str_contains($q, ':offset')) {
@@ -223,7 +251,7 @@ class Stats
      */
     public function pagesSummary(int $limit = 10, ?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null)
     {
-        $q = 'SELECT route, page_title, count(route) as hits, count(distinct ip) as visitors, count(distinct user) as users FROM data GROUP BY page_title ORDER BY hits DESC';
+        $q = 'SELECT route, page_title, count(route) as hits, count(distinct ip) as visitors, count(distinct user) as users FROM data %where GROUP BY page_title ORDER BY hits DESC';
 
         return $this->query($q, [], $limit, $dateFrom, $dateTo);
     }
@@ -274,6 +302,26 @@ class Stats
     public function totalPageViews(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
         $q = 'select count(route) as hits from data %where';
+
+        return $this->query($q, $params, null, $dateFrom, $dateTo);
+    }
+
+    /**
+     * returns the total number of unique visitors (distinct IPs)
+     */
+    public function totalUniqueVisitors(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+        $q = 'select count(distinct ip) as visitors from data %where';
+
+        return $this->query($q, $params, null, $dateFrom, $dateTo);
+    }
+
+    /**
+     * returns the total number of unique logged in users
+     */
+    public function totalUniqueUsers(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
+    {
+        $q = "select count(distinct user) as users from data %where";
 
         return $this->query($q, $params, null, $dateFrom, $dateTo);
     }
@@ -367,9 +415,9 @@ class Stats
      */
     public function siteSummary(?DateTimeImmutable $dateFrom = null, ?DateTimeImmutable $dateTo = null, array $params = [])
     {
-        $hits = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(datetime(date), :offset)', $params, $dateFrom, $dateTo);
-        $visitors = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(datetime(date), :offset)',  $params, $dateFrom, $dateTo);
-        $users = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(datetime(date), :offset)',  $params, $dateFrom, $dateTo);
+        $hits = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, count(route) as hits FROM data %where GROUP BY date(datetime(date), :offset)', $params, null, $dateFrom, $dateTo);
+        $visitors = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct ip) as hits FROM data %where GROUP BY date(datetime(date), :offset)',  $params, null, $dateFrom, $dateTo);
+        $users = $this->query('SELECT date(datetime(date), :offset) as date, route, page_title, ip, count(distinct user) as hits FROM data %where GROUP BY date(datetime(date), :offset)',  $params, null, $dateFrom, $dateTo);
 
         return [
             'hits' => $hits,

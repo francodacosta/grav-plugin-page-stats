@@ -1,3 +1,18 @@
+# v2.8.0
+## Unreleased
+
+1. [New Features](#new)
+    * feat: Grav 2.0 / Admin2 compatibility (#53) - adds a REST API controller (`classes/Api/PageStatsApiController.php`) exposing the existing `Stats` data layer, and an Admin2 sidebar entry + single-page dashboard (`admin-next/pages/page-stats.js`) with page-view/visitor/user totals, top pages/countries/browsers/platforms/users, recently viewed pages, and page/user lookup. Consolidates the nine separate classic-admin pages into one dashboard, since Admin2 component pages are a single route. Requires a `compatibility` declaration in `blueprints.yaml`, which is also what the Grav 2.0 migration wizard checks - its absence is why older versions were auto-flagged as incompatible. Classic Admin (Grav < 2.0) keeps working unchanged via the existing `onAdminDashboard`/`onAdminPage` hooks.
+1. [Bug Fixes](#bugfix)
+    * bugfix: `getUserIP()` returned `null` in request contexts without a real client IP (e.g. `bin/grav page-system-validator`, which still fires `onPageInitialized`), and `isEnabledForIp(string $ip)` declared a non-nullable parameter - causing an uncaught `TypeError` and a fatal error. `getUserIP()` now returns `?string` and `isEnabledForIp()` accepts `?string`, treating "no IP" as "nothing to log" instead of crashing.
+    * bugfix: `Stats::query()` mishandled date-range filtering whenever both `$dateFrom` and `$dateTo` were passed - the `date_from`/`date_to` values were both used to build the `BETWEEN` clause *and* re-processed by the generic equality-filter loop, producing an invalid `date_from = :date_from` condition (`data` has a `date` column, not `date_from`) and a `SQLSTATE[HY000]: no such column: date_from` error. The `BETWEEN` clause itself also had a placeholder typo (`:dateTo` instead of `:date_to`), and `DateTimeImmutable` objects were bound directly instead of as formatted strings. This is likely why date-range filtering across the plugin has been effectively dead code for years - it seems to have never been exercised with both bounds set at once.
+    * bugfix: `Stats::siteSummary()` called `query()` with the wrong argument order (missing the `$limit` argument), so `$dateFrom` landed in the `?int $limit` slot - a `DateTimeImmutable` object where an `int` was expected - and would fatal with a `TypeError` whenever a date range was actually supplied.
+    * bugfix: `Stats::pagesSummary()`'s SQL was missing `%where` entirely, so bindings for the date range (or query params) had nothing to attach to and SQLite rejected them with `SQLSTATE[HY000]: column index out of range`. Added the missing `%where` so date-range filtering on the "top pages" list actually works.
+1. [Improvements](#improvements)
+    * improvement: `Stats::totalUniqueVisitors()` / `Stats::totalUniqueUsers()` helpers for the new Admin2 overview KPIs
+    * improvement: `Stats::query()` now only binds a parameter if its placeholder is actually present in the final SQL string, as a defensive safety net against further query-builder/SQL mismatches like the `pagesSummary()` one above
+    * improvement: the SQLite connection now sets `PRAGMA busy_timeout` (5s) and `PRAGMA journal_mode = WAL`. Without these, concurrent requests writing to the stats database serialize on a single file lock (default `busy_timeout` is 0) and every commit fsyncs the whole rollback journal; under real traffic this can make individual requests noticeably slower and, in the worst case, pile up PHP-FPM workers waiting on the same lock until the pool is exhausted - taking down unrelated requests too, not just page-stats.
+
 # v2.5.3
 ## 09/01/2023
 
